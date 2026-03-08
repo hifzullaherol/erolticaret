@@ -141,6 +141,10 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:20px 4
   .stats-grid{grid-template-columns:repeat(2,1fr)!important;}
   .map-wrap{height:240px;}
 }
+
+.m-oz-title{font-weight:700;font-size:13px;color:#2d8c3e;margin-bottom:6px;letter-spacing:1px;}
+.m-oz-item{font-size:13px;color:#444;padding:3px 0;border-bottom:1px solid #f0f0f0;}
+.m-oz-item:last-child{border-bottom:none;}
 </style>
 </head>
 <body>
@@ -254,7 +258,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:20px 4
     <div class="m-body">
       <div class="m-cat" id="m-cat"></div>
       <div class="m-name" id="m-name"></div>
-      <div class="m-desc">Orijinal kalitede yedek parça. Ürün hakkında detaylı bilgi için bizimle iletişime geçebilirsiniz.</div>
+      <div class="m-desc" id="m-desc">Orijinal kalitede yedek parça. Ürün hakkında detaylı bilgi için bizimle iletişime geçebilirsiniz.</div><div id="m-ozellikler" style="display:none;margin-top:12px;"></div>
       <div class="m-price">Fiyat için iletişime geçin</div>
       <div class="m-actions">
         <button class="btn-primary" onclick="mAdd()" style="width:100%;padding:13px;font-size:15px;letter-spacing:2px;">SEPETE EKLE</button>
@@ -270,90 +274,90 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:20px 4
 <script>
 var D={
   komp:[
-    {id:'k1',ad:'G-160 KARTER',img:'https://globaltechmak.com/storage/products/May2024/karterg160.png'},
-    {id:'k2',ad:'G-160 KRANK',img:'https://globaltechmak.com/storage/products/May2024/krank.png'},
-    {id:'k3',ad:'G-160 BİYEL KOLU',img:'https://globaltechmak.com/storage/products/May2024/piston-kolu.png'},
-    {id:'k4',ad:'G-160 NKJS 60 A RULMAN',img:'https://globaltechmak.com/storage/products/May2024/ina-nkıs-60-piston-kolu-rulmani.png'},
-    {id:'k5',ad:'G-160 BİYEL KOLU BURCU',img:'https://globaltechmak.com/storage/products/May2024/BİYEL KOL BURCU.png'},
-    {id:'k6',ad:'G-160 KRANK AĞIRLIĞI',img:'https://globaltechmak.com/storage/products/May2024/krank-agirligi.png'},
-    {id:'k7',ad:'G-160 ARKA KAPAK',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak.png'},
-    {id:'k8',ad:'G-160 ARKA KAPAK SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-segman.png'},
-    {id:'k9',ad:'G-160 N309 ARKA KAPAK RULMANI',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-rulmani.png'},
-    {id:'k10',ad:'G-160 ÖN KAPAK',img:'https://globaltechmak.com/storage/products/May2024/on-kapak.png'},
-    {id:'k11',ad:'G-160 ÖN KAPAK SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/on-kapak-segmani.png'},
-    {id:'k12',ad:'G-160 NUP309 ÖN KAPAK RULMANI',img:'https://globaltechmak.com/storage/products/May2024/on-kapak-rulmani.png'},
-    {id:'k13',ad:'G-160 KRANK KEÇE YATAĞI',img:'https://globaltechmak.com/storage/products/May2024/yag-kecesi.png'},
-    {id:'k14',ad:'G-160 CONTA TAKIMI',img:'https://globaltechmak.com/storage/products/May2024/conta-takimi.png'},
-    {id:'k15',ad:'G-160 PİSTON',img:'https://globaltechmak.com/storage/products/May2024/piston.png'},
-    {id:'k16',ad:'G-160 PİSTON PİMİ',img:'https://globaltechmak.com/storage/products/May2024/piston-pimi.png'},
-    {id:'k17',ad:'G-160 PİSTON SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/piston-segman.png'},
-    {id:'k18',ad:'G-160 GÖMLEK',img:'https://globaltechmak.com/storage/products/May2024/gomlek.png'},
-    {id:'k19',ad:'G-160 HAVA EMME KLAPE',img:'https://globaltechmak.com/storage/products/May2024/emme-klape.png'},
-    {id:'k20',ad:'G-160 HAVA BASMA KLAPE',img:'https://globaltechmak.com/storage/products/May2024/basma-klape.png'},
-    {id:'k21',ad:'G-160 KLAPE KAFES UZUN',img:'https://globaltechmak.com/storage/products/May2024/kafes-uzun-35202313459420.png'},
-    {id:'k22',ad:'G-160 KLAPE KAFES KISA',img:'https://globaltechmak.com/storage/products/May2024/f101000036-g160-3-klepe-kafesi-kisa-35202314470135.png'},
-    {id:'k23',ad:'G-160 KONİK VOLANT',img:'https://globaltechmak.com/storage/products/May2024/konik-volan.png'},
-    {id:'k24',ad:'G-160 KONİK VOLANT PİMİ',img:'https://globaltechmak.com/storage/products/May2024/konik-volant-pimi.png'},
-    {id:'k25',ad:'G-160 PİM LASTİĞİ',img:'https://globaltechmak.com/storage/products/May2024/PIM-LASTIGI.png'},
-    {id:'k26',ad:'G-160 KRANK SOMUNU',img:'https://globaltechmak.com/storage/products/May2024/krank-somunu.png'},
-    {id:'k27',ad:'G-160 DİZEL KOMPRESÖR MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/dizel kompresör muhafaza.png'},
-    {id:'k28',ad:'G-160 FAN',img:'https://globaltechmak.com/storage/products/May2024/fan.png'},
-    {id:'k29',ad:'G-160 RADYATÖR',img:'https://globaltechmak.com/storage/products/May2024/radyator.png'},
-    {id:'k30',ad:'G-160 MANOMETRE',img:'https://globaltechmak.com/storage/products/May2024/manometre.png'},
-    {id:'k31',ad:'G-160 EMNİYET VENTİLİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili.png'},
-    {id:'k32',ad:'G-160 KOMPRESÖR YAĞ KAPAĞI',img:'https://globaltechmak.com/storage/products/May2024/yag-kapagi.png'},
-    {id:'k33',ad:'G-160 YAKIT DEPOSU',img:'https://globaltechmak.com/storage/products/May2024/yakıt deposu.png'},
-    {id:'k34',ad:'G-160 HAVA FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi.png'},
-    {id:'k35',ad:'G-160 ELEKTRİKLİ KAPLİN',img:'https://globaltechmak.com/storage/products/May2024/elektrikli-motor-kaplini.png'},
-    {id:'k36',ad:'G-160 ELEKTRİKLİ MOTOR KAPLİN MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/elektrikli-motor-kaplin-muhafaza.png'},
-    {id:'k37',ad:'G-160 KOMPRESÖR HAVA FİLTRE LASTİK CONTASI',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-lastik-conta-2742023144146295.png'},
-    {id:'k38',ad:'G-220 KARTER',img:'https://globaltechmak.com/storage/products/May2024/karter-2742023144747376.png'},
-    {id:'k39',ad:'G-220 KRANK',img:'https://globaltechmak.com/storage/products/May2024/krank-2742023142548607.png'},
-    {id:'k40',ad:'G-220 BİYEL KOLU',img:'https://globaltechmak.com/storage/products/May2024/piston-kolu-2742023143749140.png'},
-    {id:'k41',ad:'G-220 KRANK AĞIRLIĞI',img:'https://globaltechmak.com/storage/products/May2024/krank-agirigi-27420231495246.png'},
-    {id:'k42',ad:'G-220 CONTA TAKIMI',img:'https://globaltechmak.com/storage/products/May2024/conta-takim-g220-2742023173439456.png'},
-    {id:'k43',ad:'G-220 PİSTON',img:'https://globaltechmak.com/storage/products/May2024/piston-2742023174740400.png'},
-    {id:'k44',ad:'G-220 PİSTON PİMİ',img:'https://globaltechmak.com/storage/products/May2024/piston-pimi-2742023152122501.png'},
-    {id:'k45',ad:'G-220 GÖMLEK',img:'https://globaltechmak.com/storage/products/May2024/gomlek-274202315646504.png'},
-    {id:'k46',ad:'G-220 HAVA EMME KLAPE',img:'https://globaltechmak.com/storage/products/May2024/emme-klape-220-2742023154850551.png'},
-    {id:'k47',ad:'G-220 HAVA BASMA KLAPE',img:'https://globaltechmak.com/storage/products/May2024/basma-klape-220-2742023153351934.png'},
-    {id:'k48',ad:'G-220 KLAPE KAFESİ ALUMINYUM UZUN',img:'https://globaltechmak.com/storage/products/May2024/kafes-uzun-2742023151552960.png'},
-    {id:'k49',ad:'G-220 KLAPE KAFESİ ALUMINYUM KISA',img:'https://globaltechmak.com/storage/products/May2024/kafes-kisa-2742023152353647.png'},
-    {id:'k50',ad:'G-220 KAFES BRAKETİ',img:'https://globaltechmak.com/storage/products/May2024/kafes-braketi-2742023152554890.png'},
-    {id:'k51',ad:'G-220 KONİK VOLANT',img:'https://globaltechmak.com/storage/products/May2024/konik-volant-2742023153155485.png'},
-    {id:'k52',ad:'G-220 KONİK VOLANT PİMİ',img:'https://globaltechmak.com/storage/products/May2024/konik-volant-pimi-2742023152956747.png'},
-    {id:'k53',ad:'G-220 PİM LASTİĞİ',img:'https://globaltechmak.com/storage/products/May2024/pim-lastigi-2742023155956373.png'},
-    {id:'k54',ad:'G-220 KRANK SOMUNU',img:'https://globaltechmak.com/storage/products/May2024/krank-somunu-2742023153857138.png'},
-    {id:'k55',ad:'G-220 DİZEL KOMPRESÖR MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/dizel-kompresor-muhafaza-2742023151058976.png'},
-    {id:'k56',ad:'G-220 FAN',img:'https://globaltechmak.com/storage/products/May2024/fan-2742023154459862.png'},
-    {id:'k57',ad:'G-220 RADYATÖR',img:'https://globaltechmak.com/storage/products/May2024/radyator-2742023151259712.png'},
-    {id:'k58',ad:'G-220 MANOMETRE',img:'https://globaltechmak.com/storage/products/May2024/manometre-274202316180309.png'},
-    {id:'k59',ad:'G-220 EMNİYET VENTİLİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili-27420231646033.png'},
-    {id:'k60',ad:'G-220 KOMPRESÖR YAĞ KAPAĞI',img:'https://globaltechmak.com/storage/products/May2024/yag-kapagi-274202316121436.png'},
-    {id:'k61',ad:'G-220 YAKIT DEPOSU',img:'https://globaltechmak.com/storage/products/May2024/yakit-deposu-2742023162928852.png'},
-    {id:'k62',ad:'G-220 KOMPRESÖR HAVA FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-2742023165327200.png'},
-    {id:'k63',ad:'G-220 ELEKTRİKLİ MOTOR KAPLİN',img:'https://globaltechmak.com/storage/products/May2024/elektrikli-motor-kaplini-274202316342881.png'},
-    {id:'k64',ad:'G-220 ELEKTRİKLİ MOTOR KAPLİN MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/elektrikli-motor-kaplin-muhafaza-27420231663366.png'},
-    {id:'k65',ad:'G-220 FİLTRE KUTUSU SOL',img:'https://globaltechmak.com/storage/products/May2024/hava-filtre-kutusu-kaynatilmis-sol-2742023162426264.png'},
-    {id:'k66',ad:'G-220 FİLTRE KUTUSU SAĞ',img:'https://globaltechmak.com/storage/products/May2024/filtre-kutusu-sag-2742023161727686.png'},
-    {id:'k67',ad:'G-220 KOMPRESÖR HAVA FİLTRESİ ÇEVRE LASTİK CONTA',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-lastik-conta-2742023165231455.png'},
-    {id:'k68',ad:'G-220 KOMPRESÖR HAVA FİLTRESİ GÖBEK LASTİK CONTA',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-lastik-conta-2742023162754384.png'}
+    {id:'k1',ad:'G-160 KARTER',img:'https://globaltechmak.com/storage/products/May2024/karterg160.png',aciklama:'G-160 serisi silobas kompresörünün ana gövde parçasıdır. Yağ haznesi ve mekanizma yuvaları entegre edilmiş döküm yapısıyla uzun ömürlü kullanım sunar.',ozellikler:['Yüksek basınçlı döküm malzeme','G-160 serisi ile tam uyumlu','Entegre yağ haznesi']},
+    {id:'k2',ad:'G-160 KRANK',img:'https://globaltechmak.com/storage/products/May2024/krank.png',aciklama:'G-160 kompresörünün rotasyonel hareketini pistonlara ileten ana mil parçasıdır. Hassas işlenmiş çelik yapısı yüksek devir ve basınca dayanıklıdır.',ozellikler:['Yüksek mukavemetli çelik','Hassas toleranslı işleme','Titreşim önleyici denge tasarımı']},
+    {id:'k3',ad:'G-160 BİYEL KOLU',img:'https://globaltechmak.com/storage/products/May2024/piston-kolu.png',aciklama:'Krank milinin dönme hareketini pistonun doğrusal hareketine dönüştüren bağlantı koludur. Yüksek dinamik yüklere dayanacak şekilde imal edilmiştir.',ozellikler:['Dövme çelik gövde','G-160 krank ve pistonla tam uyum','Yüksek yorulma dayanımı']},
+    {id:'k4',ad:'G-160 NKJS 60 A RULMAN',img:'https://globaltechmak.com/storage/products/May2024/ina-nkıs-60-piston-kolu-rulmani.png',aciklama:'G-160 biyel kolu için kullanılan iğneli rulmandır. Küçük boyutuna karşın yüksek yük taşıma kapasitesiyle kompresör içindeki kritik bağlantı noktasını destekler.',ozellikler:['INA marka iğneli rulman','NKJS 60 standart ölçü','Yüksek devir kapasitesi']},
+    {id:'k5',ad:'G-160 BİYEL KOLU BURCU',img:'https://globaltechmak.com/storage/products/May2024/BİYEL KOL BURCU.png',aciklama:'Biyel kolu içindeki sürtünmeyi azaltan ve aşınmaya karşı koruma sağlayan bronz burçtur. Düzenli yağlama ile uzun ömür sunar.',ozellikler:['Bronz malzeme','Düşük sürtünme katsayısı','Kolay değiştirilebilir tasarım']},
+    {id:'k6',ad:'G-160 KRANK AĞIRLIĞI',img:'https://globaltechmak.com/storage/products/May2024/krank-agirligi.png',aciklama:'Krank milinin dengelenmesini sağlayan denge ağırlığıdır. Kompresörün titreşimsiz çalışmasına ve rulman ömrünün uzamasına katkı sağlar.',ozellikler:['Hassas dengeleme işlemi','Döküm çelik yapı','Titreşim azaltıcı etki']},
+    {id:'k7',ad:'G-160 ARKA KAPAK',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak.png',aciklama:'G-160 karter gövdesinin arka tarafını kapatan ve krank milini destekleyen kapak parçasıdır. Sızdırmazlık için segman ve keçe ile birlikte kullanılır.',ozellikler:['Alüminyum döküm yapı','Rulman yuvası entegre','Conta ile sızdırmaz bağlantı']},
+    {id:'k8',ad:'G-160 ARKA KAPAK SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-segman.png',aciklama:'Arka kapakta yağ sızdırmazlığını sağlayan keçe ya da segman parçasıdır. Zamanla aşınan bu parça düzenli bakımda değiştirilmesi önerilen sarf malzemesidir.',ozellikler:['Yağa dayanıklı elastomer','G-160 arka kapakla tam uyum','Kolay montaj']},
+    {id:'k9',ad:'G-160 N309 ARKA KAPAK RULMANI',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-rulmani.png',aciklama:'G-160 kompresör arka kapağında krank milini destekleyen N309 tip silindirik rulmandır. Eksenel ve radyal yüklere dayanıklı yapısıyla uzun çalışma ömrü sağlar.',ozellikler:['N309 standart ölçü','Silindirik makaralı rulman','Yüksek yük kapasitesi']},
+    {id:'k10',ad:'G-160 ÖN KAPAK',img:'https://globaltechmak.com/storage/products/May2024/on-kapak.png',aciklama:'G-160 karterin ön tarafını kapatan ve krank milinin ön desteğini sağlayan kapaktır. Yağ sızdırmazlığı için segman ve keçeyle birlikte çalışır.',ozellikler:['Alüminyum döküm','Rulman ve keçe yuvası','Yüksek sızdırmazlık']},
+    {id:'k11',ad:'G-160 ÖN KAPAK SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/on-kapak-segmani.png',aciklama:'Ön kapakta yağ sızdırmazlığını sağlayan segman parçasıdır. Periyodik bakımda mutlaka kontrol edilmesi ve gerekirse değiştirilmesi gereken sarf malzemesidir.',ozellikler:['Yüksek ısıya dayanıklı','G-160 ön kapakla uyumlu','Pratik montaj']},
+    {id:'k12',ad:'G-160 NUP309 ÖN KAPAK RULMANI',img:'https://globaltechmak.com/storage/products/May2024/on-kapak-rulmani.png',aciklama:'G-160 kompresörün ön kapağında krank milini destekleyen NUP309 tipi rulmandır. Hem radyal hem eksenel yükleri karşılayabilen flanşlı yapısıyla güvenli çalışma sağlar.',ozellikler:['NUP309 tip flanşlı rulman','Çift yönlü yük kapasitesi','Uzun servis ömrü']},
+    {id:'k13',ad:'G-160 KRANK KEÇE YATAĞI',img:'https://globaltechmak.com/storage/products/May2024/yag-kecesi.png',aciklama:'Krank milinin keçe bölgesini destekleyen ve sızdırmazlığı güçlendiren yataklama elemanıdır. Yağ kaçaklarını önlemede kritik rol oynar.',ozellikler:['Yağa dayanıklı malzeme','Keçeyle kombine kullanım','Sızdırmazlık güvencesi']},
+    {id:'k14',ad:'G-160 CONTA TAKIMI',img:'https://globaltechmak.com/storage/products/May2024/conta-takimi.png',aciklama:'G-160 kompresörün tüm sızdırmazlık noktaları için eksiksiz conta seti. Revizyon ve bakım çalışmalarında tek pakette tüm contaları karşılar.',ozellikler:['Komple set (tüm contalar)','Yüksek ısı ve basınca dayanıklı','Revizyon için ideal']},
+    {id:'k15',ad:'G-160 PİSTON',img:'https://globaltechmak.com/storage/products/May2024/piston.png',aciklama:'G-160 kompresörünün silindir içinde hava sıkıştırma işlemini gerçekleştiren piston gövdesidir. Özel alaşımlı alüminyumdan üretilmiş, hafif ve dayanıklı yapısıyla uzun ömür sunar.',ozellikler:['Özel alüminyum alaşım','Hassas silindir çapı toleransı','Düşük sürtünme yüzeyi']},
+    {id:'k16',ad:'G-160 PİSTON PİMİ',img:'https://globaltechmak.com/storage/products/May2024/piston-pimi.png',aciklama:'Pistonu biyel koluna bağlayan çelik pimdir. Yüksek dinamik yüklere dayanacak şekilde sertleştirilmiş çelikten üretilmiştir.',ozellikler:['Sertleştirilmiş çelik','Hassas toleranslı üretim','G-160 piston ve biyelle tam uyum']},
+    {id:'k17',ad:'G-160 PİSTON SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/piston-segman.png',aciklama:'Silindir ile piston arasındaki sızdırmazlığı ve yağ kontrolünü sağlayan piston segmanıdır. Kompresör verimini doğrudan etkileyen kritik bir sarf malzemesidir.',ozellikler:['Özel dökme demir alaşım','Sıkıştırma ve yağ segmanı seti','Yüksek basınç sızdırmazlığı']},
+    {id:'k18',ad:'G-160 GÖMLEK',img:'https://globaltechmak.com/storage/products/May2024/gomlek.png',aciklama:'Pistonun içinde hareket ettiği silindir gömlektir. İç yüzey honlama işlemiyle mükemmel piston-silindir sızdırmazlığı sağlar.',ozellikler:['Honlanmış iç yüzey','Aşınmaya dayanıklı dökme demir','G-160 karter ile tam uyum']},
+    {id:'k19',ad:'G-160 HAVA EMME KLAPE',img:'https://globaltechmak.com/storage/products/May2024/emme-klape.png',aciklama:'Kompresörün emme fazında havanın silindir içine girmesini sağlayan, basma fazında ise kapanan tek yönlü klape valf sistemidir.',ozellikler:['Paslanmaz çelik klape diski','Yüksek çevrim hızına uygun','Tek yönlü hava akışı']},
+    {id:'k20',ad:'G-160 HAVA BASMA KLAPE',img:'https://globaltechmak.com/storage/products/May2024/basma-klape.png',aciklama:'Sıkıştırılan havanın silinderden çıkışını kontrol eden basma klape sistemidir. Geri akışı önleyerek kompresör verimliliğini korur.',ozellikler:['Paslanmaz çelik','Yüksek basınç dayanımı','Geri akış önleyici']},
+    {id:'k21',ad:'G-160 KLAPE KAFES UZUN',img:'https://globaltechmak.com/storage/products/May2024/kafes-uzun-35202313459420.png',aciklama:'Uzun tip klape valfinin yerleştirildiği ve korunduğu kafes gövdesidir. Klapenin doğru çalışma mesafesini belirler.',ozellikler:['Alüminyum yapı','Uzun klape serisi','Hassas klape hareketi']},
+    {id:'k22',ad:'G-160 KLAPE KAFES KISA',img:'https://globaltechmak.com/storage/products/May2024/f101000036-g160-3-klepe-kafesi-kisa-35202314470135.png',aciklama:'Kısa tip klape valfinin konumlandırıldığı kafes gövdesidir. Silindir kafasındaki klape düzeninin doğru çalışması için gereklidir.',ozellikler:['Alüminyum yapı','Kısa klape serisi','G-160 silindir kafasıyla uyum']},
+    {id:'k23',ad:'G-160 KONİK VOLANT',img:'https://globaltechmak.com/storage/products/May2024/konik-volan.png',aciklama:'Kompresör krank milindeki konik yuvaya oturan ve V-kayış kasnağı görevini üstlenen volandır. Güç aktarımını sağlar.',ozellikler:['Döküm demir','Konik mil uyumu','V-kayış uyumlu']},
+    {id:'k24',ad:'G-160 KONİK VOLANT PİMİ',img:'https://globaltechmak.com/storage/products/May2024/konik-volant-pimi.png',aciklama:'Konik volantın krank miline sabitlenmesini sağlayan Woodruff pimdir. Volant ile mil arasındaki dönme momentini aktarır.',ozellikler:['Sertleştirilmiş çelik','Woodruff pim standardı','Güvenli volant kilitleme']},
+    {id:'k25',ad:'G-160 PİM LASTİĞİ',img:'https://globaltechmak.com/storage/products/May2024/PIM-LASTIGI.png',aciklama:'Volant piminin gevşemesini ve titreşim iletimini önleyen kauçuk lastik elemanıdır.',ozellikler:['Titreşim sönümleyici','Yüksek ısıya dayanıklı kauçuk','Kolay montaj']},
+    {id:'k26',ad:'G-160 KRANK SOMUNU',img:'https://globaltechmak.com/storage/products/May2024/krank-somunu.png',aciklama:'Krank milinin ön ucunu sabitleyen ve volanı emniyete alan somundur. Yüksek tork değerlerine dayanacak şekilde üretilmiştir.',ozellikler:['Yüksek mukavemetli çelik','Sol/sağ vidalama seçeneği','Güvenli kilitli tasarım']},
+    {id:'k27',ad:'G-160 DİZEL KOMPRESÖR MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/dizel kompresör muhafaza.png',aciklama:'G-160 dizel motorlu kompresör ünitesini dış etkenlerden ve hasardan koruyan çelik muhafaza gövdesidir.',ozellikler:['Çelik sac yapı','Boyalı dış yüzey','Motor ve kompresörü birlikte sarar']},
+    {id:'k28',ad:'G-160 FAN',img:'https://globaltechmak.com/storage/products/May2024/fan.png',aciklama:'Kompresör ve motorun soğutulmasını sağlayan plastik ya da alüminyum pervane fanıdır. Radyatör ile birlikte etkin soğutma sistemi oluşturur.',ozellikler:['Dengeli kanat tasarımı','Düşük gürültü','Yüksek hava debisi']},
+    {id:'k29',ad:'G-160 RADYATÖR',img:'https://globaltechmak.com/storage/products/May2024/radyator.png',aciklama:'Kompresör motor soğutma suyunun ısısını dışarıya atan bakır/alüminyum radyatördür. Termal yönetim için kritik öneme sahiptir.',ozellikler:['Bakır/alüminyum çekirdek','Yüksek ısı transfer kapasitesi','G-160 dizel motorla uyumlu']},
+    {id:'k30',ad:'G-160 MANOMETRE',img:'https://globaltechmak.com/storage/products/May2024/manometre.png',aciklama:'Kompresör çıkış hattındaki hava basıncını gösteren analog basınç saatidir. Operatörün güvenli çalışma aralığını takip etmesini sağlar.',ozellikler:['0-16 bar ölçüm aralığı','Gliserinli titreşim önleyici','Kolay okunabilir skala']},
+    {id:'k31',ad:'G-160 EMNİYET VENTİLİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili.png',aciklama:'Kompresör çıkış hattındaki basıncın belirli seviyeyi aşması durumunda otomatik olarak açılıp fazla basıncı tahliye eden güvenlik ventidir.',ozellikler:['Ayarlanabilir açılma basıncı','Paslanmaz çelik','TSE/CE uyumlu']},
+    {id:'k32',ad:'G-160 KOMPRESÖR YAĞ KAPAĞI',img:'https://globaltechmak.com/storage/products/May2024/yag-kapagi.png',aciklama:'Kompresör karter yağ dolum/kontrol kapağıdır. Sızdırmaz contasıyla yağ girişini ve havalandırmayı kontrol eder.',ozellikler:['Metal gövde','Sızdırmaz conta','Kolay açılır kapanır']},
+    {id:'k33',ad:'G-160 YAKIT DEPOSU',img:'https://globaltechmak.com/storage/products/May2024/yakıt deposu.png',aciklama:'G-160 dizel motorlu kompresör için yakıt depo tanka eşdeğer plastik ya da çelik yakıt hazinesidir.',ozellikler:['Yeterli kapasite','Yakıt seviye göstergesi','Sızdırmaz kapak']},
+    {id:'k34',ad:'G-160 HAVA FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi.png',aciklama:'Kompresörün emdiği havanın içindeki toz ve partikülleri tutan kağıt/sünger filtre elemanıdır. Düzenli değişimi kompresör ömrünü uzatır.',ozellikler:['Yüksek filtrasyon verimi','Kolay değiştirilebilir kartuş','G-160 filtre kutusuyla uyum']},
+    {id:'k35',ad:'G-160 ELEKTRİKLİ KAPLİN',img:'https://globaltechmak.com/storage/products/May2024/elektrikli-motor-kaplini.png',aciklama:'Elektrik motoru ile kompresör arasındaki güç aktarımını sağlayan esnek kaplin elemanıdır.',ozellikler:['Esnek kauçuk disk','Titreşim sönümleme','Kolay balans ayarı']},
+    {id:'k36',ad:'G-160 ELEKTRİKLİ MOTOR KAPLİN MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/elektrikli-motor-kaplin-muhafaza.png',aciklama:'Kaplin bölgesini koruyan ve iş güvenliği gereksinimlerini karşılayan çelik muhafaza kapağıdır.',ozellikler:['Çelik sac','İş güvenliği standardı','Kolay sökülür/takılır']},
+    {id:'k37',ad:'G-160 KOMPRESÖR HAVA FİLTRE LASTİK CONTASI',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-lastik-conta-2742023144146295.png',aciklama:'Hava filtresi gövdesi ile kompresör emme ağzı arasındaki sızdırmazlığı sağlayan lastik contadır.',ozellikler:['Hava geçirmez elastomer','G-160 filtre kutusuyla uyumlu','UV ve ozona dayanıklı']},
+    {id:'k38',ad:'G-220 KARTER',img:'https://globaltechmak.com/storage/products/May2024/karter-2742023144747376.png',aciklama:'G-220 serisi büyük kapasiteli silobas kompresörünün döküm karter gövdesidir. G-160\'a göre daha büyük hacmi ile daha fazla yağ kapasitesi ve mekanizma alanı sunar.',ozellikler:['Büyük hacimli döküm','G-220 serisine özel','Entegre yağ haznesi']},
+    {id:'k39',ad:'G-220 KRANK',img:'https://globaltechmak.com/storage/products/May2024/krank-2742023142548607.png',aciklama:'G-220 serisinin daha yüksek torklu krank milidir. Artırılmış çap ve uzunluğuyla ağır hizmet kompresör çalışmasına uygundur.',ozellikler:['Ağır hizmet çeliği','G-220 kartere özel boyut','Yüksek tork kapasitesi']},
+    {id:'k40',ad:'G-220 BİYEL KOLU',img:'https://globaltechmak.com/storage/products/May2024/piston-kolu-2742023143749140.png',aciklama:'G-220 serisi için tasarlanmış, G-160\'dan daha güçlü biyel koludur. Yüksek sıkıştırma oranlarında bile güvenle çalışır.',ozellikler:['Dövme çelik','G-220 krank ve pistonla uyum','Artırılmış yük kapasitesi']},
+    {id:'k41',ad:'G-220 KRANK AĞIRLIĞI',img:'https://globaltechmak.com/storage/products/May2024/krank-agirigi-27420231495246.png',aciklama:'G-220 krank milinin dinamik dengesini sağlayan ağırlık parçasıdır. Titreşim azaltarak rulman ve mekanizma ömrünü uzatır.',ozellikler:['Hassas dengeleme','G-220 krankla birlikte çalışır','Titreşim önleyici']},
+    {id:'k42',ad:'G-220 CONTA TAKIMI',img:'https://globaltechmak.com/storage/products/May2024/conta-takim-g220-2742023173439456.png',aciklama:'G-220 kompresörün tüm sızdırmazlık noktaları için kapsamlı conta setidir. Revizyon ve genel bakımda tek sette tüm contalar mevcuttur.',ozellikler:['Komple set','G-220 serisine özel ölçüler','Yüksek basınç ve ısı toleransı']},
+    {id:'k43',ad:'G-220 PİSTON',img:'https://globaltechmak.com/storage/products/May2024/piston-2742023174740400.png',aciklama:'G-220 serisinin daha büyük çaplı ve yüksek sıkıştırma kapasiteli pistonudur. Özel alüminyum alaşımından üretilmiştir.',ozellikler:['Büyük çap','Özel alüminyum alaşım','Yüksek kompresyon oranı']},
+    {id:'k44',ad:'G-220 PİSTON PİMİ',img:'https://globaltechmak.com/storage/products/May2024/piston-pimi-2742023152122501.png',aciklama:'G-220 pistonunu biyele bağlayan sertleştirilmiş çelik pimdir.',ozellikler:['Sertleştirilmiş çelik','G-220 piston ve biyelle uyum','Yüksek yorulma dayanımı']},
+    {id:'k45',ad:'G-220 GÖMLEK',img:'https://globaltechmak.com/storage/products/May2024/gomlek-274202315646504.png',aciklama:'G-220 serisinin büyük çaplı silindir gömlektir. Honlanmış iç yüzeyi ve aşınmaya dayanıklı yapısıyla uzun ömür sağlar.',ozellikler:['Büyük çap honlanmış yüzey','Aşınmaya dayanıklı dökme demir','G-220 kartere tam uyum']},
+    {id:'k46',ad:'G-220 HAVA EMME KLAPE',img:'https://globaltechmak.com/storage/products/May2024/emme-klape-220-2742023154850551.png',aciklama:'G-220 serisinin emme fazında havanın silindir içine girişini kontrol eden klape sistemidir.',ozellikler:['Paslanmaz çelik disk','G-220 silindir kafasına uyum','Yüksek debi kapasitesi']},
+    {id:'k47',ad:'G-220 HAVA BASMA KLAPE',img:'https://globaltechmak.com/storage/products/May2024/basma-klape-220-2742023153351934.png',aciklama:'G-220 kompresörünün sıkıştırılmış havayı çıkaran basma klape sistemidir. Geri akışı önleyerek sistem verimini korur.',ozellikler:['Paslanmaz çelik','Yüksek basınç dayanımı','Geri akış önleyici']},
+    {id:'k48',ad:'G-220 KLAPE KAFESİ ALUMINYUM UZUN',img:'https://globaltechmak.com/storage/products/May2024/kafes-uzun-2742023151552960.png',aciklama:'G-220 uzun klape valfinin alüminyum kafes gövdesidir. Klape hareketini sınırlayarak doğru çalışma mesafesini sağlar.',ozellikler:['Alüminyum yapı','G-220 uzun klape serisi','Hassas klape kontrolü']},
+    {id:'k49',ad:'G-220 KLAPE KAFESİ ALUMINYUM KISA',img:'https://globaltechmak.com/storage/products/May2024/kafes-kisa-2742023152353647.png',aciklama:'G-220 kısa klape valfinin alüminyum kafes gövdesidir.',ozellikler:['Alüminyum yapı','G-220 kısa klape serisi','Silindir kafası uyumu']},
+    {id:'k50',ad:'G-220 KAFES BRAKETİ',img:'https://globaltechmak.com/storage/products/May2024/kafes-braketi-2742023152554890.png',aciklama:'Klape kafeslerini silindir kafasına sabitleyen braket parçasıdır. Klape sisteminin düzgün konumlanmasını sağlar.',ozellikler:['Çelik braket','G-220 kafes serisiyle uyum','Güvenli sabitleme']},
+    {id:'k51',ad:'G-220 KONİK VOLANT',img:'https://globaltechmak.com/storage/products/May2024/konik-volant-2742023153155485.png',aciklama:'G-220 krank milindeki konik yuvaya oturan daha büyük çaplı V-kayış kasnağıdır.',ozellikler:['Büyük çaplı döküm','G-220 konik mil uyumu','Yüksek tork aktarımı']},
+    {id:'k52',ad:'G-220 KONİK VOLANT PİMİ',img:'https://globaltechmak.com/storage/products/May2024/konik-volant-pimi-2742023152956747.png',aciklama:'G-220 konik volantını krank miline sabitleyen Woodruff pimdir.',ozellikler:['Sertleştirilmiş çelik','G-220 volant uyumu','Güvenli kilitleme']},
+    {id:'k53',ad:'G-220 PİM LASTİĞİ',img:'https://globaltechmak.com/storage/products/May2024/pim-lastigi-2742023155956373.png',aciklama:'G-220 volant piminin titreşim iletimini engelleyen kauçuk lastik elemanıdır.',ozellikler:['Titreşim sönümleme','G-220 serisine uygun','Yüksek ısı dayanımı']},
+    {id:'k54',ad:'G-220 KRANK SOMUNU',img:'https://globaltechmak.com/storage/products/May2024/krank-somunu-2742023153857138.png',aciklama:'G-220 krank milini ve volantı emniyete alan yüksek mukavemetli somundur.',ozellikler:['Yüksek mukavemetli çelik','G-220 mil dişine uygun','Güvenli kilitleme']},
+    {id:'k55',ad:'G-220 DİZEL KOMPRESÖR MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/dizel-kompresor-muhafaza-2742023151058976.png',aciklama:'G-220 dizel motorlu kompresör ünitesini koruyan büyük gövdeli çelik muhafazadır.',ozellikler:['Çelik sac yapı','G-220 boyutlarına özel','Hava sirkülasyon kanalları']},
+    {id:'k56',ad:'G-220 FAN',img:'https://globaltechmak.com/storage/products/May2024/fan-2742023154459862.png',aciklama:'G-220 kompresörünün soğutma sistemindeki büyük çaplı soğutma pervane fanıdır.',ozellikler:['Yüksek hava debisi','Dengeli kanat','G-220 radyatörüyle uyum']},
+    {id:'k57',ad:'G-220 RADYATÖR',img:'https://globaltechmak.com/storage/products/May2024/radyator-2742023151259712.png',aciklama:'G-220 serisi için artırılmış ısı kapasiteli motor soğutma radyatörüdür.',ozellikler:['Büyük yüzey alanlı çekirdek','Alüminyum/bakır','G-220 dizel motorla uyum']},
+    {id:'k58',ad:'G-220 MANOMETRE',img:'https://globaltechmak.com/storage/products/May2024/manometre-274202316180309.png',aciklama:'G-220 hava çıkış hattı için kullanılan analog basınç göstergesidir.',ozellikler:['0-16 bar aralığı','Gliserinli titreşim önleyici','Kolay okunur skala']},
+    {id:'k59',ad:'G-220 EMNİYET VENTİLİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili-27420231646033.png',aciklama:'G-220 sisteminin aşırı basınç koruması için kullanılan güvenlik ventidir. Belirlenen basınç eşiğinde otomatik açılır.',ozellikler:['Ayarlanabilir','Paslanmaz çelik','CE uyumlu']},
+    {id:'k60',ad:'G-220 KOMPRESÖR YAĞ KAPAĞI',img:'https://globaltechmak.com/storage/products/May2024/yag-kapagi-274202316121436.png',aciklama:'G-220 karter yağ dolum ve kontrol kapağıdır.',ozellikler:['Metal gövde','Sızdırmaz conta','Havalandırma fonksiyonu']},
+    {id:'k61',ad:'G-220 YAKIT DEPOSU',img:'https://globaltechmak.com/storage/products/May2024/yakit-deposu-2742023162928852.png',aciklama:'G-220 dizel kompresörün yakıt deposudur. Yeterli kapasite ve sızdırmaz yapısıyla uzun çalışma süreleri destekler.',ozellikler:['Yüksek kapasite','Çelik/plastik gövde','Yakıt seviye göstergesi']},
+    {id:'k62',ad:'G-220 KOMPRESÖR HAVA FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-2742023165327200.png',aciklama:'G-220 kompresörünün emdiği havanın filtrasyonunu sağlayan büyük kapasiteli filtre elemanıdır.',ozellikler:['Yüksek yüzey alanlı eleman','G-220 filtre kutusuna uyum','Etkin toz tutma']},
+    {id:'k63',ad:'G-220 ELEKTRİKLİ MOTOR KAPLİN',img:'https://globaltechmak.com/storage/products/May2024/elektrikli-motor-kaplini-274202316342881.png',aciklama:'G-220 elektrik motorlu versiyonunda güç aktarımını sağlayan esnek kaplin sistemidir.',ozellikler:['Esnek kauçuk disk','G-220 elektrik motoruyla uyum','Titreşim sönümleme']},
+    {id:'k64',ad:'G-220 ELEKTRİKLİ MOTOR KAPLİN MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/elektrikli-motor-kaplin-muhafaza-27420231663366.png',aciklama:'G-220 kaplin bölgesini örten iş güvenliği muhafazasıdır.',ozellikler:['Çelik sac','İş güvenliği uyumu','Kolay montaj/demontaj']},
+    {id:'k65',ad:'G-220 FİLTRE KUTUSU SOL',img:'https://globaltechmak.com/storage/products/May2024/hava-filtre-kutusu-kaynatilmis-sol-2742023162426264.png',aciklama:'G-220 kompresörünün sol tarafındaki hava filtresi muhafaza kutusudur.',ozellikler:['Sol taraf montajı','G-220 gövde uyumu','Filtre elemanı yuvası']},
+    {id:'k66',ad:'G-220 FİLTRE KUTUSU SAĞ',img:'https://globaltechmak.com/storage/products/May2024/filtre-kutusu-sag-2742023161727686.png',aciklama:'G-220 kompresörünün sağ tarafındaki hava filtresi muhafaza kutusudur.',ozellikler:['Sağ taraf montajı','G-220 gövde uyumu','Kolay filtre erişimi']},
+    {id:'k67',ad:'G-220 KOMPRESÖR HAVA FİLTRESİ ÇEVRE LASTİK CONTA',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-lastik-conta-2742023165231455.png',aciklama:'G-220 hava filtresi dış çevresindeki sızdırmazlık contasıdır. Filtrelenmemiş hava girişini önler.',ozellikler:['Elastomer yapı','G-220 filtre dış çapına uyum','UV ve ozon dayanımı']},
+    {id:'k68',ad:'G-220 KOMPRESÖR HAVA FİLTRESİ GÖBEK LASTİK CONTA',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-lastik-conta-2742023162754384.png',aciklama:'G-220 hava filtresi merkez deliğindeki iç sızdırmazlık contasıdır.',ozellikler:['Elastomer yapı','G-220 filtre iç çapına uyum','Sızdırmaz bağlantı']}
   ],
   silo:[
-    {id:'s1',ad:'ÇALPARA ÇEKVALF',img:'https://globaltechmak.com/storage/products/May2024/cekvalf-2842023102232779.png'},
-    {id:'s2',ad:'DİSKO ÇEKVALF',img:'https://globaltechmak.com/storage/products/May2024/disko-cekvalf-2942023101444501.png'},
-    {id:'s3',ad:'EMNİYET VENTİLİ DİŞİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili-disi-25202317561633.png'},
-    {id:'s4',ad:'EMNİYET VENTİLİ ERKEK',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili-erkek-25202317152676.png'},
-    {id:'s5',ad:'KELEBEK VANA',img:'https://globaltechmak.com/storage/products/May2024/kelebek-vana-2842023101433196.png'},
-    {id:'s6',ad:'KÜRESEL VANA',img:'https://globaltechmak.com/storage/products/May2024/kuresel-vana-2842023105733446.png'},
-    {id:'s7',ad:'KIRMIZI ELEK BEZİ',img:'https://globaltechmak.com/storage/products/May2024/kirmizi-elek-bezi-2842023103433737.png'},
-    {id:'s8',ad:'SARI ELEK BEZİ',img:'https://globaltechmak.com/storage/products/May2024/sari-elek-bezi-2842023101934915.png'},
-    {id:'s9',ad:'SİLOBAS BOŞALTMA HORTUMU',img:'https://globaltechmak.com/storage/products/May2024/silobas-bosaltma-hortumu-284202310635684.png'},
-    {id:'s10',ad:'SİLOBAS MANOMETRESİ',img:'https://globaltechmak.com/storage/products/May2024/silobas-saati-2842023104135899.png'},
-    {id:'s11',ad:'ÜST KAPAK CONTA',img:'https://globaltechmak.com/storage/products/May2024/ustkapak-conta-2842023101436142.png'},
+    {id:'s1',ad:'ÇALPARA ÇEKVALF',img:'https://globaltechmak.com/storage/products/May2024/cekvalf-2842023102232779.png',aciklama:'Silobas boşaltma hatlarında havanın tek yönde akmasını sağlayan çalpara (salınımlı disk) tipli geri dönüşsüz vanadır. Sistemin kapandığında geri akışı engeller.',ozellikler:['Tek yönlü akış','Çalpara disk mekanizması','Alüminyum/çelik gövde']},
+    {id:'s2',ad:'DİSKO ÇEKVALF',img:'https://globaltechmak.com/storage/products/May2024/disko-cekvalf-2942023101444501.png',aciklama:'İnce disk yapısıyla kompakt tasarıma sahip, boru hattında minimum basınç düşümüne yol açan disko tip geri dönüş ventidir.',ozellikler:['Kompakt disk tasarımı','Düşük basınç kaybı','Paslanmaz çelik disk']},
+    {id:'s3',ad:'EMNİYET VENTİLİ DİŞİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili-disi-25202317561633.png',aciklama:'Silobas pnömatik sistemindeki aşırı basıncı tahliye eden dişi bağlantılı güvenlik ventidir.',ozellikler:['Dişi (iç) bağlantı','Ayarlanabilir açılma basıncı','Paslanmaz çelik']},
+    {id:'s4',ad:'EMNİYET VENTİLİ ERKEK',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili-erkek-25202317152676.png',aciklama:'Silobas sistemindeki erkek bağlantılı güvenlik ventidir. Belirli basınç seviyesinde otomatik açılarak sistemi korur.',ozellikler:['Erkek (dış) bağlantı','Ayarlanabilir basınç','Güvenilir tahliye']},
+    {id:'s5',ad:'KELEBEK VANA',img:'https://globaltechmak.com/storage/products/May2024/kelebek-vana-2842023101433196.png',aciklama:'Silobas boşaltma ve dolum hatlarında akışı kontrol eden kelebek tip küresel vanadır. Çeyrek tur hareketiyle hızlı açma/kapama sağlar.',ozellikler:['Çeyrek tur açma/kapama','Düşük akış direnci','Alüminyum/demir gövde']},
+    {id:'s6',ad:'KÜRESEL VANA',img:'https://globaltechmak.com/storage/products/May2024/kuresel-vana-2842023105733446.png',aciklama:'Silobas boru hatlarında tam açık/tam kapalı kontrol için kullanılan küresel (ball) vanadır. Sızdırmaz yapısı ve kolay kumandası ile tercih edilir.',ozellikler:['Tam geçişli küre','PTFE conta','Manüel kollu kumanda']},
+    {id:'s7',ad:'KIRMIZI ELEK BEZİ',img:'https://globaltechmak.com/storage/products/May2024/kirmizi-elek-bezi-2842023103433737.png',aciklama:'Silobas boşaltma ağzında kullanılan, kaba partikülleri tutan kırmızı renk kodlu naylon elek bezidir. Gözenek boyutu malzeme tipine göre seçilir.',ozellikler:['Kırmızı renk kodu (kaba gözenek)','Yıkanabilir naylon','Silobas ağzı boyutlarında']},
+    {id:'s8',ad:'SARI ELEK BEZİ',img:'https://globaltechmak.com/storage/products/May2024/sari-elek-bezi-2842023101934915.png',aciklama:'Silobas boşaltma sisteminde ince partikülleri filtreleyen sarı renk kodlu elek bezidir. Kırmızıya göre daha ince gözenek boyutuna sahiptir.',ozellikler:['Sarı renk kodu (ince gözenek)','Naylon filtre bezi','Yıkanabilir yapı']},
+    {id:'s9',ad:'SİLOBAS BOŞALTMA HORTUMU',img:'https://globaltechmak.com/storage/products/May2024/silobas-bosaltma-hortumu-284202310635684.png',aciklama:'Silobas tankındaki çimento, un gibi toz malzemelerin boşaltılmasında kullanılan basınçlı hava hortumudur. Yüksek aşınma ve basınca dayanıklı özel yapıdadır.',ozellikler:['Yüksek aşınma direnci','4 bar çalışma basıncı','4 inç iç çap']},
+    {id:'s10',ad:'SİLOBAS MANOMETRESİ',img:'https://globaltechmak.com/storage/products/May2024/silobas-saati-2842023104135899.png',aciklama:'Silobas tankı üzerindeki hava basıncını gösteren özel basınç saatidir. Boşaltma işlemi sırasında güvenli basınç takibine imkân sağlar.',ozellikler:['0-4 bar ölçüm aralığı','Gliserinli titreşim önleyici','1/4" BSP bağlantı']},
+    {id:'s11',ad:'ÜST KAPAK CONTA',img:'https://globaltechmak.com/storage/products/May2024/ustkapak-conta-2842023101436142.png',aciklama:'Silobas tankının üst kapağında sızdırmazlığı sağlayan özel kesit contadır. Yüksek basınç altında dahi kaçak yaşanmasını önler.',ozellikler:['Yüksek basınç sızdırmazlığı','EPDM/NBR elastomer','Silobas üst kapak ölçüsünde']},
     {id:'s12',ad:'4\'\' İÇTEN DİŞLİ ALÜMİNYUM RAKOR',img:'https://globaltechmak.com/storage/products/May2024/4-alman-tip-aluminyum-rakor-28420231527191.png'},
     {id:'s13',ad:'4\'\' İÇTEN DİŞLİ ALÜMİNYUM KAMLOK',img:'https://globaltechmak.com/storage/products/May2024/4-icten-disli-aluminyum-rakor-284202315347665.png'},
-    {id:'s14',ad:'SEPARATÖR FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/mikropor-filtresi2-15202316121803.png'}
+    {id:'s14',ad:'SEPARATÖR FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/mikropor-filtresi2-15202316121803.png',aciklama:'Silobas kompresörü çıkış hattında hava içindeki yağ ve nem partiküllerini ayıran yüksek verimli filtre elemanıdır. Temiz ve kuru hava üretimi için kritik öneme sahiptir.',ozellikler:['Yüksek ayırma verimi','Koalesan filtre prensibi','G-160/G-220 uyumlu']}
   ]
 };
 
@@ -484,6 +488,15 @@ function openM(id,kat){
   document.getElementById('m-cat').textContent=kat==='komp'?'KOMPRESÖR YEDEK PARÇA':'SİLOBAS YEDEK PARÇA';
   document.getElementById('m-name').textContent=u.ad;
   document.getElementById('m-img').innerHTML='<img src="'+u.img+'" alt="'+u.ad+'" onerror="this.innerHTML=\'⚙️\'">';
+  // Açıklama
+  var descEl=document.getElementById('m-desc');
+  if(u.aciklama){descEl.textContent=u.aciklama;}else{descEl.textContent='Orijinal kalitede yedek parça. Detaylı bilgi için iletişime geçin.';}
+  // Özellikler
+  var ozEl=document.getElementById('m-ozellikler');
+  if(u.ozellikler && u.ozellikler.length){
+    ozEl.innerHTML='<div class="m-oz-title">✅ Teknik Özellikler</div>'+u.ozellikler.map(function(o){return '<div class="m-oz-item">▸ '+o+'</div>';}).join('');
+    ozEl.style.display='block';
+  } else { ozEl.style.display='none'; }
   document.getElementById('modal-ov').classList.add('open');
 }
 
