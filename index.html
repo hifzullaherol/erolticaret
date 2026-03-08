@@ -259,7 +259,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:20px 4
       <div class="m-cat" id="m-cat"></div>
       <div class="m-name" id="m-name"></div>
       <div class="m-desc" id="m-desc">Orijinal kalitede yedek parça. Ürün hakkında detaylı bilgi için bizimle iletişime geçebilirsiniz.</div><div id="m-ozellikler" style="display:none;margin-top:12px;"></div>
-      <div class="m-price">Fiyat için iletişime geçin</div>
+      <div class="m-price" id="m-price">Fiyat için iletişime geçin</div>
       <div class="m-actions">
         <button class="btn-primary" onclick="mAdd()" style="width:100%;padding:13px;font-size:15px;letter-spacing:2px;">SEPETE EKLE</button>
         <button class="wa-btn" onclick="mWa()">💬 WHATSAPP İLE SATIN AL</button>
@@ -361,14 +361,33 @@ var D={
   ]
 };
 
+var FIYAT={
+  k1:15480,k2:6675,k4:3315,k5:480,k6:1875,k7:5635,k8:1470,k9:1310,
+  k10:2335,k11:15,k12:1330,k13:740,k14:610,k15:1945,k16:355,k17:1470,
+  k18:3885,k19:1170,k20:1170,k21:600,k22:600,k23:8945,k24:80,k25:110,
+  k26:480,k27:6310,k28:2925,k29:8345,k30:825,k31:1755,k32:545,k33:715,
+  k34:1900,k35:5510,k36:5835,k37:110,
+  k38:24305,k39:9540,k41:2745,k42:390,k43:2300,k44:295,k45:5625,
+  k46:2215,k47:2215,k48:800,k49:800,k50:1210,k51:8945,k52:80,k53:110,
+  k54:565,k56:3220,k57:7735,k58:825,k59:1755,k60:545,k61:715,
+  k62:2425,k63:5510,k64:5835,k65:1130,k66:1130,k67:70,k68:50,
+  s3:1755,s4:1755,s10:825
+};
+
+function fiyatGoster(id){
+  if(FIYAT[id]) return FIYAT[id].toLocaleString('tr-TR')+'&nbsp;₺';
+  return 'FİYAT İÇİN ARA';
+}
+
 var sepet=[], aktifM=null;
 
 function kart(u,kat){
   var catLbl=kat==='komp'?'KOMPRESÖR':'SİLOBAS';
+  var fiyatStr=FIYAT[u.id]?'<span style="color:var(--green-light);font-size:13px;font-weight:600;">'+FIYAT[u.id].toLocaleString('tr-TR')+' ₺</span>':'<span>FİYAT İÇİN ARA</span>';
   return '<div class="prod-card" onclick="openM(\''+u.id+'\',\''+kat+'\')">'
     +'<div class="prod-img"><img src="'+u.img+'" alt="'+u.ad+'" loading="lazy" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"><div class="prod-img-ph" style="display:none;">⚙️</div></div>'
     +'<div class="prod-info"><div class="prod-cat">'+catLbl+'</div><div class="prod-name">'+u.ad+'</div>'
-    +'<div class="prod-footer"><div class="prod-price">FİYAT İÇİN ARA</div>'
+    +'<div class="prod-footer"><div class="prod-price">'+fiyatStr+'</div>'
     +'<button class="add-btn" onclick="event.stopPropagation();addCart(\''+u.id+'\',\''+kat+'\')">+ EKLE</button>'
     +'</div></div></div>';
 }
@@ -457,14 +476,15 @@ function updateCart(){
       return '<div class="cart-item">'
         +'<div class="ci-img"><img src="'+s.img+'" alt="'+s.ad+'" onerror="this.style.display=\'none\'"></div>'
         +'<div class="ci-info"><div class="ci-name">'+s.ad+'</div>'
-        +'<div style="font-size:10px;color:var(--text-muted);font-family:\'IBM Plex Mono\',monospace;">FİYAT İÇİN ARA</div>'
+        +'<div style="font-size:10px;color:var(--text-muted);font-family:\'IBM Plex Mono\',monospace;">'+(FIYAT[s.id]?(FIYAT[s.id].toLocaleString('tr-TR')+' ₺ / adet'):'FİYAT İÇİN ARA')+'</div>'
         +'<div class="ci-qty"><button class="q-btn" onclick="chgQty(\''+s.id+'\',-1)">−</button>'
         +'<span class="q-num">'+s.adet+'</span>'
         +'<button class="q-btn" onclick="chgQty(\''+s.id+'\',1)">+</button></div></div>'
         +'<button class="del-btn" onclick="delCart(\''+s.id+'\')">🗑</button></div>';
     }).join('');
     document.getElementById('cart-foot').style.display='block';
-    document.getElementById('ctotal').textContent='Teklif İste';
+    var toplam=sepet.reduce(function(t,s){return t+(FIYAT[s.id]||0)*s.adet;},0);
+    document.getElementById('ctotal').textContent=toplam>0?(toplam.toLocaleString('tr-TR')+' ₺'):'Teklif İste';
   }
 }
 
@@ -497,6 +517,13 @@ function openM(id,kat){
     ozEl.innerHTML='<div class="m-oz-title">✅ Teknik Özellikler</div>'+u.ozellikler.map(function(o){return '<div class="m-oz-item">▸ '+o+'</div>';}).join('');
     ozEl.style.display='block';
   } else { ozEl.style.display='none'; }
+  // Fiyat
+  var priceEl=document.getElementById('m-price');
+  if(FIYAT[id]){
+    priceEl.innerHTML='<span style="color:var(--green-light);font-size:20px;font-weight:700;">'+FIYAT[id].toLocaleString('tr-TR')+' ₺</span>';
+  } else {
+    priceEl.innerHTML='Fiyat için iletişime geçin';
+  }
   document.getElementById('modal-ov').classList.add('open');
 }
 
