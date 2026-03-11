@@ -162,16 +162,12 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:20px 4
 .auth-err{color:#ff5555;font-size:12px;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;display:none;}
 .auth-err.show{display:block;}
 .auth-close{position:absolute;top:12px;right:12px;background:transparent;border:1px solid var(--border);color:var(--text-dim);width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
-
-/* Kullanıcı dropdown */
 .user-menu{position:relative;display:inline-block;}
 .user-btn{background:rgba(45,140,62,0.15);border:1px solid var(--green);color:var(--green-light);padding:7px 14px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:7px;}
 .user-dropdown{display:none;position:absolute;right:0;top:42px;background:var(--dark);border:1px solid var(--border);border-radius:8px;min-width:180px;z-index:200;overflow:hidden;}
 .user-dropdown.open{display:block;}
 .user-dd-item{display:block;width:100%;padding:11px 16px;background:transparent;border:none;color:var(--text);font-family:'Barlow',sans-serif;font-size:13px;cursor:pointer;text-align:left;transition:background 0.15s;}
 .user-dd-item:hover{background:var(--surface2);}
-
-/* Sipariş sayfası */
 .siparis-kart{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:14px;}
 .siparis-kart-baslik{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .siparis-no{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green-light);}
@@ -181,18 +177,14 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:20px 4
 .durum-kargoda{background:rgba(100,149,237,0.15);color:#6495ed;}
 .durum-teslim_edildi{background:rgba(45,140,62,0.2);color:#4caf50;}
 .durum-iptal{background:rgba(255,70,70,0.15);color:#ff4646;}
-
-/* Ödeme adımları */
 .checkout-steps{display:flex;gap:0;margin-bottom:28px;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
 .checkout-step{flex:1;padding:12px 8px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--text-muted);background:var(--surface);transition:all 0.2s;}
 .checkout-step.active{background:var(--green);color:white;}
 .checkout-step.done{background:rgba(45,140,62,0.2);color:var(--green-light);}
-
-/* Admin panel */
 .admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
 .admin-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;}
 .admin-stat-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--green-light);}
-.admin-stat-lbl{font-size:11px;color:var(--text-dim);margin-top:4px;}
+.admin-stat-lbl{font-size:11px;color:var(--text-muted);margin-top:4px;}
 .admin-table{width:100%;border-collapse:collapse;}
 .admin-table th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);}
 .admin-table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;}
@@ -204,10 +196,6 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:20px 4
 <!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ============================================================
-// SUPABASE AYARLARI - Kendi değerlerinizle değiştirin!
-// Supabase → Project Settings → API
-// ============================================================
 const SUPABASE_URL  = 'https://cdyftkdlhggwcsrebdje.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkeWZ0a2RsaGdnd2NzcmViZGplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc4NTQsImV4cCI6MjA4ODgwMzg1NH0.smtgRaHgpycUaTZsCUiblx7SYFnMOaobMj_8mH9BqVM';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -363,12 +351,11 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 <div class="toast" id="toast"></div>
 
 <script>
-/* === USD/TRY KURU - TCMB (PHP sunucu tarafında çekti) === */
+/* === USD/TRY KURU - TCMB === */
 var USD_KUR = 38.5;
 
 function kurCek() {
   var badge = document.getElementById('kur-badge');
-  // TCMB XML CORS proxy üzerinden çek
   var proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://www.tcmb.gov.tr/kurlar/today.xml');
   fetch(proxyUrl, {signal: AbortSignal.timeout(7000)})
     .then(function(r){ return r.text(); })
@@ -381,7 +368,7 @@ function kurCek() {
           var satis = parseFloat(currencies[i].querySelector('ForexSelling').textContent.replace(',','.'));
           if (satis > 20 && satis < 200) {
             USD_KUR = satis;
-            if (badge) badge.innerHTML = '1 USD = <strong>' + USD_KUR.toFixed(2) + '</strong> &#8378; <span style="color:var(--green-light);font-size:9px;">TCMB ✓</span>';
+            if (badge) badge.innerHTML = '1 USD = <strong>' + USD_KUR.toFixed(2) + '</strong> ₺ <span style="color:var(--green-light);font-size:9px;">TCMB ✓</span>';
             renderAll(); return;
           }
         }
@@ -390,12 +377,10 @@ function kurCek() {
     })
     .catch(function(){ fallbackKur(); });
   function fallbackKur() {
-    if (badge) badge.innerHTML = '1 USD &asymp; ' + USD_KUR.toFixed(2) + ' &#8378; <span style="color:#ff6b6b;font-size:9px;">(varsayılan)</span>';
+    if (badge) badge.innerHTML = '1 USD ≈ ' + USD_KUR.toFixed(2) + ' ₺ <span style="color:#ff6b6b;font-size:9px;">(varsayılan)</span>';
     renderAll();
   }
 }
-        }
-
 
 function fiyatHesapla(usd) {
   if(!usd) return null;
@@ -407,11 +392,141 @@ function fiyatHesapla(usd) {
 /* === ÜRÜN VERİTABANI === */
 /* Her ürüne kategori (kat) ve USD fiyatı (usd) eklendi */
 var D = {
-  g160:[],
-  g220:[],
-  g230:[],
+  g160:[
+    {id:'k1',kat:'g160',usd:484.4,ad:'G-160 KARTER',img:'https://globaltechmak.com/storage/products/May2024/karterg160.png',aciklama:'G-160 serisi silobas kompresörünün ana gövde parçasıdır. Yağ haznesi ve mekanizma yuvaları entegre edilmiş döküm yapısıyla uzun ömürlü kullanım sunar.',ozellikler:['Yüksek basınçlı döküm malzeme','G-160 serisi ile tam uyumlu','Entegre yağ haznesi']},
+    {id:'k2',kat:'g160',usd:208.6,ad:'G-160 KRANK',img:'https://globaltechmak.com/storage/products/May2024/krank.png',aciklama:'G-160 kompresörünün rotasyonel hareketini pistonlara ileten ana mil parçasıdır.',ozellikler:['Yüksek mukavemetli çelik','Hassas toleranslı işleme']},
+    {id:'k3',kat:'g160',usd:null,ad:'G-160 BİYEL KOLU',img:'https://globaltechmak.com/storage/products/May2024/piston-kolu.png',aciklama:'Krank milinin dönme hareketini pistonun doğrusal hareketine dönüştüren bağlantı koludur.',ozellikler:['Dövme çelik gövde','G-160 krank ve pistonla tam uyum']},
+    {id:'k4',kat:'g160',usd:103.6,ad:'G-160 NKJS 60 A RULMAN',img:'https://globaltechmak.com/storage/products/May2024/ina-nkıs-60-piston-kolu-rulmani.png',aciklama:'G-160 biyel kolu için kullanılan iğneli rulmandır.',ozellikler:['INA marka iğneli rulman','NKJS 60 standart ölçü']},
+    {id:'k5',kat:'g160',usd:15.0,ad:'G-160 BİYEL KOLU BURCU',img:'https://globaltechmak.com/storage/products/May2024/BİYEL KOL BURCU.png',aciklama:'Biyel kolu içindeki sürtünmeyi azaltan bronz burçtur.',ozellikler:['Bronz malzeme','Düşük sürtünme katsayısı']},
+    {id:'k6',kat:'g160',usd:58.6,ad:'G-160 KRANK AĞIRLIĞI',img:'https://globaltechmak.com/storage/products/May2024/krank-agirligi.png',aciklama:'Krank milinin dengelenmesini sağlayan denge ağırlığıdır.',ozellikler:['Hassas dengeleme işlemi','Döküm çelik yapı']},
+    {id:'k7',kat:'g160',usd:176.1,ad:'G-160 ARKA KAPAK',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak.png',aciklama:'G-160 karter gövdesinin arka tarafını kapatan kapak parçasıdır.',ozellikler:['Alüminyum döküm yapı','Rulman yuvası entegre']},
+    {id:'k8',kat:'g160',usd:46.0,ad:'G-160 ARKA KAPAK SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-segman.png',aciklama:'Arka kapakta yağ sızdırmazlığını sağlayan keçe/segman parçasıdır.',ozellikler:['Yağa dayanıklı elastomer','G-160 arka kapakla tam uyum']},
+    {id:'k9',kat:'g160',usd:41.0,ad:'G-160 N309 ARKA KAPAK RULMANI',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-rulmani.png',aciklama:'G-160 kompresör arka kapağında krank milini destekleyen N309 tip silindirik rulmandır.',ozellikler:['N309 standart ölçü','Silindirik makaralı rulman']},
+    {id:'k10',kat:'g160',usd:73.0,ad:'G-160 ÖN KAPAK',img:'https://globaltechmak.com/storage/products/May2024/on-kapak.png',aciklama:'G-160 karter ön tarafını kapatan alüminyum döküm kapak.',ozellikler:['Alüminyum döküm','G-160 uyumlu']},
+    {id:'k11',kat:'g160',usd:0.5,ad:'G-160 ÖN KAPAK SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/on-kapak-segman.png',aciklama:'Ön kapak sızdırmazlık segmanı.',ozellikler:['Elastomer malzeme']},
+    {id:'k12',kat:'g160',usd:41.6,ad:'G-160 NUP309 ÖN KAPAK RULMANI',img:'https://globaltechmak.com/storage/products/May2024/nup-309-kapak-rulmani.png',aciklama:'G-160 ön kapak NUP309 rulmandır.',ozellikler:['NUP309 standart']},
+    {id:'k13',kat:'g160',usd:23.1,ad:'G-160 KRANK KEÇE YATAĞI',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'Krank milinin keçe yatağıdır.',ozellikler:['Radyal keçe','G-160 uyumlu']},
+    {id:'k14',kat:'g160',usd:19.1,ad:'G-160 CONTA TAKIMI',img:'https://globaltechmak.com/storage/products/May2024/conta-takimi-g160.png',aciklama:'G-160 komple conta takımıdır.',ozellikler:['Komple set','Tüm conta noktaları']},
+    {id:'k15',kat:'g160',usd:60.8,ad:'G-160 PİSTON',img:'https://globaltechmak.com/storage/products/May2024/piston-2742023174740400.png',aciklama:'G-160 dökme demir pistonudur.',ozellikler:['Dökme demir','G-160 uyumlu']},
+    {id:'k16',kat:'g160',usd:11.1,ad:'G-160 PİSTON PİMİ',img:'https://globaltechmak.com/storage/products/May2024/piston-pimi.png',aciklama:'Piston ile biyel kolunu bağlayan pim.',ozellikler:['Sertleştirilmiş çelik']},
+    {id:'k17',kat:'g160',usd:46.0,ad:'G-160 PİSTON SEGMANI',img:'https://globaltechmak.com/storage/products/May2024/piston-segman.png',aciklama:'G-160 piston segman takımıdır.',ozellikler:['Komple set']},
+    {id:'k18',kat:'g160',usd:121.4,ad:'G-160 GÖMLEK',img:'https://globaltechmak.com/storage/products/May2024/gomlek-g160.png',aciklama:'G-160 silindir gömleğidir.',ozellikler:['Dökme demir','Honlanmış yüzey']},
+    {id:'k19',kat:'g160',usd:36.6,ad:'G-160 HAVA EMME KLAPE',img:'https://globaltechmak.com/storage/products/May2024/emme-klape-160.png',aciklama:'G-160 hava emme klepe montajıdır.',ozellikler:['Paslanmaz çelik levha']},
+    {id:'k20',kat:'g160',usd:36.6,ad:'G-160 HAVA BASMA KLAPE',img:'https://globaltechmak.com/storage/products/May2024/basma-klape-160.png',aciklama:'G-160 hava basma klepe montajıdır.',ozellikler:['Paslanmaz çelik levha']},
+    {id:'k21',kat:'g160',usd:18.8,ad:'G-160 KLAPE KAFES UZUN',img:'https://globaltechmak.com/storage/products/May2024/klape-kafes-uzun.png',aciklama:'G-160 uzun klape kafesidir.',ozellikler:['Alüminyum döküm']},
+    {id:'k22',kat:'g160',usd:18.8,ad:'G-160 KLAPE KAFES KISA',img:'https://globaltechmak.com/storage/products/May2024/klape-kafes-kisa.png',aciklama:'G-160 kısa klape kafesidir.',ozellikler:['Alüminyum döküm']},
+    {id:'k23',kat:'g160',usd:279.5,ad:'G-160 KONİK VOLANT',img:'https://globaltechmak.com/storage/products/May2024/konik-volant.png',aciklama:'G-160 konik volant dişlisidir.',ozellikler:['Döküm demir','Hassas dişli profili']},
+    {id:'k24',kat:'g160',usd:2.5,ad:'G-160 KONİK VOLANT PİMİ',img:'https://globaltechmak.com/storage/products/May2024/konik-volant-pimi.png',aciklama:'Konik volant hizalama pimi.',ozellikler:['Sertleştirilmiş çelik']},
+    {id:'k25',kat:'g160',usd:3.4,ad:'G-160 PİM LASTİĞİ',img:'https://globaltechmak.com/storage/products/May2024/pim-lastigi.png',aciklama:'Kaplin pimi lastiğidir.',ozellikler:['Elastomer']},
+    {id:'k26',kat:'g160',usd:15.0,ad:'G-160 KRANK SOMUNU',img:'https://globaltechmak.com/storage/products/May2024/krank-somunu.png',aciklama:'Krank mili kilitleme somunudur.',ozellikler:['Yüksek mukavemetli çelik']},
+    {id:'k27',kat:'g160',usd:197.2,ad:'G-160 DİZEL KOMPRESÖR MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/dizel-kompresör-muhafaza.png',aciklama:'Dizel motor kompresör muhafazasıdır.',ozellikler:['Çelik sac','G-160 dizel uyumlu']},
+    {id:'k28',kat:'g160',usd:91.4,ad:'G-160 FAN',img:'https://globaltechmak.com/storage/products/May2024/fan-g160.png',aciklama:'G-160 soğutma fanıdır.',ozellikler:['Alüminyum','Dengeli yapı']},
+    {id:'k29',kat:'g160',usd:260.8,ad:'G-160 RADYATÖR',img:'https://globaltechmak.com/storage/products/May2024/radyator-g160.png',aciklama:'G-160 dizel soğutma radyatörüdür.',ozellikler:['Bakır/alüminyum çekirdek']},
+    {id:'k30',kat:'g160',usd:25.8,ad:'G-160 MANOMETRE',img:'https://globaltechmak.com/storage/products/May2024/manometre-g160.png',aciklama:'G-160 kompresör hava basınç saatidir.',ozellikler:['Gliserinli','0-16 bar']},
+    {id:'k31',kat:'g160',usd:54.8,ad:'G-160 EMNİYET VENTİLİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili.png',aciklama:'G-160 emniyet ventilidir.',ozellikler:['Ayarlanabilir basınç']},
+    {id:'k32',kat:'g160',usd:17.0,ad:'G-160 KOMPRESÖR YAĞ KAPAĞI',img:'https://globaltechmak.com/storage/products/May2024/yag-kapagi.png',aciklama:'Kompresör yağ kapağıdır.',ozellikler:['Alüminyum']},
+    {id:'k33',kat:'g160',usd:22.3,ad:'G-160 YAKIT DEPOSU',img:'https://globaltechmak.com/storage/products/May2024/yakit-deposu.png',aciklama:'G-160 dizel yakıt deposudur.',ozellikler:['Çelik sac']},
+    {id:'k34',kat:'g160',usd:59.4,ad:'G-160 HAVA FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-g160.png',aciklama:'G-160 hava filtresidir.',ozellikler:['G-160 uyumlu']},
+    {id:'k35',kat:'g160',usd:172.2,ad:'G-160 ELEKTRİKLİ KAPLİN',img:'https://globaltechmak.com/storage/products/May2024/elektrik-kaplin.png',aciklama:'G-160 elektrikli motor kaplin seti.',ozellikler:['Tam set']},
+    {id:'k36',kat:'g160',usd:182.4,ad:'G-160 ELEKTRİKLİ MOTOR KAPLİN MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/kaplin-muhafaza.png',aciklama:'Kaplin muhafazasıdır.',ozellikler:['Çelik sac']},
+    {id:'k37',kat:'g160',usd:3.4,ad:'G-160 KOMPRESÖR HAVA FİLTRE LASTİK CONTASI',img:'https://globaltechmak.com/storage/products/May2024/filtre-lastik-conta.png',aciklama:'Hava filtresi lastik contasıdır.',ozellikler:['EPDM elastomer']},
+    {id:'k88',kat:'g160',usd:24.8,ad:'G160 ÖN KEÇE YATAĞI',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'G160 ön taraf keçe yatağıdır.',ozellikler:['G160 uyumlu','Radyal keçe']},
+    {id:'k89',kat:'g160',usd:14.9,ad:'G160 ARKA KEÇE YATAĞI',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'G160 arka taraf keçe yatağıdır.',ozellikler:['G160 uyumlu']},
+    {id:'k90',kat:'g160',usd:23.9,ad:'G160 EMME KLEPE MONTAJ',img:'https://globaltechmak.com/storage/products/May2024/emme-klape-160.png',aciklama:'G160 emme klepe montaj takımıdır.',ozellikler:['G160 uyumlu','Paslanmaz çelik']},
+    {id:'k91',kat:'g160',usd:23.9,ad:'G160 BASMA KLEPE MONTAJ',img:'https://globaltechmak.com/storage/products/May2024/basma-klape-160.png',aciklama:'G160 basma klepe montaj takımıdır.',ozellikler:['G160 uyumlu']},
+    {id:'k92',kat:'g160',usd:212.4,ad:'G160 KRANK SETİ',img:'https://globaltechmak.com/storage/products/May2024/krank.png',aciklama:'G160 komple krank setidir.',ozellikler:['Komple set','G160 uyumlu']},
+    {id:'k93',kat:'g160',usd:84.0,ad:'G160 BİYEL KOLU RULMANI BÜYÜK (NKJS60)',img:'https://globaltechmak.com/storage/products/May2024/ina-nkıs-60-piston-kolu-rulmani.png',aciklama:'G160 büyük biyel kolu iğneli rulmandır.',ozellikler:['NKJS60','İğneli rulman']},
+    {id:'k94',kat:'g160',usd:34.2,ad:'G160 ARKA KAPAK RULMANI (N309)',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-rulmani.png',aciklama:'G160 arka kapak N309 rulmandır.',ozellikler:['N309']},
+    {id:'k95',kat:'g160',usd:42.7,ad:'G160 ÖN KAPAK RULMANI (NUP309)',img:'https://globaltechmak.com/storage/products/May2024/nup-309-kapak-rulmani.png',aciklama:'G160 ön kapak NUP309 rulmandır.',ozellikler:['NUP309']},
+    {id:'k96',kat:'g160',usd:11.4,ad:'G160 BİYEL KOLU BURCU 37x31x40',img:'https://globaltechmak.com/storage/products/May2024/BİYEL KOL BURCU.png',aciklama:'G160 biyel kolu bronz burcudur.',ozellikler:['37x31x40 mm','Bronz']},
+    {id:'k97',kat:'g160',usd:30.7,ad:'G160 SEGMAN TAKIMI Ø160',img:'https://globaltechmak.com/storage/products/May2024/piston-segman.png',aciklama:'G160 piston segman takımıdır.',ozellikler:['Ø160 mm','Komple set']},
+    {id:'k98',kat:'g160',usd:1.6,ad:'G160 O-RING Ø68x3 (BEKOMSAN KAFES)',img:'https://globaltechmak.com/storage/products/May2024/o-ring.png',aciklama:'G160 kafes O-ring contadır.',ozellikler:['Ø68x3 mm','NBR']},
+    {id:'k99',kat:'g160',usd:1.8,ad:'G160 O-RING Ø63x3 (KAFES O-RING)',img:'https://globaltechmak.com/storage/products/May2024/o-ring.png',aciklama:'G160 kafes O-ring contadır.',ozellikler:['Ø63x3 mm','NBR']},
+    {id:'k100',kat:'g160',usd:25.0,ad:'G160 KEÇE 100x70x10 (İTHAL)',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'G160 ithal keçesidir.',ozellikler:['100x70x10 mm','İthal']},
+    {id:'k101',kat:'g160',usd:6.5,ad:'G160 KEÇE 100x70x10 (YERLİ)',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'G160 yerli keçesidir.',ozellikler:['100x70x10 mm','Yerli']},
+    {id:'k102',kat:'g160',usd:40.5,ad:'G160 ALÜMİNYUM PİSTON Ø160',img:'https://globaltechmak.com/storage/products/May2024/piston-2742023174740400.png',aciklama:'G160 alüminyum pistonudur.',ozellikler:['Ø160 mm','Alüminyum alaşım']},
+    {id:'k103',kat:'g160',usd:9.9,ad:'G160 PİSTON PİMİ Ø32x130',img:'https://globaltechmak.com/storage/products/May2024/piston-pimi.png',aciklama:'G160 piston pimi.',ozellikler:['Ø32x130 mm']},
+    {id:'k104',kat:'g160',usd:20.1,ad:'G160 CONTA TAKIMI',img:'https://globaltechmak.com/storage/products/May2024/conta-takimi-g160.png',aciklama:'G160 komple conta takımıdır.',ozellikler:['Komple set']},
+    {id:'k105',kat:'g160',usd:0.1,ad:'G160 KLEPE YAYI',img:'https://globaltechmak.com/storage/products/May2024/klape-kafes-uzun.png',aciklama:'G160 klepe yayıdır.',ozellikler:['Paslanmaz çelik']},
+    {id:'k106',kat:'g160',usd:3.7,ad:'G160 KLEPE PULU TAKIM',img:'https://globaltechmak.com/storage/products/May2024/klape-kafes-kisa.png',aciklama:'G160 klepe pul takımıdır.',ozellikler:['Komple']},
+    {id:'k107',kat:'g160',usd:4.5,ad:'G160 KLEPE TAMİR TAKIMI',img:'https://globaltechmak.com/storage/products/May2024/emme-klape-160.png',aciklama:'G160 klepe tamir takımıdır.',ozellikler:['Komple tamir seti']}
+  ],
+  g220:[
+    {id:'k38',kat:'g220',usd:759.5,ad:'G-220 KARTER',img:'https://globaltechmak.com/storage/products/May2024/karter-g220-2742023154044497.png',aciklama:'G-220 serisi kompresörün ana gövde karter parçasıdır.',ozellikler:['Yüksek basınçlı döküm','G-220 serisi uyumlu']},
+    {id:'k39',kat:'g220',usd:298.1,ad:'G-220 KRANK',img:'https://globaltechmak.com/storage/products/May2024/krank.png',aciklama:'G-220 kompresör krank mildir.',ozellikler:['Yüksek mukavemetli çelik']},
+    {id:'k40',kat:'g220',usd:null,ad:'G-220 BİYEL KOLU',img:'https://globaltechmak.com/storage/products/May2024/piston-kolu.png',aciklama:'G-220 biyel koludur.',ozellikler:['Dövme çelik']},
+    {id:'k41',kat:'g220',usd:85.8,ad:'G-220 KRANK AĞIRLIĞI',img:'https://globaltechmak.com/storage/products/May2024/krank-agirligi.png',aciklama:'G-220 krank denge ağırlığıdır.',ozellikler:['Döküm çelik']},
+    {id:'k42',kat:'g220',usd:12.2,ad:'G-220 CONTA TAKIMI',img:'https://globaltechmak.com/storage/products/May2024/conta-takimi-220-2742023154435282.png',aciklama:'G-220 komple conta takımıdır.',ozellikler:['Komple set']},
+    {id:'k43',kat:'g220',usd:71.9,ad:'G-220 PİSTON',img:'https://globaltechmak.com/storage/products/May2024/piston-2742023174740400.png',aciklama:'G-220 pistonudur.',ozellikler:['G-220 uyumlu']},
+    {id:'k44',kat:'g220',usd:9.2,ad:'G-220 PİSTON PİMİ',img:'https://globaltechmak.com/storage/products/May2024/piston-pimi.png',aciklama:'G-220 piston pimi.',ozellikler:['Sertleştirilmiş çelik']},
+    {id:'k45',kat:'g220',usd:175.8,ad:'G-220 GÖMLEK',img:'https://globaltechmak.com/storage/products/May2024/gomlek-220-2742023155125680.png',aciklama:'G-220 silindir gömleğidir.',ozellikler:['Dökme demir','Honlanmış yüzey']},
+    {id:'k46',kat:'g220',usd:69.2,ad:'G-220 HAVA EMME KLAPE',img:'https://globaltechmak.com/storage/products/May2024/emme-klape-220-2742023154850551.png',aciklama:'G-220 emme klepe montajıdır.',ozellikler:['Paslanmaz çelik levha']},
+    {id:'k47',kat:'g220',usd:69.2,ad:'G-220 HAVA BASMA KLAPE',img:'https://globaltechmak.com/storage/products/May2024/basma-klape-220-2742023153351934.png',aciklama:'G-220 basma klepe montajıdır.',ozellikler:['Paslanmaz çelik levha']},
+    {id:'k48',kat:'g220',usd:25.0,ad:'G-220 KLAPE KAFESİ ALUMINYUM UZUN',img:'https://globaltechmak.com/storage/products/May2024/klape-kafes-uzun-220-2742023153629477.png',aciklama:'G-220 uzun alüminyum klape kafesidir.',ozellikler:['Alüminyum döküm']},
+    {id:'k49',kat:'g220',usd:25.0,ad:'G-220 KLAPE KAFESİ ALUMINYUM KISA',img:'https://globaltechmak.com/storage/products/May2024/klape-kafes-kisa-220-2742023153742698.png',aciklama:'G-220 kısa alüminyum klape kafesidir.',ozellikler:['Alüminyum döküm']},
+    {id:'k50',kat:'g220',usd:37.8,ad:'G-220 KAFES BRAKETİ',img:'https://globaltechmak.com/storage/products/May2024/kafes-braketi-220-2742023153848264.png',aciklama:'G-220 kafes braket parçasıdır.',ozellikler:['Alüminyum']},
+    {id:'k51',kat:'g220',usd:279.5,ad:'G-220 KONİK VOLANT',img:'https://globaltechmak.com/storage/products/May2024/konik-volant.png',aciklama:'G-220 konik volant dişlisidir.',ozellikler:['Döküm demir']},
+    {id:'k52',kat:'g220',usd:2.5,ad:'G-220 KONİK VOLANT PİMİ',img:'https://globaltechmak.com/storage/products/May2024/konik-volant-pimi.png',aciklama:'G-220 volant hizalama pimi.',ozellikler:['Çelik']},
+    {id:'k53',kat:'g220',usd:3.4,ad:'G-220 PİM LASTİĞİ',img:'https://globaltechmak.com/storage/products/May2024/pim-lastigi.png',aciklama:'Kaplin pimi lastiğidir.',ozellikler:['Elastomer']},
+    {id:'k54',kat:'g220',usd:17.6,ad:'G-220 KRANK SOMUNU',img:'https://globaltechmak.com/storage/products/May2024/krank-somunu.png',aciklama:'G-220 krank kilitleme somunudur.',ozellikler:['Yüksek mukavemetli']},
+    {id:'k55',kat:'g220',usd:null,ad:'G-220 DİZEL KOMPRESÖR MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/dizel-kompresör-muhafaza.png',aciklama:'G-220 dizel motor kompresör muhafazasıdır.',ozellikler:['Çelik sac']},
+    {id:'k56',kat:'g220',usd:100.6,ad:'G-220 FAN',img:'https://globaltechmak.com/storage/products/May2024/fan-g220-2742023161120882.png',aciklama:'G-220 soğutma fanıdır.',ozellikler:['Alüminyum']},
+    {id:'k57',kat:'g220',usd:241.7,ad:'G-220 RADYATÖR',img:'https://globaltechmak.com/storage/products/May2024/radyatör-g220.png',aciklama:'G-220 dizel soğutma radyatörüdür.',ozellikler:['Bakır/alüminyum çekirdek']},
+    {id:'k58',kat:'g220',usd:25.8,ad:'G-220 MANOMETRE',img:'https://globaltechmak.com/storage/products/May2024/manometre-g160.png',aciklama:'G-220 hava basınç saatidir.',ozellikler:['Gliserinli','0-16 bar']},
+    {id:'k59',kat:'g220',usd:54.8,ad:'G-220 EMNİYET VENTİLİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili.png',aciklama:'G-220 emniyet ventilidir.',ozellikler:['Ayarlanabilir']},
+    {id:'k60',kat:'g220',usd:17.0,ad:'G-220 KOMPRESÖR YAĞ KAPAĞI',img:'https://globaltechmak.com/storage/products/May2024/yag-kapagi.png',aciklama:'G-220 yağ kapağıdır.',ozellikler:['Alüminyum']},
+    {id:'k61',kat:'g220',usd:22.3,ad:'G-220 YAKIT DEPOSU',img:'https://globaltechmak.com/storage/products/May2024/yakit-deposu.png',aciklama:'G-220 dizel yakıt deposudur.',ozellikler:['Çelik sac']},
+    {id:'k62',kat:'g220',usd:75.8,ad:'G-220 KOMPRESÖR HAVA FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/hava-filtresi-220-2742023153012374.png',aciklama:'G-220 hava filtresidir.',ozellikler:['G-220 uyumlu']},
+    {id:'k63',kat:'g220',usd:172.2,ad:'G-220 ELEKTRİKLİ MOTOR KAPLİN',img:'https://globaltechmak.com/storage/products/May2024/elektrik-kaplin.png',aciklama:'G-220 elektrikli motor kaplin setidir.',ozellikler:['Tam set']},
+    {id:'k64',kat:'g220',usd:182.4,ad:'G-220 ELEKTRİKLİ MOTOR KAPLİN MUHAFAZA',img:'https://globaltechmak.com/storage/products/May2024/kaplin-muhafaza.png',aciklama:'G-220 kaplin muhafazasıdır.',ozellikler:['Çelik sac']},
+    {id:'k65',kat:'g220',usd:35.3,ad:'G-220 FİLTRE KUTUSU SOL',img:'https://globaltechmak.com/storage/products/May2024/filtre-kutusu-sol-220-2742023152709699.png',aciklama:'G-220 sol filtre kutusudur.',ozellikler:['G-220 uyumlu']},
+    {id:'k66',kat:'g220',usd:35.3,ad:'G-220 FİLTRE KUTUSU SAĞ',img:'https://globaltechmak.com/storage/products/May2024/filtre-kutusu-sag-220-2742023152826219.png',aciklama:'G-220 sağ filtre kutusudur.',ozellikler:['G-220 uyumlu']},
+    {id:'k67',kat:'g220',usd:2.2,ad:'G-220 KOMPRESÖR HAVA FİLTRESİ ÇEVRE LASTİK CONTA',img:'https://globaltechmak.com/storage/products/May2024/filtre-lastik-conta.png',aciklama:'Hava filtresi çevre contadır.',ozellikler:['EPDM']},
+    {id:'k68',kat:'g220',usd:1.6,ad:'G-220 KOMPRESÖR HAVA FİLTRESİ GÖBEK LASTİK CONTA',img:'https://globaltechmak.com/storage/products/May2024/filtre-lastik-conta.png',aciklama:'Hava filtresi göbek contadır.',ozellikler:['EPDM']},
+    {id:'k69',kat:'g220',usd:27.6,ad:'G220 ÖN KEÇE YATAĞI',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'G220 ön taraf keçe yatağıdır.',ozellikler:['G220 uyumlu']},
+    {id:'k70',kat:'g220',usd:14.5,ad:'G220 ARKA KEÇE YATAĞI',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'G220 arka taraf keçe yatağıdır.',ozellikler:['G220 uyumlu']},
+    {id:'k71',kat:'g220',usd:40.5,ad:'G220 EMME KLEPE MONTAJ',img:'https://globaltechmak.com/storage/products/May2024/emme-klape-220-2742023154850551.png',aciklama:'G220 emme klepe montaj takımıdır.',ozellikler:['G220 uyumlu','Paslanmaz çelik']},
+    {id:'k72',kat:'g220',usd:40.5,ad:'G220 BASMA KLEPE MONTAJ',img:'https://globaltechmak.com/storage/products/May2024/basma-klape-220-2742023153351934.png',aciklama:'G220 basma klepe montaj takımıdır.',ozellikler:['G220 uyumlu']},
+    {id:'k73',kat:'g220',usd:275.3,ad:'G220 KRANK SETİ',img:'https://globaltechmak.com/storage/products/May2024/krank.png',aciklama:'G220 komple krank setidir.',ozellikler:['Komple set']},
+    {id:'k74',kat:'g220',usd:0.1,ad:'G220 KLEPE YAYI',img:'https://globaltechmak.com/storage/products/May2024/klape-kafes-uzun-220-2742023153629477.png',aciklama:'G220 klepe yayıdır.',ozellikler:['Paslanmaz çelik']},
+    {id:'k75',kat:'g220',usd:2.9,ad:'G220 O-RING Ø110x3 (KAFES O-RING)',img:'https://globaltechmak.com/storage/products/May2024/o-ring.png',aciklama:'G220 kafes O-ring.',ozellikler:['Ø110x3 mm']},
+    {id:'k76',kat:'g220',usd:4.4,ad:'G220 O-RING Ø235x5.7 (GÖMLEK ALT)',img:'https://globaltechmak.com/storage/products/May2024/o-ring.png',aciklama:'G220 gömlek alt O-ring.',ozellikler:['Ø235x5.7 mm']},
+    {id:'k77',kat:'g220',usd:3.4,ad:'G220 O-RING Ø250x3 (GÖMLEK ÜST)',img:'https://globaltechmak.com/storage/products/May2024/o-ring.png',aciklama:'G220 gömlek üst O-ring.',ozellikler:['Ø250x3 mm']},
+    {id:'k78',kat:'g220',usd:27.7,ad:'G220 KEÇE 120x80x13 (İTHAL)',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'G220 ithal keçesidir.',ozellikler:['120x80x13 mm','İthal']},
+    {id:'k79',kat:'g220',usd:9.0,ad:'G220 KEÇE 120x80x13 (YERLİ)',img:'https://globaltechmak.com/storage/products/May2024/kece-yatagi.png',aciklama:'G220 yerli keçesidir.',ozellikler:['120x80x13 mm','Yerli']},
+    {id:'k80',kat:'g220',usd:60.2,ad:'G220 SEGMAN TAKIMI Ø220',img:'https://globaltechmak.com/storage/products/May2024/piston-segman.png',aciklama:'G220 piston segman takımıdır.',ozellikler:['Ø220 mm','Komple set']},
+    {id:'k81',kat:'g220',usd:26.9,ad:'G220 BİYEL KOLU RULMANI KÜÇÜK (6905 RNA)',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-rulmani.png',aciklama:'G220 küçük biyel kolu iğneli rulmandır.',ozellikler:['6905 RNA']},
+    {id:'k82',kat:'g220',usd:98.9,ad:'G220 BİYEL KOLU RULMANI BÜYÜK (NKJS70)',img:'https://globaltechmak.com/storage/products/May2024/ina-nkıs-60-piston-kolu-rulmani.png',aciklama:'G220 büyük biyel kolu iğneli rulmandır.',ozellikler:['NKJS70']},
+    {id:'k83',kat:'g220',usd:42.0,ad:'G220 ARKA KAPAK RULMANI (N311)',img:'https://globaltechmak.com/storage/products/May2024/arka-kapak-rulmani.png',aciklama:'G220 arka kapak N311 rulmandır.',ozellikler:['N311']},
+    {id:'k84',kat:'g220',usd:47.3,ad:'G220 ÖN KAPAK RULMANI (NUP311)',img:'https://globaltechmak.com/storage/products/May2024/nup-309-kapak-rulmani.png',aciklama:'G220 ön kapak NUP311 rulmandır.',ozellikler:['NUP311']},
+    {id:'k85',kat:'g220',usd:0.7,ad:'G220 PİSTON PİMİ SEGMANI Ø30',img:'https://globaltechmak.com/storage/products/May2024/piston-segman.png',aciklama:'G220 piston pimi segmanı.',ozellikler:['Ø30 mm']},
+    {id:'k86',kat:'g220',usd:48.2,ad:'G220 ALÜMİNYUM PİSTON Ø220',img:'https://globaltechmak.com/storage/products/May2024/piston-2742023174740400.png',aciklama:'G220 alüminyum pistonudur.',ozellikler:['Ø220 mm','Alüminyum alaşım']},
+    {id:'k87',kat:'g220',usd:8.8,ad:'G220 PİSTON PİMİ Ø30x81',img:'https://globaltechmak.com/storage/products/May2024/piston-pimi.png',aciklama:'G220 piston pimi.',ozellikler:['Ø30x81 mm']}
+  ],
+  g230:[
+    {id:'k113',kat:'g230',usd:147.2,ad:'G230 GÖMLEK Ø230',img:'https://globaltechmak.com/storage/products/May2024/gomlek-220-2742023155125680.png',aciklama:'G230 silindir gömleğidir.',ozellikler:['Ø230 mm','Dökme demir']},
+    {id:'k114',kat:'g230',usd:81.7,ad:'G230 EMME KLEPE MONTAJ',img:'https://globaltechmak.com/storage/products/May2024/emme-klape-220-2742023154850551.png',aciklama:'G230 emme klape montaj takımıdır.',ozellikler:['G230 uyumlu','Paslanmaz çelik']},
+    {id:'k115',kat:'g230',usd:81.7,ad:'G230 BASMA KLEPE MONTAJ',img:'https://globaltechmak.com/storage/products/May2024/basma-klape-220-2742023153351934.png',aciklama:'G230 basma klape montaj takımıdır.',ozellikler:['G230 uyumlu','Yüksek basınç dayanımı']},
+    {id:'k116',kat:'g230',usd:106.4,ad:'G230 SEGMAN TAKIMI Ø230',img:'https://globaltechmak.com/storage/products/May2024/piston-segman.png',aciklama:'G230 piston segman takımıdır.',ozellikler:['Ø230 mm','Komple set']},
+    {id:'k117',kat:'g230',usd:115.7,ad:'G230 ALÜMİNYUM PİSTON Ø230',img:'https://globaltechmak.com/storage/products/May2024/piston-2742023174740400.png',aciklama:'G230 kompresörü için alüminyum pistonudur.',ozellikler:['Ø230 mm','Alüminyum alaşım','G230 uyumlu']}
+  ],
   ortak:[],
-  silo:[]
+  silo:[
+    {id:'s1',kat:'silo',usd:null,ad:'ÇALPARA ÇEKVALF',img:'https://globaltechmak.com/storage/products/May2024/cekvalf-2842023102232779.png',aciklama:'Silobas boşaltma hatlarında havanın tek yönde akmasını sağlayan çalpara tipli geri dönüşsüz vanadır.',ozellikler:['Tek yönlü akış','Çalpara disk mekanizması','Alüminyum/çelik gövde']},
+    {id:'s2',kat:'silo',usd:null,ad:'DİSKO ÇEKVALF',img:'https://globaltechmak.com/storage/products/May2024/disko-cekvalf-2942023101444501.png',aciklama:'İnce disk yapısıyla kompakt tasarıma sahip geri dönüş ventilidir.',ozellikler:['Kompakt disk tasarımı','Düşük basınç kaybı','Paslanmaz çelik disk']},
+    {id:'s3',kat:'silo',usd:54.8,ad:'EMNİYET VENTİLİ DİŞİ',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili-disi-25202317561633.png',aciklama:'Silobas pnömatik sistemindeki aşırı basıncı tahliye eden dişi bağlantılı güvenlik ventidir.',ozellikler:['Dişi (iç) bağlantı','Ayarlanabilir açılma basıncı','Paslanmaz çelik']},
+    {id:'s4',kat:'silo',usd:54.8,ad:'EMNİYET VENTİLİ ERKEK',img:'https://globaltechmak.com/storage/products/May2024/emniyet-ventili-erkek-25202317152676.png',aciklama:'Silobas sistemindeki erkek bağlantılı güvenlik ventidir.',ozellikler:['Erkek (dış) bağlantı','Ayarlanabilir basınç','Güvenilir tahliye']},
+    {id:'s5',kat:'silo',usd:null,ad:'KELEBEK VANA',img:'https://globaltechmak.com/storage/products/May2024/kelebek-vana-2842023101433196.png',aciklama:'Silobas boşaltma ve dolum hatlarında akışı kontrol eden kelebek tip vanadır.',ozellikler:['Çeyrek tur açma/kapama','Düşük akış direnci','Alüminyum/demir gövde']},
+    {id:'s6',kat:'silo',usd:null,ad:'KÜRESEL VANA',img:'https://globaltechmak.com/storage/products/May2024/kuresel-vana-2842023105733446.png',aciklama:'Silobas boru hatlarında tam açık/tam kapalı kontrol için kullanılan küresel vanadır.',ozellikler:['Tam geçişli küre','PTFE conta','Manüel kollu kumanda']},
+    {id:'s7',kat:'silo',usd:null,ad:'KIRMIZI ELEK BEZİ',img:'https://globaltechmak.com/storage/products/May2024/kirmizi-elek-bezi-2842023103433737.png',aciklama:'Silobas boşaltma ağzında kullanılan kırmızı renk kodlu naylon elek bezidir.',ozellikler:['Kırmızı renk kodu (kaba gözenek)','Yıkanabilir naylon']},
+    {id:'s8',kat:'silo',usd:null,ad:'SARI ELEK BEZİ',img:'https://globaltechmak.com/storage/products/May2024/sari-elek-bezi-2842023101934915.png',aciklama:'Silobas boşaltma sisteminde ince partikülleri filtreleyen sarı renk kodlu elek bezidir.',ozellikler:['Sarı renk kodu (ince gözenek)','Naylon filtre bezi']},
+    {id:'s9',kat:'silo',usd:null,ad:'SİLOBAS BOŞALTMA HORTUMU',img:'https://globaltechmak.com/storage/products/May2024/silobas-bosaltma-hortumu-284202310635684.png',aciklama:'Silobas tankındaki toz malzemelerin boşaltılmasında kullanılan basınçlı hava hortumudur.',ozellikler:['Yüksek aşınma direnci','4 bar çalışma basıncı','4 inç iç çap']},
+    {id:'s10',kat:'silo',usd:25.8,ad:'SİLOBAS MANOMETRESİ',img:'https://globaltechmak.com/storage/products/May2024/silobas-saati-2842023104135899.png',aciklama:'Silobas tankı üzerindeki hava basıncını gösteren özel basınç saatidir.',ozellikler:['0-4 bar ölçüm aralığı','Gliserinli titreşim önleyici']},
+    {id:'s11',kat:'silo',usd:null,ad:'ÜST KAPAK CONTA',img:'https://globaltechmak.com/storage/products/May2024/ustkapak-conta-2842023101436142.png',aciklama:'Silobas tankının üst kapağında sızdırmazlığı sağlayan özel kesit contadır.',ozellikler:['Yüksek basınç sızdırmazlığı','EPDM/NBR elastomer']},
+    {id:'s12',kat:'silo',usd:null,ad:"4'' İÇTEN DİŞLİ ALÜMİNYUM RAKOR",img:'https://globaltechmak.com/storage/products/May2024/4-alman-tip-aluminyum-rakor-28420231527191.png',aciklama:'4 inç içten dişli alüminyum rakor.',ozellikler:['4 inç','Alüminyum']},
+    {id:'s13',kat:'silo',usd:null,ad:"4'' İÇTEN DİŞLİ ALÜMİNYUM KAMLOK",img:'https://globaltechmak.com/storage/products/May2024/4-icten-disli-aluminyum-rakor-284202315347665.png',aciklama:'4 inç içten dişli alüminyum kamlok.',ozellikler:['4 inç','Kamlok tip']},
+    {id:'s14',kat:'silo',usd:null,ad:'SEPARATÖR FİLTRESİ',img:'https://globaltechmak.com/storage/products/May2024/mikropor-filtresi2-15202316121803.png',aciklama:'Kompresör çıkış hattında hava içindeki yağ ve nem partiküllerini ayıran yüksek verimli filtre elemanıdır.',ozellikler:['Yüksek ayırma verimi','G-160/G-220 uyumlu']}
+  ]
 };
 
 /* Tüm ürünlere arama için gerekli kategori etiketi */
@@ -687,7 +802,7 @@ kurCek();
   </div>
 </div>
 
-<!-- ===== ÖDEME / SİPARİŞ TAMAMLAMA MODAL ===== -->
+<!-- ===== ÖDEME MODAL ===== -->
 <div class="auth-modal-ov" id="odeme-modal">
   <div class="auth-box" style="max-width:540px;">
     <button class="auth-close" onclick="odemeKapat()">✕</button>
@@ -697,8 +812,6 @@ kurCek();
       <div class="checkout-step" id="step2">2. ÖDEME</div>
       <div class="checkout-step" id="step3">3. ONAY</div>
     </div>
-
-    <!-- Adım 1: Teslimat -->
     <div id="odeme-adim1">
       <input class="auth-input" id="t-adsoyad" type="text" placeholder="Ad Soyad *">
       <input class="auth-input" id="t-telefon" type="tel" placeholder="Telefon *">
@@ -709,8 +822,6 @@ kurCek();
       <div class="auth-err" id="adim1-err"></div>
       <button class="auth-btn" onclick="adim1Devam()">DEVAM ET →</button>
     </div>
-
-    <!-- Adım 2: Ödeme -->
     <div id="odeme-adim2" style="display:none;">
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;">SİPARİŞ ÖZETİ</div>
@@ -727,18 +838,16 @@ kurCek();
       <div class="auth-err" id="adim2-err"></div>
       <button class="auth-btn" onclick="adim2Geri()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);margin-top:4px;">← GERİ</button>
     </div>
-
-    <!-- Adım 3: Onay -->
     <div id="odeme-adim3" style="display:none;text-align:center;padding:20px 0;">
       <div style="font-size:52px;margin-bottom:16px;">✅</div>
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;margin-bottom:10px;">SİPARİŞ ALINDI!</div>
       <div style="color:var(--text-dim);font-size:13px;line-height:1.7;margin-bottom:20px;" id="onay-mesaj"></div>
-      <button class="auth-btn" onclick="odemeKapat();toggleCart();">SİPARİŞLERİMİ GÖR</button>
+      <button class="auth-btn" onclick="odemeKapat();siparislerimiYukle();">SİPARİŞLERİMİ GÖR</button>
     </div>
   </div>
 </div>
 
-<!-- ===== SİPARİŞLERİM PANEL ===== -->
+<!-- ===== SİPARİŞLERİM ===== -->
 <div id="sec-siparisler" style="display:none;">
   <div class="section">
     <div class="section-header"><h2 class="section-title">📦 SİPARİŞLERİM</h2></div>
@@ -783,14 +892,11 @@ kurCek();
 
 <script>
 // ============================================================
-// SilobasShop — Auth, Sipariş, Admin modülü
+// SilobasShop — Auth, Sipariş, Admin
 // ============================================================
-
 var aktifKullanici = null;
 var adminMi = false;
-var odemeAdimi = 1;
 
-// ── Oturum dinle ──
 sb.auth.onAuthStateChange(async function(event, session) {
   aktifKullanici = session ? session.user : null;
   await kullaniciUIGuncelle();
@@ -801,26 +907,20 @@ async function kullaniciUIGuncelle() {
   var userMenu = document.getElementById('nav-user-menu');
   var userLabel = document.getElementById('nav-user-label');
   var adminBtn = document.getElementById('nav-admin-btn');
-
   if (!aktifKullanici) {
     if (girisBtn) girisBtn.style.display = 'block';
     if (userMenu) userMenu.style.display = 'none';
     if (adminBtn) adminBtn.style.display = 'none';
-    adminMi = false;
-    return;
+    adminMi = false; return;
   }
-
-  // Admin kontrolü
-  var { data: adm } = await sb.from('adminler').select('email').eq('email', aktifKullanici.email).single();
-  adminMi = !!adm;
-
+  var res = await sb.from('adminler').select('email').eq('email', aktifKullanici.email).single();
+  adminMi = !!(res && res.data);
   if (girisBtn) girisBtn.style.display = 'none';
   if (userMenu) userMenu.style.display = 'block';
   if (userLabel) userLabel.textContent = aktifKullanici.email.split('@')[0].toUpperCase();
   if (adminBtn) adminBtn.style.display = adminMi ? 'block' : 'none';
 }
 
-// ── Auth Modal ──
 function authAc(tab) {
   document.getElementById('auth-modal').classList.add('open');
   if (tab) authTab(tab, null);
@@ -830,12 +930,9 @@ function authKapat() { document.getElementById('auth-modal').classList.remove('o
 function authTab(tab, el) {
   document.getElementById('auth-giris-form').style.display = tab === 'giris' ? 'block' : 'none';
   document.getElementById('auth-kayit-form').style.display = tab === 'kayit' ? 'block' : 'none';
-  document.querySelectorAll('.auth-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.auth-tab-btn').forEach(function(b){ b.classList.remove('active'); });
   if (el) el.classList.add('active');
-  else {
-    var btns = document.querySelectorAll('.auth-tab-btn');
-    btns[tab === 'giris' ? 0 : 1].classList.add('active');
-  }
+  else document.querySelectorAll('.auth-tab-btn')[tab === 'giris' ? 0 : 1].classList.add('active');
 }
 
 async function girisYap() {
@@ -844,10 +941,9 @@ async function girisYap() {
   var err = document.getElementById('giris-err');
   err.classList.remove('show');
   if (!email || !sifre) { err.textContent = 'E-posta ve şifre gerekli.'; err.classList.add('show'); return; }
-  var { error } = await sb.auth.signInWithPassword({ email: email, password: sifre });
-  if (error) { err.textContent = 'Giriş hatası: ' + (error.message === 'Invalid login credentials' ? 'E-posta veya şifre yanlış.' : error.message); err.classList.add('show'); return; }
-  authKapat();
-  showToast('Hoş geldiniz! ✓');
+  var res = await sb.auth.signInWithPassword({ email: email, password: sifre });
+  if (res.error) { err.textContent = res.error.message === 'Invalid login credentials' ? 'E-posta veya şifre yanlış.' : res.error.message; err.classList.add('show'); return; }
+  authKapat(); showToast('Hoş geldiniz! ✓');
 }
 
 async function kayitOl() {
@@ -859,32 +955,27 @@ async function kayitOl() {
   err.classList.remove('show');
   if (!adSoyad || !email || !sifre) { err.textContent = 'Zorunlu alanları doldurun.'; err.classList.add('show'); return; }
   if (sifre.length < 6) { err.textContent = 'Şifre en az 6 karakter olmalı.'; err.classList.add('show'); return; }
-  var { data, error } = await sb.auth.signUp({ email: email, password: sifre });
-  if (error) { err.textContent = 'Kayıt hatası: ' + error.message; err.classList.add('show'); return; }
-  // Profil güncelle
-  if (data.user) {
-    await sb.from('profiller').upsert({ id: data.user.id, ad_soyad: adSoyad, telefon: telefon });
+  var res = await sb.auth.signUp({ email: email, password: sifre });
+  if (res.error) { err.textContent = res.error.message; err.classList.add('show'); return; }
+  if (res.data && res.data.user) {
+    await sb.from('profiller').upsert({ id: res.data.user.id, ad_soyad: adSoyad, telefon: telefon });
   }
-  authKapat();
-  showToast('Kayıt başarılı! E-postanızı doğrulayın ✓');
+  authKapat(); showToast('Kayıt başarılı! ✓');
 }
 
 async function cikisYap() {
   await sb.auth.signOut();
   document.getElementById('nav-user-dropdown').classList.remove('open');
-  showSec('home'); setNav(null);
-  showToast('Çıkış yapıldı.');
+  showSec('home'); setNav(null); showToast('Çıkış yapıldı.');
 }
 
 function userMenuToggle() {
   document.getElementById('nav-user-dropdown').classList.toggle('open');
 }
 
-// ── Ödeme Akışı ──
 function odemeAc() {
   if (!aktifKullanici) { authAc('giris'); showToast('Sipariş için giriş yapın.'); return; }
   if (sepet.length === 0) return;
-  // Profil bilgilerini doldur
   sb.from('profiller').select('*').eq('id', aktifKullanici.id).single().then(function(res) {
     if (res.data) {
       if (res.data.ad_soyad) document.getElementById('t-adsoyad').value = res.data.ad_soyad;
@@ -894,14 +985,12 @@ function odemeAc() {
       if (res.data.posta_kodu) document.getElementById('t-posta').value = res.data.posta_kodu;
     }
   });
-  odemeAdimi = 1;
   odemeAdimGoster(1);
   document.getElementById('odeme-modal').classList.add('open');
 }
 
 function odemeKapat() {
   document.getElementById('odeme-modal').classList.remove('open');
-  odemeAdimi = 1;
   odemeAdimGoster(1);
 }
 
@@ -922,15 +1011,11 @@ function adim1Devam() {
       err.textContent = 'Lütfen zorunlu alanları doldurun.'; err.classList.add('show'); return;
     }
   }
-  // Özet göster
   var ozetEl = document.getElementById('odeme-ozet-liste');
   var toplam = 0;
   ozetEl.innerHTML = sepet.map(function(s) {
-    var f = fiyatHesapla(s.usd) || 0;
-    toplam += f * s.adet;
-    return '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--border);">'
-      + '<span>' + s.ad + ' × ' + s.adet + '</span>'
-      + '<span style="color:var(--green-light);">' + (f*s.adet).toLocaleString('tr-TR') + ' ₺</span></div>';
+    var f = fiyatHesapla(s.usd) || 0; toplam += f * s.adet;
+    return '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--border);"><span>' + s.ad + ' x ' + s.adet + '</span><span style="color:var(--green-light);">' + (f*s.adet).toLocaleString('tr-TR') + ' ₺</span></div>';
   }).join('');
   document.getElementById('odeme-toplam-tutar').textContent = toplam.toLocaleString('tr-TR') + ' ₺';
   odemeAdimGoster(2);
@@ -941,109 +1026,68 @@ function adim2Geri() { odemeAdimGoster(1); }
 async function odemeYontemiSec(yontem) {
   var err = document.getElementById('adim2-err');
   err.classList.remove('show');
-
-  var adSoyad  = document.getElementById('t-adsoyad').value.trim();
-  var telefon  = document.getElementById('t-telefon').value.trim();
-  var adres    = document.getElementById('t-adres').value.trim();
-  var sehir    = document.getElementById('t-sehir').value.trim();
-  var posta    = document.getElementById('t-posta').value.trim();
-  var not      = document.getElementById('t-not').value.trim();
-  var toplam   = sepet.reduce(function(t,s){ return t + (fiyatHesapla(s.usd)||0)*s.adet; }, 0);
-
-  // Siparişi kaydet
-  var { data: siparis, error: sipErr } = await sb.from('siparisler').insert({
+  var toplam = sepet.reduce(function(t,s){ return t + (fiyatHesapla(s.usd)||0)*s.adet; }, 0);
+  var res = await sb.from('siparisler').insert({
     kullanici_id: aktifKullanici.id,
     durum: 'beklemede',
     toplam_tutar: toplam,
-    odeme_durumu: yontem === 'havale' ? 'beklemede' : 'beklemede',
+    odeme_durumu: 'beklemede',
     odeme_yontemi: yontem,
-    teslimat_ad_soyad: adSoyad,
-    teslimat_telefon: telefon,
-    teslimat_adres: adres,
-    teslimat_sehir: sehir,
-    teslimat_posta_kodu: posta,
-    notlar: not
+    teslimat_ad_soyad: document.getElementById('t-adsoyad').value.trim(),
+    teslimat_telefon: document.getElementById('t-telefon').value.trim(),
+    teslimat_adres: document.getElementById('t-adres').value.trim(),
+    teslimat_sehir: document.getElementById('t-sehir').value.trim(),
+    teslimat_posta_kodu: document.getElementById('t-posta').value.trim(),
+    notlar: document.getElementById('t-not').value.trim()
   }).select().single();
-
-  if (sipErr) { err.textContent = 'Sipariş kaydedilemedi: ' + sipErr.message; err.classList.add('show'); return; }
-
-  // Kalemleri kaydet
+  if (res.error) { err.textContent = 'Hata: ' + res.error.message; err.classList.add('show'); return; }
   var kalemler = sepet.map(function(s) {
-    return {
-      siparis_id: siparis.id,
-      urun_id: s.id,
-      urun_adi: s.ad,
-      urun_img: s.img,
-      adet: s.adet,
-      birim_fiyat: fiyatHesapla(s.usd) || 0,
-      usd_fiyat: s.usd,
-      usd_kur: USD_KUR
-    };
+    return { siparis_id: res.data.id, urun_id: s.id, urun_adi: s.ad, urun_img: s.img, adet: s.adet, birim_fiyat: fiyatHesapla(s.usd)||0, usd_fiyat: s.usd, usd_kur: USD_KUR };
   });
   await sb.from('siparis_kalemleri').insert(kalemler);
-
-  // WhatsApp ise yönlendir
   if (yontem === 'whatsapp') {
-    var msg = 'Merhaba, sipariş #' + siparis.id.slice(0,8).toUpperCase() + '\n\n';
-    sepet.forEach(function(s){ msg += '• ' + s.ad + ' × ' + s.adet + '\n'; });
-    msg += '\nToplam: ' + toplam.toLocaleString('tr-TR') + ' ₺\nTeşekkürler.';
+    var msg = 'Merhaba, siparis #' + res.data.id.slice(0,8).toUpperCase() + '
+
+';
+    sepet.forEach(function(s){ msg += '- ' + s.ad + ' x ' + s.adet + '
+'; });
+    msg += '
+Toplam: ' + toplam.toLocaleString('tr-TR') + ' TL';
     window.open('https://wa.me/905415176909?text=' + encodeURIComponent(msg), '_blank');
   }
-
-  // Sepeti temizle
-  sepet = [];
-  updateCart();
-
-  // Onay ekranı
-  var onayMesaj = yontem === 'havale'
-    ? 'Siparişiniz alındı. Havale bilgileri için WhatsApp üzerinden iletişime geçin.\nSipariş No: #' + siparis.id.slice(0,8).toUpperCase()
-    : 'Siparişiniz WhatsApp üzerinden iletildi.\nSipariş No: #' + siparis.id.slice(0,8).toUpperCase();
-  document.getElementById('onay-mesaj').textContent = onayMesaj;
+  sepet = []; updateCart();
+  var onayMsg = yontem === 'havale' ? 'Havale bilgileri icin WhatsApp ile iletisime gecin.
+Siparis No: #' + res.data.id.slice(0,8).toUpperCase() : 'Siparisiz WhatsApp uzerinden iletildi.
+Siparis No: #' + res.data.id.slice(0,8).toUpperCase();
+  document.getElementById('onay-mesaj').textContent = onayMsg;
   odemeAdimGoster(3);
 }
 
-// ── Siparişlerim ──
 async function siparislerimiYukle() {
   if (!aktifKullanici) { authAc('giris'); return; }
   showSec('siparisler');
   var el = document.getElementById('siparisler-liste');
-  el.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-muted);">Yükleniyor...</div>';
-  var { data, error } = await sb.from('siparisler')
-    .select('*, siparis_kalemleri(*)')
-    .eq('kullanici_id', aktifKullanici.id)
-    .order('olusturuldu', { ascending: false });
-  if (error || !data || data.length === 0) {
-    el.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-muted);">Henüz siparişiniz yok.</div>';
-    return;
-  }
-  el.innerHTML = data.map(function(s) {
+  el.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-muted);">Yukleniyor...</div>';
+  var res = await sb.from('siparisler').select('*, siparis_kalemleri(*)').eq('kullanici_id', aktifKullanici.id).order('olusturuldu', { ascending: false });
+  if (!res.data || res.data.length === 0) { el.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-muted);">Henuz siparisiz yok.</div>'; return; }
+  el.innerHTML = res.data.map(function(s) {
     var durumClass = 'durum-' + s.durum;
-    var durumLabel = {beklemede:'BEKLEMEDE',onaylandi:'ONAYLANDI',kargoda:'KARGODA',teslim_edildi:'TESLİM EDİLDİ',iptal:'İPTAL'}[s.durum] || s.durum;
+    var durumLabel = {beklemede:'BEKLEMEDE',onaylandi:'ONAYLANDI',kargoda:'KARGODA',teslim_edildi:'TESLIM EDILDI',iptal:'IPTAL'}[s.durum] || s.durum;
     var tarih = new Date(s.olusturuldu).toLocaleDateString('tr-TR');
-    var kalemHTML = (s.siparis_kalemleri||[]).map(function(k) {
-      return '<div style="font-size:12px;color:var(--text-dim);padding:2px 0;">▸ ' + k.urun_adi + ' × ' + k.adet + '</div>';
-    }).join('');
-    return '<div class="siparis-kart"><div class="siparis-kart-baslik">'
-      + '<div><div class="siparis-no">#' + s.id.slice(0,8).toUpperCase() + '</div><div style="font-size:11px;color:var(--text-muted);">' + tarih + '</div></div>'
-      + '<span class="siparis-durum ' + durumClass + '">' + durumLabel + '</span></div>'
-      + kalemHTML
-      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">'
-      + '<span style="font-family:IBM Plex Mono,monospace;font-size:11px;color:var(--text-muted);">' + s.odeme_yontemi + '</span>'
-      + '<span style="font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:700;color:var(--green-light);">' + (s.toplam_tutar||0).toLocaleString('tr-TR') + ' ₺</span>'
-      + '</div></div>';
+    var kalemHTML = (s.siparis_kalemleri||[]).map(function(k){ return '<div style="font-size:12px;color:var(--text-dim);padding:2px 0;">- ' + k.urun_adi + ' x ' + k.adet + '</div>'; }).join('');
+    return '<div class="siparis-kart"><div class="siparis-kart-baslik"><div><div class="siparis-no">#' + s.id.slice(0,8).toUpperCase() + '</div><div style="font-size:11px;color:var(--text-muted);">' + tarih + '</div></div><span class="siparis-durum ' + durumClass + '">' + durumLabel + '</span></div>' + kalemHTML + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);"><span style="font-size:11px;color:var(--text-muted);">' + s.odeme_yontemi + '</span><span style="font-size:18px;font-weight:700;color:var(--green-light);">' + (s.toplam_tutar||0).toLocaleString('tr-TR') + ' ₺</span></div></div>';
   }).join('');
 }
 
-// ── Profil ──
 async function profilYukle() {
   if (!aktifKullanici) return;
-  var { data } = await sb.from('profiller').select('*').eq('id', aktifKullanici.id).single();
-  if (data) {
-    document.getElementById('profil-adsoyad').value = data.ad_soyad || '';
-    document.getElementById('profil-telefon').value = data.telefon || '';
-    document.getElementById('profil-adres').value = data.adres || '';
-    document.getElementById('profil-sehir').value = data.sehir || '';
-    document.getElementById('profil-posta').value = data.posta_kodu || '';
+  var res = await sb.from('profiller').select('*').eq('id', aktifKullanici.id).single();
+  if (res.data) {
+    document.getElementById('profil-adsoyad').value = res.data.ad_soyad || '';
+    document.getElementById('profil-telefon').value = res.data.telefon || '';
+    document.getElementById('profil-adres').value = res.data.adres || '';
+    document.getElementById('profil-sehir').value = res.data.sehir || '';
+    document.getElementById('profil-posta').value = res.data.posta_kodu || '';
   }
 }
 
@@ -1051,57 +1095,32 @@ async function profilKaydet() {
   if (!aktifKullanici) return;
   var err = document.getElementById('profil-err');
   err.classList.remove('show');
-  var { error } = await sb.from('profiller').upsert({
-    id: aktifKullanici.id,
-    ad_soyad: document.getElementById('profil-adsoyad').value.trim(),
-    telefon: document.getElementById('profil-telefon').value.trim(),
-    adres: document.getElementById('profil-adres').value.trim(),
-    sehir: document.getElementById('profil-sehir').value.trim(),
-    posta_kodu: document.getElementById('profil-posta').value.trim()
-  });
-  if (error) { err.textContent = 'Kayıt hatası: ' + error.message; err.classList.add('show'); return; }
+  var res = await sb.from('profiller').upsert({ id: aktifKullanici.id, ad_soyad: document.getElementById('profil-adsoyad').value.trim(), telefon: document.getElementById('profil-telefon').value.trim(), adres: document.getElementById('profil-adres').value.trim(), sehir: document.getElementById('profil-sehir').value.trim(), posta_kodu: document.getElementById('profil-posta').value.trim() });
+  if (res.error) { err.textContent = 'Hata: ' + res.error.message; err.classList.add('show'); return; }
   showToast('Profil kaydedildi ✓');
 }
 
-// ── Admin Panel ──
 async function adminPanelYukle() {
   if (!adminMi) return;
   showSec('admin');
-  var { data: siparisler } = await sb.from('siparisler').select('*').order('olusturuldu', { ascending: false });
-  if (!siparisler) return;
+  var res = await sb.from('siparisler').select('*').order('olusturuldu', { ascending: false });
+  if (!res.data) return;
   var bugun = new Date().toDateString();
-  var bugunSayisi = siparisler.filter(function(s){ return new Date(s.olusturuldu).toDateString() === bugun; }).length;
-  var bekleyen = siparisler.filter(function(s){ return s.durum === 'beklemede'; }).length;
-  var ciro = siparisler.reduce(function(t,s){ return t + (s.toplam_tutar||0); }, 0);
-  document.getElementById('adm-toplam-siparis').textContent = siparisler.length;
-  document.getElementById('adm-bekleyen').textContent = bekleyen;
-  document.getElementById('adm-bugun').textContent = bugunSayisi;
-  document.getElementById('adm-ciro').textContent = ciro.toLocaleString('tr-TR');
-
-  var tbody = document.getElementById('admin-siparis-tbody');
-  tbody.innerHTML = siparisler.map(function(s) {
+  document.getElementById('adm-toplam-siparis').textContent = res.data.length;
+  document.getElementById('adm-bekleyen').textContent = res.data.filter(function(s){ return s.durum === 'beklemede'; }).length;
+  document.getElementById('adm-bugun').textContent = res.data.filter(function(s){ return new Date(s.olusturuldu).toDateString() === bugun; }).length;
+  document.getElementById('adm-ciro').textContent = res.data.reduce(function(t,s){ return t+(s.toplam_tutar||0); }, 0).toLocaleString('tr-TR');
+  document.getElementById('admin-siparis-tbody').innerHTML = res.data.map(function(s) {
     var tarih = new Date(s.olusturuldu).toLocaleDateString('tr-TR');
-    return '<tr>'
-      + '<td style="font-family:IBM Plex Mono,monospace;font-size:11px;">#' + s.id.slice(0,8).toUpperCase() + '</td>'
-      + '<td>' + (s.teslimat_ad_soyad||'-') + '<br><span style="font-size:11px;color:var(--text-muted);">' + (s.teslimat_telefon||'') + '</span></td>'
-      + '<td style="color:var(--green-light);font-weight:700;">' + (s.toplam_tutar||0).toLocaleString('tr-TR') + ' ₺</td>'
-      + '<td><span class="siparis-durum durum-' + s.odeme_durumu + '">' + s.odeme_yontemi + '</span></td>'
-      + '<td style="font-size:12px;">' + tarih + '</td>'
-      + '<td><select class="durum-select" onchange="durumGuncelle(\'' + s.id + '\',this.value)">'
-      + ['beklemede','onaylandi','kargoda','teslim_edildi','iptal'].map(function(d){
-          return '<option value="' + d + '"' + (s.durum===d?' selected':'') + '>' + d + '</option>';
-        }).join('')
-      + '</select></td>'
-      + '</tr>';
+    return '<tr><td style="font-size:11px;">#' + s.id.slice(0,8).toUpperCase() + '</td><td>' + (s.teslimat_ad_soyad||'-') + '</td><td style="color:var(--green-light);font-weight:700;">' + (s.toplam_tutar||0).toLocaleString('tr-TR') + ' ₺</td><td>' + (s.odeme_yontemi||'-') + '</td><td style="font-size:12px;">' + tarih + '</td><td><select class="durum-select" onchange="durumGuncelle('' + s.id + '',this.value)">' + ['beklemede','onaylandi','kargoda','teslim_edildi','iptal'].map(function(d){ return '<option value="' + d + '"' + (s.durum===d?' selected':'') + '>' + d + '</option>'; }).join('') + '</select></td></tr>';
   }).join('');
 }
 
 async function durumGuncelle(id, durum) {
   await sb.from('siparisler').update({ durum: durum }).eq('id', id);
-  showToast('Durum güncellendi ✓');
+  showToast('Durum guncellendi ✓');
 }
 
-// ── showSec override — profil/siparisler/admin için hook ──
 var _origShowSec = showSec;
 showSec = function(sec) {
   _origShowSec(sec);
@@ -1110,7 +1129,6 @@ showSec = function(sec) {
   if (sec === 'admin') adminPanelYukle();
 };
 
-// Dış tıklamada dropdown kapat
 document.addEventListener('click', function(e) {
   var menu = document.getElementById('nav-user-dropdown');
   if (menu && !e.target.closest('.user-menu')) menu.classList.remove('open');
