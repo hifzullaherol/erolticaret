@@ -1053,6 +1053,39 @@
   cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
 }
 #adminToggleBtn:hover { border-color: #f97316; color: #f97316; background: rgba(249,115,22,0.1); }
+
+.admin-tab-btn {
+  background: transparent; border: 1px solid #2a2a2a; color: #666;
+  padding: 6px 14px; font-family: "IBM Plex Mono", monospace; font-size: 11px;
+  letter-spacing: 1px; cursor: pointer; border-radius: 3px; transition: all 0.15s;
+}
+.admin-tab-btn.active { background: rgba(249,115,22,0.12); border-color: #f97316; color: #f97316; }
+.admin-tab-btn:hover { border-color: #f97316; color: #f97316; }
+
+/* Product table rows */
+#productTableBody tr { border-bottom: 1px solid #1a1a1a; transition: background 0.1s; }
+#productTableBody tr:hover { background: #1a1a1a; }
+#productTableBody td { padding: 8px 10px; font-size: 12px; vertical-align: middle; }
+.tbl-partno { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: #f97316; }
+.tbl-name { color: #e8e8e8; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tbl-en { color: #666; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tbl-cat { font-family: "IBM Plex Mono", monospace; font-size: 10px; color: #888; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tbl-price { font-family: "Bebas Neue", sans-serif; font-size: 16px; color: #fbbf24; text-align: right; }
+.tbl-img-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.tbl-edit-btn { background: transparent; border: 1px solid #2a2a2a; color: #666; padding: 4px 10px; font-size: 11px; cursor: pointer; border-radius: 2px; margin-right: 4px; transition: all 0.1s; }
+.tbl-edit-btn:hover { border-color: #f97316; color: #f97316; }
+.tbl-del-btn { background: transparent; border: 1px solid #2a2a2a; color: #666; padding: 4px 10px; font-size: 11px; cursor: pointer; border-radius: 2px; transition: all 0.1s; }
+.tbl-del-btn:hover { border-color: #ef4444; color: #ef4444; }
+
+/* Sync preview */
+.sync-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 3px; margin-bottom: 4px; font-size: 12px; }
+.sync-row.new { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+.sync-row.update { background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); }
+.sync-row.same { background: rgba(255,255,255,0.03); border: 1px solid #1a1a1a; color: #555; }
+.sync-badge { font-family: "IBM Plex Mono", monospace; font-size: 9px; letter-spacing: 2px; padding: 2px 6px; border-radius: 2px; white-space: nowrap; }
+.sync-badge.new { background: #22c55e; color: #000; }
+.sync-badge.update { background: #f97316; color: #000; }
+.sync-badge.same { background: #2a2a2a; color: #666; }
 </style>
 </head>
 <body>
@@ -1210,6 +1243,10 @@
     <div class="admin-header-inner">
       <div class="admin-logo"><span>SİLOBA</span>SHOP</div>
       <div class="admin-badge">ADMİN PANELİ</div>
+      <div style="display:flex;gap:4px;margin-left:8px;">
+        <button class="admin-tab-btn active" id="tabResimBtn" onclick="switchTab('resim')">🖼 Resimler</button>
+        <button class="admin-tab-btn" id="tabUrunBtn" onclick="switchTab('urun')">📦 Ürün Yönetimi</button>
+      </div>
       <div class="admin-stats">
         <div class="admin-stat">Toplam: <span id="aTotalCount">204</span></div>
         <div class="admin-stat">Resimli: <span id="aImgCount" style="color:#22c55e">0</span></div>
@@ -1242,7 +1279,100 @@
   <div class="admin-grid-wrap">
     <div class="admin-grid" id="adminGrid"></div>
   </div>
-</div>
+</div><!-- end tabResim -->
+
+<!-- ===== ÜRÜN YÖNETİMİ SEKMESİ ===== -->
+<div id="tabUrun" style="display:none">
+  <div style="max-width:1600px;margin:0 auto;padding:20px 24px;">
+
+    <!-- Excel Sync -->
+    <div style="background:#131313;border:1px solid #2a2a2a;border-radius:8px;padding:24px;margin-bottom:20px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#f97316;margin-bottom:6px;">📊 Excel'den Senkronize Et</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#666;margin-bottom:16px;">Globaltech parça listesi Excel dosyasını yükleyin — yeni ürünler eklenir, fiyatlar güncellenir, silinmiş ürünler işaretlenir.</div>
+      <div id="xlsxDropZone" style="border:2px dashed #2a2a2a;border-radius:6px;padding:30px;text-align:center;cursor:pointer;transition:all 0.2s;background:#0a0a0a;"
+        onclick="document.getElementById('xlsxInput').click()"
+        ondragover="event.preventDefault();this.style.borderColor='#f97316'"
+        ondragleave="this.style.borderColor='#2a2a2a'"
+        ondrop="event.preventDefault();this.style.borderColor='#2a2a2a';handleXlsxDrop(event.dataTransfer.files)">
+        <div style="font-size:32px;margin-bottom:8px;">📂</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#f97316;">Excel Dosyası Yükle</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;margin-top:4px;">.xlsx formatı — Globaltech_Parca_Listesi.xlsx</div>
+        <input type="file" id="xlsxInput" accept=".xlsx,.xls" style="display:none" onchange="handleXlsxFile(this.files[0])">
+      </div>
+      <div id="syncPreview" style="display:none;margin-top:16px;"></div>
+    </div>
+
+    <!-- Manuel Ürün Ekle -->
+    <div style="background:#131313;border:1px solid #2a2a2a;border-radius:8px;padding:24px;margin-bottom:20px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#f97316;margin-bottom:16px;">➕ Manuel Ürün Ekle / Düzenle</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:6px;">PARÇA NO *</label>
+          <input id="formPartNo" type="text" placeholder="G303010001" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:13px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+        </div>
+        <div>
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:6px;">FİYAT (USD) *</label>
+          <input id="formPrice" type="number" step="0.01" placeholder="0.00" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:13px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+        </div>
+        <div>
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:6px;">TÜRKÇE AÇIKLAMA *</label>
+          <input id="formTR" type="text" placeholder="G220 KARTER ISLENMIS" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+        </div>
+        <div>
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:6px;">İNGİLİZCE AÇIKLAMA</label>
+          <input id="formEN" type="text" placeholder="G220 OIL HOUSING" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:6px;">KATEGORİ *</label>
+          <select id="formCat" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;outline:none;border-radius:3px;">
+            <option value="G220 İKİ KAFA KOMPRESÖR & YEDEK PARÇA LİSTESİ">G220 İki Kafa Yedek Parça</option>
+            <option value="G220 KOMPLET KOMPRESÖRler">G220 Komplet Kompresörler</option>
+            <option value="G160 ÜÇ KAFA KOMPRESÖR & YEDEK PARÇA LİSTESİ">G160 Üç Kafa Yedek Parça</option>
+            <option value="G160 KOMPLET KOMPRESÖRler">G160 Komplet Kompresörler</option>
+            <option value="G220 & G160 ORTAK YEDEK PARÇALAR">G220 & G160 Ortak Parçalar</option>
+            <option value="G230 İKİ KAFA KOMPRESÖR YEDEK PARÇA LİSTESİ">G230 İki Kafa Yedek Parça</option>
+            <option value="ELEKTRİK AKSAMLARI YEDEK PARÇALARI">Elektrik Aksamları</option>
+            <option value="DİZEL AKSAMLARI YEDEK PARÇALARI">Dizel Aksamları</option>
+            <option value="DİĞER">Diğer</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="admin-btn" style="flex:1" onclick="saveProductForm()">✓ Kaydet / Güncelle</button>
+        <button class="admin-btn secondary" onclick="clearProductForm()">↺ Temizle</button>
+      </div>
+      <div id="formMsg" style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;height:16px;"></div>
+    </div>
+
+    <!-- Ürün Listesi -->
+    <div style="background:#131313;border:1px solid #2a2a2a;border-radius:8px;padding:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#f97316;">📋 Ürün Listesi</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="urunSearch" type="text" placeholder="Ara..." oninput="renderProductTable()"
+            style="background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:7px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;border-radius:3px;width:200px;">
+          <span id="urunTableCount" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#666;"></span>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table id="productTable" style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:2px solid #2a2a2a;">
+              <th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:#666;">PARÇA NO</th>
+              <th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:#666;">TÜRKÇE ADI</th>
+              <th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:#666;">İNGİLİZCE ADI</th>
+              <th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:#666;">KATEGORİ</th>
+              <th style="text-align:right;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:#666;">FİYAT</th>
+              <th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:#666;">RESİM</th>
+              <th style="padding:8px 10px;"></th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div><!-- end tabUrun -->
 
 <!-- EDIT MODAL -->
 <div id="adminEditModal">
@@ -1273,6 +1403,45 @@
 </div>
 
 <!-- UNMATCHED MODAL -->
+<!-- ÜRÜN EKLE/DÜZENLE MODAL -->
+<div id="prodModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:3000;align-items:center;justify-content:center;padding:24px;">
+  <div class="admin-modal-box" style="max-width:560px;">
+    <div class="admin-modal-head">
+      <div class="admin-modal-title" id="prodModalTitle">YENİ ÜRÜN EKLE</div>
+      <button class="admin-modal-close" onclick="closeProdModal()">&#x2715;</button>
+    </div>
+    <div class="admin-modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:5px;">PAR&#xC7;A NO *</label>
+          <input id="prodFormPartNo" type="text" placeholder="G303010001" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+        </div>
+        <div>
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:5px;">F&#x130;YAT (USD) *</label>
+          <input id="prodFormPrice" type="number" step="0.01" min="0" placeholder="0.00" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:5px;">T&#xDC;RK&#xC7;E AD *</label>
+        <input id="prodFormTr" type="text" placeholder="G220 KARTER ISLENMIS" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:5px;">&#x130;NG&#x130;L&#x130;ZCE AD</label>
+        <input id="prodFormEn" type="text" placeholder="G220 OIL HOUSING" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#666;letter-spacing:2px;display:block;margin-bottom:5px;">KATEG&#xD6;R&#x130; *</label>
+        <input id="prodFormCat" type="text" list="catSuggestions" placeholder="G220 &#x130;K&#x130; KAFA..." style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;outline:none;border-radius:3px;" onfocus="this.style.borderColor='#f97316'" onblur="this.style.borderColor='#2a2a2a'">
+        <datalist id="catSuggestions"></datalist>
+      </div>
+      <div class="admin-action-row">
+        <button class="admin-btn" style="flex:1" onclick="saveProduct()">&#x2713; Kaydet</button>
+        <button class="admin-btn secondary" onclick="closeProdModal()">&#x130;ptal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="unmatchedModal">
   <div class="admin-modal-box" style="max-width:560px">
     <div class="admin-modal-head">
@@ -2100,6 +2269,253 @@ function adminSave() {
   document.body.appendChild(a); a.click();
   setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 500);
   adminToast(`✓ silobashop.html indirildi`);
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+  document.getElementById('resimTab').style.display = tab === 'resim' ? 'block' : 'none';
+  document.getElementById('urunTab').style.display = tab === 'urun' ? 'block' : 'none';
+  document.getElementById('tabResimBtn').classList.toggle('active', tab === 'resim');
+  document.getElementById('tabUrunBtn').classList.toggle('active', tab === 'urun');
+  if (tab === 'urun') initProdTable();
+}
+
+// ===== PRODUCT TABLE =====
+function initProdTable() {
+  // Populate category filter
+  const sel = document.getElementById('prodCatFilter');
+  const cats = [...new Set(PRODUCTS.map(p => p.category))].sort();
+  sel.innerHTML = '<option value="">Tüm Kategoriler</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  renderProdTable();
+}
+
+function renderProdTable() {
+  const q = (document.getElementById('prodSearch')?.value || '').toLowerCase();
+  const cat = document.getElementById('prodCatFilter')?.value || '';
+  const filtered = PRODUCTS.filter(p => {
+    const mq = !q || p.part_no.toLowerCase().includes(q) || p.turkish_name.toLowerCase().includes(q) || p.english_name.toLowerCase().includes(q);
+    const mc = !cat || p.category === cat;
+    return mq && mc;
+  });
+  const tbody = document.getElementById('prodTableBody');
+  const empty = document.getElementById('prodTableEmpty');
+  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = filtered.map((p, i) => {
+    const hasImg = !!PRODUCT_IMAGES[p.part_no];
+    const idx = PRODUCTS.indexOf(p);
+    return `<tr style="border-bottom:1px solid #1e1e1e;transition:background 0.1s;" onmouseover="this.style.background='#151515'" onmouseout="this.style.background='transparent'">
+      <td style="padding:9px 8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#f97316;">${p.part_no}</td>
+      <td style="padding:9px 8px;font-size:12px;color:#e8e8e8;max-width:220px;">${p.turkish_name}</td>
+      <td style="padding:9px 8px;font-size:12px;color:#888;max-width:200px;">${p.english_name}</td>
+      <td style="padding:9px 8px;font-size:11px;color:#666;max-width:160px;">${p.category}</td>
+      <td style="padding:9px 8px;font-family:'Bebas Neue',sans-serif;font-size:15px;color:#fbbf24;text-align:right;">$${p.price_usd.toFixed(2)}</td>
+      <td style="padding:9px 8px;text-align:center;">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${hasImg ? '#22c55e' : '#ef4444'};box-shadow:0 0 5px ${hasImg ? '#22c55e' : '#ef4444'}"></span>
+      </td>
+      <td style="padding:9px 8px;text-align:right;">
+        <button onclick="openEditProduct(${idx})" style="background:transparent;border:1px solid #2a2a2a;color:#888;padding:4px 10px;font-size:11px;cursor:pointer;border-radius:3px;margin-right:4px;transition:all 0.15s;" onmouseover="this.style.borderColor='#f97316';this.style.color='#f97316'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">✏</button>
+        <button onclick="deleteProduct(${idx})" style="background:transparent;border:1px solid #2a2a2a;color:#888;padding:4px 10px;font-size:11px;cursor:pointer;border-radius:3px;transition:all 0.15s;" onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteProduct(idx) {
+  const p = PRODUCTS[idx];
+  if (!confirm(`"${p.part_no} - ${p.turkish_name}" ürününü silmek istediğinizden emin misiniz?`)) return;
+  PRODUCTS.splice(idx, 1);
+  delete PRODUCT_IMAGES[p.part_no];
+  renderProdTable();
+  renderProducts && renderProducts();
+  updateAdminCounts();
+  adminToast(`✓ ${p.part_no} silindi`);
+}
+
+// ===== ADD/EDIT PRODUCT MODAL =====
+let editProductIdx = -1;
+
+function fillCatSuggestions() {
+  const dl = document.getElementById('catSuggestions');
+  if (!dl) return;
+  const cats = [...new Set(PRODUCTS.map(p => p.category))].sort();
+  dl.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+}
+
+function openAddProduct() {
+  editProductIdx = -1;
+  document.getElementById('prodModalTitle').textContent = 'YENİ ÜRÜN EKLE';
+  document.getElementById('prodFormPartNo').value = '';
+  document.getElementById('prodFormTr').value = '';
+  document.getElementById('prodFormEn').value = '';
+  document.getElementById('prodFormPrice').value = '';
+  document.getElementById('prodFormCat').value = '';
+  document.getElementById('prodFormPartNo').disabled = false;
+  fillCatSuggestions();
+  document.getElementById('prodModal').style.display = 'flex';
+}
+
+function openEditProduct(idx) {
+  editProductIdx = idx;
+  const p = PRODUCTS[idx];
+  document.getElementById('prodModalTitle').textContent = 'ÜRÜN DÜZENLE';
+  document.getElementById('prodFormPartNo').value = p.part_no;
+  document.getElementById('prodFormTr').value = p.turkish_name;
+  document.getElementById('prodFormEn').value = p.english_name;
+  document.getElementById('prodFormPrice').value = p.price_usd;
+  document.getElementById('prodFormCat').value = p.category;
+  document.getElementById('prodFormPartNo').disabled = true;
+  fillCatSuggestions();
+  document.getElementById('prodModal').style.display = 'flex';
+}
+
+function closeProdModal() {
+  document.getElementById('prodModal').style.display = 'none';
+}
+
+function saveProduct() {
+  const part_no = document.getElementById('prodFormPartNo').value.trim().toUpperCase();
+  const turkish_name = document.getElementById('prodFormTr').value.trim();
+  const english_name = document.getElementById('prodFormEn').value.trim();
+  const price_usd = parseFloat(document.getElementById('prodFormPrice').value);
+  const category = document.getElementById('prodFormCat').value.trim().toUpperCase();
+
+  if (!part_no || !turkish_name || !price_usd || !category) {
+    adminToast('Lütfen zorunlu alanları doldurun (*)', true); return;
+  }
+
+  if (editProductIdx === -1) {
+    if (PRODUCTS.find(p => p.part_no === part_no)) {
+      adminToast('Bu parça numarası zaten mevcut', true); return;
+    }
+    PRODUCTS.push({ part_no, turkish_name, english_name: english_name || turkish_name, price_usd, category });
+    adminToast(`✓ ${part_no} eklendi`);
+  } else {
+    PRODUCTS[editProductIdx] = { part_no, turkish_name, english_name: english_name || turkish_name, price_usd, category };
+    adminToast(`✓ ${part_no} güncellendi`);
+  }
+
+  closeProdModal();
+  renderProdTable();
+  renderProducts && renderProducts();
+  updateAdminCounts();
+  initCategoryFilters && initCategoryFilters();
+}
+
+// ===== EXCEL IMPORT =====
+async function loadSheetJS() {
+  if (window.XLSX) return window.XLSX;
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload = () => resolve(window.XLSX);
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function handleXlsxFile(file) {
+  if (!file) return;
+  adminToast('Excel okunuyor...');
+  try {
+    const XLSX = await loadSheetJS();
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array' });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+    processExcelRows(rows);
+  } catch(e) {
+    adminToast('Excel okunamadı: ' + e.message, true);
+  }
+}
+
+function handleXlsxDrop(files) {
+  if (files && files[0]) handleXlsxFile(files[0]);
+}
+
+function processExcelRows(rows) {
+  // Find header row
+  let headerIdx = -1;
+  let colMap = {};
+  for (let i = 0; i < Math.min(5, rows.length); i++) {
+    const row = rows[i].map(c => String(c).toLowerCase());
+    const hasPart = row.some(c => c.includes('part') || c.includes('parça') || c.includes('no'));
+    if (hasPart) { headerIdx = i; break; }
+  }
+  if (headerIdx === -1) headerIdx = 1; // default skip first row
+
+  const header = rows[headerIdx].map(c => String(c).toLowerCase());
+  header.forEach((h, i) => {
+    if (h.includes('part') || h.includes('parça')) colMap.part_no = i;
+    else if (h.includes('türk') || h.includes('turk') || h.includes('açık') || (h.includes('ad') && !h.includes('ingiliz'))) colMap.turkish_name = i;
+    else if (h.includes('ingiliz') || h.includes('english') || h.includes('eng')) colMap.english_name = i;
+    else if (h.includes('fiyat') || h.includes('price') || h.includes('usd')) colMap.price_usd = i;
+    else if (h.includes('kateg') || h.includes('category')) colMap.category = i;
+  });
+
+  // Fallback column mapping
+  if (!colMap.part_no) colMap.part_no = 0;
+  if (!colMap.turkish_name) colMap.turkish_name = 1;
+  if (!colMap.english_name) colMap.english_name = 2;
+  if (!colMap.price_usd) colMap.price_usd = 3;
+
+  const dataRows = rows.slice(headerIdx + 1).filter(r => r[colMap.part_no]);
+  let added = 0, updated = 0, skipped = 0;
+
+  dataRows.forEach(row => {
+    const part_no = String(row[colMap.part_no] || '').trim().toUpperCase();
+    if (!part_no) return;
+    const turkish_name = String(row[colMap.turkish_name] || '').trim();
+    const english_name = String(row[colMap.english_name] || '').trim();
+    const price_raw = row[colMap.price_usd];
+    const price_usd = parseFloat(String(price_raw).replace(/[^0-9.]/g, '')) || 0;
+    const category = colMap.category !== undefined ? String(row[colMap.category] || '').trim().toUpperCase() : 'DİĞER';
+
+    const existing = PRODUCTS.find(p => p.part_no === part_no);
+    if (existing) {
+      if (turkish_name) existing.turkish_name = turkish_name;
+      if (english_name) existing.english_name = english_name;
+      if (price_usd) existing.price_usd = price_usd;
+      updated++;
+    } else {
+      PRODUCTS.push({ part_no, turkish_name, english_name: english_name || turkish_name, price_usd, category });
+      added++;
+    }
+  });
+
+  renderProdTable();
+  renderProducts && renderProducts();
+  updateAdminCounts();
+  adminToast(`✓ Excel aktarıldı: ${added} yeni, ${updated} güncellendi`);
+  
+  // Show summary
+  const preview = document.getElementById('syncPreview');
+  preview.style.display = 'block';
+  preview.innerHTML = `<div style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#666;">
+    <span style="color:#22c55e;margin-right:16px;">+${added} yeni ürün eklendi</span>
+    <span style="color:#fbbf24;margin-right:16px;">✎ ${updated} ürün güncellendi</span>
+    <span style="color:#888;">Toplam: ${PRODUCTS.length} ürün</span>
+  </div>`;
+}
+
+// ===== EXCEL EXPORT =====
+async function exportExcel() {
+  adminToast('Excel hazırlanıyor...');
+  try {
+    const XLSX = await loadSheetJS();
+    const data = [
+      ['Parça No', 'Türkçe Açıklama', 'İngilizce Açıklama', 'Fiyat (USD)', 'Kategori'],
+      ...PRODUCTS.map(p => [p.part_no, p.turkish_name, p.english_name, p.price_usd, p.category])
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    ws['!cols'] = [{ wch: 16 }, { wch: 40 }, { wch: 40 }, { wch: 12 }, { wch: 50 }];
+    XLSX.utils.book_append_sheet(wb, ws, 'Ürünler');
+    XLSX.writeFile(wb, 'silobashop_urunler.xlsx');
+    adminToast('✓ Excel indirildi');
+  } catch(e) {
+    adminToast('Excel oluşturulamadı: ' + e.message, true);
+  }
 }
 
 function adminToast(msg, isErr=false) {
