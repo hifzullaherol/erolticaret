@@ -395,12 +395,7 @@ function kurCek() {
   }
 }
         }
-        dene(i+1);
-      })
-      .catch(function(){dene(i+1);});
-  }
-  dene(0);
-}
+
 
 function fiyatHesapla(usd) {
   if(!usd) return null;
@@ -1033,8 +1028,8 @@ async function siparislerimiYukle() {
       + '<span class="siparis-durum ' + durumClass + '">' + durumLabel + '</span></div>'
       + kalemHTML
       + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">'
-      + '<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted);">' + s.odeme_yontemi + '</span>'
-      + '<span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--green-light);">' + (s.toplam_tutar||0).toLocaleString('tr-TR') + ' ₺</span>'
+      + '<span style="font-family:IBM Plex Mono,monospace;font-size:11px;color:var(--text-muted);">' + s.odeme_yontemi + '</span>'
+      + '<span style="font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:700;color:var(--green-light);">' + (s.toplam_tutar||0).toLocaleString('tr-TR') + ' ₺</span>'
       + '</div></div>';
   }).join('');
 }
@@ -1087,7 +1082,7 @@ async function adminPanelYukle() {
   tbody.innerHTML = siparisler.map(function(s) {
     var tarih = new Date(s.olusturuldu).toLocaleDateString('tr-TR');
     return '<tr>'
-      + '<td style="font-family:'IBM Plex Mono',monospace;font-size:11px;">#' + s.id.slice(0,8).toUpperCase() + '</td>'
+      + '<td style="font-family:IBM Plex Mono,monospace;font-size:11px;">#' + s.id.slice(0,8).toUpperCase() + '</td>'
       + '<td>' + (s.teslimat_ad_soyad||'-') + '<br><span style="font-size:11px;color:var(--text-muted);">' + (s.teslimat_telefon||'') + '</span></td>'
       + '<td style="color:var(--green-light);font-weight:700;">' + (s.toplam_tutar||0).toLocaleString('tr-TR') + ' ₺</td>'
       + '<td><span class="siparis-durum durum-' + s.odeme_durumu + '">' + s.odeme_yontemi + '</span></td>'
