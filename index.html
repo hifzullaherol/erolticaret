@@ -372,7 +372,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 .modal-add { width: 100%; padding: 14px; background: var(--ink); color: var(--white); border: none; font-family: var(--font); font-size: 14px; font-weight: 500; cursor: pointer; border-radius: var(--radius); transition: background 0.15s; margin-top: auto; }
 .modal-add:hover { background: var(--accent); }
 .modal-close-btn { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--ink2); }
-.modal-overlay { position: relative; }
+.modal-box { position: relative; }
 
 /* ── WHATSAPP FLOAT ── */
 .wa-float {
@@ -1506,7 +1506,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div class="adm-stat">Toplam <b id="admTotal">204</b></div>
         <div class="adm-stat">Resimli <b id="admImg" style="color:#16a34a">0</b></div>
         <div class="adm-stat">Resimsiz <b id="admNoImg" style="color:#dc2626">0</b></div>
-        <button class="adm-save-btn" id="admSaveBtn" onclick="admSave()">💾 Kaydet & İndir</button>
+        <button class="adm-save-btn" onclick="admSave()">💾 Kaydet & İndir</button>
         <button class="adm-close-btn" onclick="toggleAdmin()">✕ Kapat</button>
       </div>
     </div>
@@ -3341,38 +3341,50 @@ async function compressImg(dataUrl, maxDim=800, q=0.78) {
 }
 
 async function admSave() {
-  const saveBtn = document.getElementById('admSaveBtn');
-  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⏳ Kaydediliyor...'; }
   showToast('Kaydediliyor...');
   await new Promise(r=>setTimeout(r,50));
+  const keys=Object.keys(PRODUCT_IMAGES);
+  const compressed={};
+  for (let i=0;i<keys.length;i++) {
+    const val = PRODUCT_IMAGES[keys[i]];
+    // R2 URL ise olduğu gibi kaydet, base64 ise sıkıştır
+    if (val && val.startsWith('http')) {
+      compressed[keys[i]] = val;
+    } else {
+      compressed[keys[i]] = await compressImg(val);
+    }
+    if ((i+1)%30===0) { showToast(`${i+1}/${keys.length}...`); await new Promise(r=>setTimeout(r,10)); }
+  }
   showToast('Dosya hazırlanıyor...');
   await new Promise(r=>setTimeout(r,50));
 
+  // Use template to avoid outerHTML bloat
   const tpl=document.getElementById('__tpl__');
   let base=tpl ? new TextDecoder('utf-8').decode(Uint8Array.from(atob(tpl.value),c=>c.charCodeAt(0))) : null;
   let out;
   if (base) {
     out=base
-      .replace('const PRODUCT_IMAGES = __IMAGES__;', 'const PRODUCT_IMAGES = '+JSON.stringify(PRODUCT_IMAGES)+';')
+      .replace('const PRODUCT_IMAGES = __IMAGES__;', 'const PRODUCT_IMAGES = '+JSON.stringify(compressed)+';')
       .replace('const PRODUCTS = __PRODUCTS__;', 'const PRODUCTS = '+JSON.stringify(PRODUCTS)+';');
   } else {
+    // fallback
     let raw=document.documentElement.outerHTML;
     const im='const PRODUCT_IMAGES = '; let is2=raw.indexOf(im)+im.length,id2=0,ii2=is2;
     while(ii2<raw.length){if(raw[ii2]==='{')id2++;else if(raw[ii2]==='}'){id2--;if(id2===0){ii2++;break;}}ii2++;}
-    out=raw.slice(0,is2)+JSON.stringify(PRODUCT_IMAGES)+raw.slice(ii2);
+    const pm='const PRODUCTS = '; let ps2=raw.indexOf(pm)+pm.length,pd2=0,pi2=ps2;
+    while(pi2<raw.length){if(raw[pi2]==='[')pd2++;else if(raw[pi2]===']'){pd2--;if(pd2===0){pi2++;break;}}pi2++;}
+    out=raw.slice(0,is2)+JSON.stringify(compressed)+raw.slice(ii2);
     const pm3='const PRODUCTS = '; let ps3=out.indexOf(pm3)+pm3.length,pd3=0,pi3=ps3;
     while(pi3<out.length){if(out[pi3]==='[')pd3++;else if(out[pi3]===']'){pd3--;if(pd3===0){pi3++;break;}}pi3++;}
     out=out.slice(0,ps3)+JSON.stringify(PRODUCTS)+out.slice(pi3);
   }
-
   const sizeKB=Math.round(new Blob([out]).size/1024);
   const blob=new Blob([out],{type:'text/html;charset=utf-8'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='index.html';
+  const a=document.createElement('a'); a.href=url; a.download='globaltech-shop.html';
   a.style.display='none'; document.body.appendChild(a); a.click();
   setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
   showToast(`✓ İndirildi — ${sizeKB<1024?sizeKB+'KB':(sizeKB/1024).toFixed(1)+'MB'}`);
-  if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 Kaydet & İndir'; }
 }
 
 // ── CATEGORY MANAGEMENT ──
