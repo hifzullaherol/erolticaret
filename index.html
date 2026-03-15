@@ -1506,6 +1506,12 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div class="adm-stat">Toplam <b id="admTotal">204</b></div>
         <div class="adm-stat">Resimli <b id="admImg" style="color:#16a34a">0</b></div>
         <div class="adm-stat">Resimsiz <b id="admNoImg" style="color:#dc2626">0</b></div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <input id="ghTokenInput" type="password" placeholder="🔑 GitHub Token" title="GitHub Personal Access Token — bir kez gir, kaydedilir"
+            style="padding:6px 10px;font-size:12px;font-family:var(--mono);border:1px solid var(--border2);border-radius:2px;background:var(--off);color:var(--ink);width:180px;outline:none;"
+            onchange="saveGHToken(this.value)" oninput="saveGHToken(this.value)"/>
+          <span id="ghTokenStatus" style="font-size:11px;font-family:var(--mono);color:#8a857e;white-space:nowrap;"></span>
+        </div>
         <button class="adm-save-btn" id="admSaveBtn" onclick="admSave()">💾 Kaydet & Güncelle</button>
         <button class="adm-close-btn" onclick="toggleAdmin()">✕ Kapat</button>
       </div>
@@ -2675,7 +2681,7 @@ function toggleAdmin() {
   }
   if (adminUnlocked) {
     panel.style.display = 'block';
-    renderImgGrid(); updateAdmCounts();
+    renderImgGrid(); updateAdmCounts(); initGHTokenInput();
     return;
   }
   // Show password modal
@@ -2691,7 +2697,7 @@ function checkAdminPass() {
     document.getElementById('adminPassInput').value = '';
     document.getElementById('adminPassError').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
-    renderImgGrid(); updateAdmCounts();
+    renderImgGrid(); updateAdmCounts(); initGHTokenInput();
   } else {
     document.getElementById('adminPassError').style.display = 'block';
     document.getElementById('adminPassInput').select();
@@ -3341,16 +3347,49 @@ async function compressImg(dataUrl, maxDim=800, q=0.78) {
 }
 
 // ── GITHUB CONFIG ──
-const GITHUB_TOKEN  = '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';
 const GITHUB_OWNER  = 'hifzullaherol';
 const GITHUB_REPO   = 'erolticaret';
 const GITHUB_BRANCH = 'main';
 const GITHUB_FILE   = 'index.html';
 
+function saveGHToken(val) {
+  val = val.trim();
+  if (val) {
+    localStorage.setItem('stp_gh_token', val);
+    const st = document.getElementById('ghTokenStatus');
+    if (st) { st.textContent = '✓ Kaydedildi'; st.style.color = '#16a34a'; }
+  }
+}
+function getGHToken() {
+  return localStorage.getItem('stp_gh_token') || '';
+}
+function initGHTokenInput() {
+  const inp = document.getElementById('ghTokenInput');
+  if (!inp) return;
+  const saved = getGHToken();
+  if (saved) {
+    inp.value = saved;
+    const st = document.getElementById('ghTokenStatus');
+    if (st) { st.textContent = '✓ Token mevcut'; st.style.color = '#16a34a'; }
+  }
+}
+
+function strToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  const chunkSize = 8192;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary);
+}
+
 async function pushToGitHub(content) {
+  const token = getGHToken();
+  if (!token) throw new Error('Token girilmedi! Admin panelindeki 🔑 kutusuna GitHub token gir.');
   const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
   const headers = {
-    'Authorization': `token ${GITHUB_TOKEN}`,
+    'Authorization': `token ${token}`,
     'Accept': 'application/vnd.github.v3+json',
     'Content-Type': 'application/json'
   };
@@ -3360,8 +3399,8 @@ async function pushToGitHub(content) {
   const fileInfo = await getRes.json();
   const sha = fileInfo.sha;
 
-  // Base64 encode
-  const b64 = btoa(unescape(encodeURIComponent(content)));
+  // Base64 encode (büyük dosya güvenli)
+  const b64 = strToBase64(content);
 
   // Güncelle
   const putRes = await fetch(apiUrl, {
