@@ -6473,6 +6473,7 @@ function quickDelImg(partNo) {
 }
 
 // ── BATCH UPLOAD ──
+const CAT_ORDER = [];
 const R2_URL = 'https://images.silotechparts.com.tr';
 
 // R2'den resim URL'si oluştur — PRODUCT_IMAGES'a kayıtlı yoksa otomatik R2 URL'si üret
@@ -6738,6 +6739,7 @@ async function admSave() {
     try {
       const prodJSON = JSON.stringify(PRODUCTS);
       const imgJSON  = JSON.stringify(PRODUCT_IMAGES);
+      const catOrderJSON = JSON.stringify(window._catOrder || getSortedCats());
 
       // Sayfanın HTML'ini al
       let out = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
@@ -6759,6 +6761,9 @@ async function admSave() {
       });
       out = out.replace(/const PRODUCT_IMAGES\s*=\s*\{[\s\S]*?\};/, function() {
         return 'const PRODUCT_IMAGES = ' + imgJSON + ';';
+      });
+      out = out.replace(/const CAT_ORDER\s*=\s*\[[\s\S]*?\];/, function() {
+        return 'const CAT_ORDER = ' + catOrderJSON + ';';
       });
 
       // İndir
@@ -6790,7 +6795,10 @@ function getSortedCats() {
   const fromProducts = [...new Set(PRODUCTS.map(p => p.category))];
   const extra = (window._extraCats||[]).filter(c => !fromProducts.includes(c));
   const allCats = [...fromProducts, ...extra];
-  if (!window._catOrder) window._catOrder = [...allCats].sort();
+  // CAT_ORDER sabitini başlangıç değeri olarak kullan
+  if (!window._catOrder) {
+    window._catOrder = CAT_ORDER.length > 0 ? [...CAT_ORDER] : [...allCats].sort();
+  }
   // Yeni eklenen kategorileri sona ekle
   allCats.forEach(c => { if (!window._catOrder.includes(c)) window._catOrder.push(c); });
   // Silinenleri temizle
