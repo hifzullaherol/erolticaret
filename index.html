@@ -239,6 +239,16 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 .list-view .p-name { margin-bottom: 0; flex: 1; font-size: 13px; }
 .p-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
 .list-view .p-footer { flex-shrink: 0; gap: 16px; }
+
+/* Mobile list view fixes */
+@media (max-width: 600px) {
+  .list-view .p-body { flex-wrap: wrap; gap: 6px; padding: 8px 10px; }
+  .list-view .p-code { width: 90px; font-size: 9px; }
+  .list-view .p-name { font-size: 12px; flex: 1; min-width: 0; }
+  .list-view .p-footer { width: 100%; justify-content: space-between; flex-shrink: unset; }
+  .list-view .p-img { width: 60px; height: 60px; }
+  .list-view .p-price { font-size: 14px; }
+}
 .p-price { font-family: var(--serif); font-size: 18px; color: var(--ink); }
 .p-price-usd { font-family: var(--mono); font-size: 9px; color: var(--ink3); letter-spacing: 0.1em; }
 .add-btn {
@@ -997,6 +1007,10 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 
   /* Area toolbar */
   .area-toolbar { flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .area-toolbar .results-count { width: 100%; display: none; }
+  .area-toolbar .sort-select { flex: 1; min-width: 0; }
+  .area-toolbar #kurBadge { order: 3; font-size: 10px; padding: 5px 8px; }
+  .area-toolbar .view-toggle { order: 4; margin-left: auto; }
   .results-count { font-size: 10px; }
   .sort-select { font-size: 12px; padding: 6px 24px 6px 10px; }
 
@@ -1153,7 +1167,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
       <div class="results-count" id="mobResultsCount" style="margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink3);">217 ürün</div>
     </div>
     <div class="area-toolbar">
-      <div class="results-count" id="resultsCount">217 ürün bulundu</div>
+      <div class="results-count" id="resultsCount">217 ÜRÜN</div>
       <select class="sort-select" id="sortSelect" onchange="applyFilters()">
         <option value="default" id="sortDefault">Varsayılan Sıralama</option>
         <option value="price-asc" id="sortPriceAsc">Fiyat: Düşükten Yükseğe</option>
@@ -1179,7 +1193,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$484.20</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010001')">+</button>
         </div>
@@ -1193,7 +1207,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$612.30</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010002')">+</button>
         </div>
@@ -1207,7 +1221,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$117.60</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010003')">+</button>
         </div>
@@ -1221,7 +1235,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$133.80</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010004')">+</button>
         </div>
@@ -1235,7 +1249,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$85.70</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010007')">+</button>
         </div>
@@ -1249,7 +1263,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$118.90</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010008')">+</button>
         </div>
@@ -1263,7 +1277,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$27.60</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010009')">+</button>
         </div>
@@ -1277,7 +1291,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$168.70</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010010')">+</button>
         </div>
@@ -1291,7 +1305,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$14.50</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303010032')">+</button>
         </div>
@@ -1305,7 +1319,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$47.20</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303020006')">+</button>
         </div>
@@ -1319,7 +1333,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$40.50</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303020023')">+</button>
         </div>
@@ -1333,7 +1347,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$40.50</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303020024')">+</button>
         </div>
@@ -1347,7 +1361,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$275.30</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303020036')">+</button>
         </div>
@@ -1361,7 +1375,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$15.30</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303030001')">+</button>
         </div>
@@ -1375,7 +1389,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$15.30</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G303030002')">+</button>
         </div>
@@ -1389,7 +1403,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$73.60</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G105010017')">+</button>
         </div>
@@ -1403,7 +1417,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$4.30</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G105020009')">+</button>
         </div>
@@ -1417,7 +1431,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$2.50</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G105020011')">+</button>
         </div>
@@ -1431,7 +1445,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$1.10</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G105020012')">+</button>
         </div>
@@ -1445,7 +1459,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$2.30</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G108030017')">+</button>
         </div>
@@ -1459,7 +1473,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$7.60</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G108030020')">+</button>
         </div>
@@ -1473,7 +1487,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$9.10</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G108030028')">+</button>
         </div>
@@ -1487,7 +1501,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$3.50</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G108040006')">+</button>
         </div>
@@ -1501,7 +1515,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div>
             <div class="p-price">$0.10</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('G108130003')">+</button>
         </div>
@@ -5877,7 +5891,7 @@ function loginPromptConfirm() {
 const T = {
   tr: {
     search: 'Parça no veya isim ara...', cart: 'Sepet', cats: 'Kategoriler',
-    price: 'Fiyat Aralığı (USD)', all: 'Tümü', results: 'ürün bulundu',
+    price: 'Fiyat Aralığı (USD)', all: 'Tümü', results: 'ÜRÜN',
     add: 'Sepete Ekle', total: 'Toplam', order: 'Sipariş Ver',
     wa: 'WhatsApp ile Sipariş', empty: 'Sepetiniz boş',
     sort0: 'Varsayılan', sort1: 'Fiyat ↑', sort2: 'Fiyat ↓', sort3: 'İsim A→Z',
@@ -5889,7 +5903,7 @@ const T = {
   },
   en: {
     search: 'Search part no or name...', cart: 'Cart', cats: 'Categories',
-    price: 'Price Range (USD)', all: 'All', results: 'products found',
+    price: 'Price Range (USD)', all: 'All', results: 'PRODUCTS',
     add: 'Add to Cart', total: 'Total', order: 'Place Order',
     wa: 'Order via WhatsApp', empty: 'Your cart is empty',
     sort0: 'Default', sort1: 'Price ↑', sort2: 'Price ↓', sort3: 'Name A→Z',
@@ -6018,7 +6032,7 @@ function renderGrid() {
           <div>
             <div class="p-price">$${p.price_usd.toFixed(2)}</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
-            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
+            ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
           <button class="add-btn" onclick="event.stopPropagation();addToCart('${p.part_no}')">+</button>
         </div>
@@ -6070,7 +6084,7 @@ function openModal(partNo) {
   document.getElementById('modalName').textContent = lang==='en' ? p.english_name : p.turkish_name;
   document.getElementById('modalNameEn').textContent = lang==='en' ? p.turkish_name : p.english_name;
   document.getElementById('modalCat').textContent = p.category;
-  document.getElementById('modalPrice').innerHTML = `$${p.price_usd.toFixed(2)} <small>USD</small>`;
+  document.getElementById('modalPrice').innerHTML = `$${p.price_usd.toFixed(2)} <small>USD</small><div style="font-size:13px;color:#c8410a;font-weight:700;letter-spacing:0.05em;margin-top:4px;">+KDV</div>${window._kurRate ? '<div style=\"font-family:var(--mono);font-size:14px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;\">\u20ba' + (p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2}) + '</div>' : ''}`;
   document.getElementById('modalAddBtn').textContent = `+ ${t('add')}`;
   const imgSrc = getImgUrl(p.part_no);
   const col = document.getElementById('modalImgCol');
