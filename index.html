@@ -5779,7 +5779,7 @@ async function doLogin() {
       headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password: pass })
     });
-    const data = await res.json(); const rate = data.usd.try; window._kurRate = rate;
+    const data = await res.json();
     if (!res.ok || data.error) {
       err.textContent = 'E-posta veya şifre hatalı.';
       err.style.display = 'block';
@@ -5820,7 +5820,7 @@ async function doRegister() {
       headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password: pass })
     });
-    const data = await res.json(); const rate = data.usd.try; window._kurRate = rate;
+    const data = await res.json();
     if (!res.ok || data.error) {
       err.textContent = data.error_description || data.msg || 'Kayıt başarısız.';
       err.style.display = 'block';
@@ -8068,7 +8068,7 @@ window._kurRate = 0;
 (async function() {
   try {
     const res = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
-    const data = await res.json(); const rate = data.usd.try; window._kurRate = rate;
+    const data = await res.json(); const rate = data.usd['try']; window._kurRate = rate;
     // Her p-price div'inin altına TL fiyatı ekle
     document.querySelectorAll('.p-price').forEach(function(el) {
       const text = el.textContent.trim();
