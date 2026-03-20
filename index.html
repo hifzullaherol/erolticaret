@@ -104,7 +104,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 .hero {
   position: relative; overflow: hidden;
   border-bottom: 1px solid var(--border);
-  height: clamp(340px, 35vw, 500px);
+  height: 650px;
   display: flex; align-items: center;
 }
 .hero-bg {
@@ -118,7 +118,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 .hero-slider { position: absolute; inset: 0; }
 .hero-slide {
   position: absolute; inset: 0;
-  background-size: cover; background-position: center center;
+  background-size: cover; background-position: 70% center;
   opacity: 0; transition: opacity 1s ease;
 }
 .hero-slide.slide-contain {
@@ -1132,7 +1132,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 <section class="hero" id="heroSection">
   <div class="hero-slider" id="heroSlider">
     <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero.png');"></div>
-    <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png'); background-size: cover; background-position: center top;"></div>
+    <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png?v=2'); background-size: auto 100%; background-position: center center;"></div>
   </div>
   <div class="hero-dots">
     <span class="hero-dot active" onclick="goSlide(0)"></span>
