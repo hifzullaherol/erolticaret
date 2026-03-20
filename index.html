@@ -126,10 +126,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
   background-repeat: no-repeat;
   background-color: #0d2b18;
 }
-.hero-slide::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(105deg, rgba(10,40,20,0.60) 0%, rgba(10,40,20,0.45) 55%, rgba(10,40,20,0.25) 100%);
-}
+
 .hero-slide.active { opacity: 1; }
 .hero-dots {
   position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
@@ -1131,42 +1128,14 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 <!-- HERO -->
 <section class="hero" id="heroSection">
   <div class="hero-slider" id="heroSlider">
-    <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero.png');"></div>
-    <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png?v=2'); background-size: 100% 100%; background-position: center center;"></div>
+    <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero%201.png');"></div>
+    <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png'); background-size: 100% 100%; background-position: center center;"></div>
   </div>
   <div class="hero-dots">
     <span class="hero-dot active" onclick="goSlide(0)"></span>
     <span class="hero-dot" onclick="goSlide(1)"></span>
   </div>
-  <div class="hero-wrap">
-    <div class="hero-left">
-      <div class="hero-eyebrow" id="heroEyebrow">Pamukova &ndash; Sakarya</div>
-      <h1 class="hero-title" id="heroTitle">Silobas &amp; Kompresör<em>Yedek Parça</em></h1>
-      <p class="hero-desc" id="heroDesc">Güvenilir ve kaliteli yedek parçalarla makinelerinizin kesintisiz çalışmasını sağlıyoruz. Hızlı kargo, orijinal parça.</p>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="hero-stat-num" id="statProd">200+</div>
-          <div class="hero-stat-label" id="statProdL">Ürün Çeşidi</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">10+</div>
-          <div class="hero-stat-label" id="statYearL">Yıl Deneyim</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">2</div>
-          <div class="hero-stat-label" id="statCatL">Kategori</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">7/24</div>
-          <div class="hero-stat-label" id="statSuppL">Destek</div>
-        </div>
-      </div>
-      <div class="hero-cta-group">
-        <a href="#" class="hero-cta hero-cta-primary" onclick="document.getElementById('searchInput')?.focus();return false;" id="heroCta1">Kompresör Parçaları</a>
-        <a href="#" class="hero-cta hero-cta-secondary" id="heroCta2">Silobas Parçaları</a>
-      </div>
-    </div>
-  </div>
+
 </section>
 
 <!-- MOBİL ARAMA BARI -->
