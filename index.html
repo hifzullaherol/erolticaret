@@ -115,6 +115,27 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(105deg, rgba(10,40,20,0.60) 0%, rgba(10,40,20,0.45) 55%, rgba(10,40,20,0.25) 100%);
 }
+.hero-slider { position: absolute; inset: 0; }
+.hero-slide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0; transition: opacity 1s ease;
+}
+.hero-slide::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(10,40,20,0.60) 0%, rgba(10,40,20,0.45) 55%, rgba(10,40,20,0.25) 100%);
+}
+.hero-slide.active { opacity: 1; }
+.hero-dots {
+  position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 8px; z-index: 10;
+}
+.hero-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.35); cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.hero-dot.active { background: #4ade80; transform: scale(1.3); }
 .hero-wrap {
   max-width: 1440px; margin: 0 auto; width: 100%;
   display: flex; flex-direction: column; align-items: center;
@@ -1104,7 +1125,14 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 
 <!-- HERO -->
 <section class="hero" id="heroSection">
-  <div class="hero-bg" style="background-image: url('https://images.silotechparts.com.tr/hero.png');"></div>
+  <div class="hero-slider" id="heroSlider">
+    <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero.png');"></div>
+    <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/HERO%202.png');"></div>
+  </div>
+  <div class="hero-dots">
+    <span class="hero-dot active" onclick="goSlide(0)"></span>
+    <span class="hero-dot" onclick="goSlide(1)"></span>
+  </div>
   <div class="hero-wrap">
     <div class="hero-left">
       <div class="hero-eyebrow" id="heroEyebrow">Pamukova &ndash; Sakarya</div>
@@ -7194,6 +7222,36 @@ window._kurRate = 0;
   } catch(e) {
     console.warn('Kur alınamadı:', e);
   }
+})();
+</script>
+
+<script>
+// Hero Slider
+(function() {
+  var slides = document.querySelectorAll('.hero-slide');
+  var dots = document.querySelectorAll('.hero-dot');
+  var current = 0;
+  var timer;
+
+  function goSlide(n) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = n % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  window.goSlide = goSlide;
+
+  function next() { goSlide((current + 1) % slides.length); }
+
+  function start() { timer = setInterval(next, 4000); }
+  function stop() { clearInterval(timer); }
+
+  document.querySelector('.hero-slider')?.addEventListener('mouseenter', stop);
+  document.querySelector('.hero-slider')?.addEventListener('mouseleave', start);
+
+  start();
 })();
 </script>
 </body></html>
