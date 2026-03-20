@@ -7150,6 +7150,15 @@ setCat = function(c) {
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:48px;">
       <div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#8a857e;margin-bottom:14px;">Kurumsal</div>
+        <a href="#hakkimizda" onclick="event.preventDefault();openTrustModal('hakkimizda')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">Hakkımızda</a>
+        <a href="#teslimat" onclick="event.preventDefault();openTrustModal('teslimat')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">Teslimat Bilgileri</a>
+        <a href="#iade" onclick="event.preventDefault();openTrustModal('iade')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">İade & Değişim</a>
+        <a href="#mesafeli-satis" onclick="event.preventDefault();openTrustModal('mesafeli-satis')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">Mesafeli Satış Sözleşmesi</a>
+        <a href="#kvkk" onclick="event.preventDefault();openTrustModal('kvkk')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">Gizlilik / KVKK</a>
+        <a href="#sss" onclick="event.preventDefault();openTrustModal('sss')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">Sıkça Sorulan Sorular</a>
+      </div>
+      <div>
         <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#8a857e;margin-bottom:14px;">İletişim</div>
         <a href="tel:+905415176909" style="display:flex;align-items:center;gap:10px;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:10px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
@@ -7174,6 +7183,207 @@ setCat = function(c) {
     <div style="font-family:'DM Mono',monospace;font-size:10px;color:#4a4540;letter-spacing:0.1em;">silotechparts.com.tr</div>
   </div>
 </footer>
+
+<!-- GÜVEN SAYFALARI MODALLARı -->
+<style>
+.trust-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,24,20,0.7);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 40px 20px;
+}
+.trust-modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+.trust-modal-box {
+  background: #fff;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 760px;
+  padding: 40px 48px;
+  position: relative;
+  font-family: 'DM Sans', sans-serif;
+  color: #1a1814;
+  line-height: 1.8;
+}
+.trust-modal-close {
+  position: absolute;
+  top: 20px; right: 24px;
+  background: none; border: none;
+  font-size: 22px; cursor: pointer;
+  color: #8a857e; line-height: 1;
+}
+.trust-modal-close:hover { color: #1a1814; }
+.trust-modal-box h1 { font-size: 22px; font-weight: 700; margin-bottom: 24px; border-bottom: 1px solid #e8e4de; padding-bottom: 16px; }
+.trust-modal-box h2 { font-size: 15px; font-weight: 700; margin: 24px 0 8px; }
+.trust-modal-box p { font-size: 14px; color: #4a4540; margin-bottom: 12px; }
+.trust-modal-box ul { font-size: 14px; color: #4a4540; padding-left: 20px; margin-bottom: 12px; }
+.trust-modal-box ul li { margin-bottom: 6px; }
+.trust-modal-box table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 16px; }
+.trust-modal-box table th, .trust-modal-box table td { border: 1px solid #e8e4de; padding: 8px 12px; text-align: left; }
+.trust-modal-box table th { background: #f7f6f3; font-weight: 600; }
+@media (max-width: 600px) { .trust-modal-box { padding: 24px 20px; } }
+</style>
+
+<!-- HAKKIMIZDA -->
+<div id="modal-hakkimizda" class="trust-modal-overlay" onclick="if(event.target===this)closeTrustModal('hakkimizda')">
+  <div class="trust-modal-box">
+    <button class="trust-modal-close" onclick="closeTrustModal('hakkimizda')">✕</button>
+    <h1>Hakkımızda</h1>
+    <p>SilotechParts, silobas ve kompresör yedek parçaları alanında uzmanlaşmış endüstriyel çözüm ortağınızdır. Pamukova, Sakarya merkezli olarak faaliyet gösteren firmamız, Globaltech Makina'nın Marmara Bölge Bayii olarak orijinal ve kaliteli yedek parça tedariki konusunda müşterilerine güvenilir hizmet sunmaktadır.</p>
+    <h2>Misyonumuz</h2>
+    <p>Müşterilerimizin makinelerinin kesintisiz çalışmasını sağlamak için doğru parçayı, doğru zamanda ve uygun fiyatla ulaştırmak.</p>
+    <h2>Neden SilotechParts?</h2>
+    <ul>
+      <li><strong>Orijinal Ürün:</strong> Yetkili bayi güvencesiyle yalnızca orijinal parça tedarik ediyoruz.</li>
+      <li><strong>Yüksek Kalite:</strong> Dayanıklı ve uzun ömürlü yedek parça seçimi yapıyoruz.</li>
+      <li><strong>Teknik Destek:</strong> Satış öncesi ve satış sonrası teknik destek veriyoruz.</li>
+      <li><strong>Hızlı Sevkiyat:</strong> Stoktan teslimat imkânıyla siparişlerinizi en kısa sürede karşılıyoruz.</li>
+      <li><strong>200+ Ürün Çeşidi:</strong> Geniş ürün yelpazemizle her ihtiyaca çözüm sunuyoruz.</li>
+    </ul>
+    <h2>İletişim</h2>
+    <p>Cumhuriyet, Fatih Cd. NO:303/7, 54900 Pamukova / Sakarya<br>
+    Telefon: <a href="tel:+905415176909" style="color:#c8410a">0541 517 69 09</a><br>
+    WhatsApp: <a href="https://wa.me/905415176909" target="_blank" style="color:#25d366">0541 517 69 09</a></p>
+  </div>
+</div>
+
+<!-- TESLİMAT BİLGİLERİ -->
+<div id="modal-teslimat" class="trust-modal-overlay" onclick="if(event.target===this)closeTrustModal('teslimat')">
+  <div class="trust-modal-box">
+    <button class="trust-modal-close" onclick="closeTrustModal('teslimat')">✕</button>
+    <h1>Teslimat Bilgileri</h1>
+    <h2>Kargo Süreleri</h2>
+    <p>Siparişleriniz, ödemenin onaylanmasının ardından stok durumuna göre aynı gün veya 1 iş günü içinde kargoya verilmektedir. Kargoya verilen siparişler genellikle <strong>1–3 iş günü</strong> içinde teslim edilmektedir.</p>
+    <h2>Kargo Ücretleri</h2>
+    <p>Tüm siparişlerde kargo ücreti müşteriye aittir. Kargo bedeli, sipariş tamamlanmadan önce sepet sayfasında görüntülenir.</p>
+    <h2>Kargo Firması</h2>
+    <p>Siparişleriniz anlaşmalı kargo firmalarımız aracılığıyla gönderilmektedir. Kargo takip numaranız, siparişiniz kargoya verildikten sonra size iletilecektir.</p>
+    <h2>Teslimat Adresi</h2>
+    <p>Teslimat adresinizin eksiksiz ve doğru girilmesi sizin sorumluluğunuzdadır. Yanlış adres nedeniyle oluşan gecikme veya ek kargo bedelinden firmamız sorumlu tutulamaz.</p>
+    <h2>Hasar Durumu</h2>
+    <p>Kargonuzun hasarlı teslim edilmesi durumunda, teslim almadan önce kargo görevlisine tutanak tutturmanızı ve derhal bizimle iletişime geçmenizi öneririz.</p>
+  </div>
+</div>
+
+<!-- İADE & DEĞİŞİM -->
+<div id="modal-iade" class="trust-modal-overlay" onclick="if(event.target===this)closeTrustModal('iade')">
+  <div class="trust-modal-box">
+    <button class="trust-modal-close" onclick="closeTrustModal('iade')">✕</button>
+    <h1>İade & Değişim</h1>
+    <p>SilotechParts olarak müşteri memnuniyetini ön planda tutuyoruz. Ürünlerimizde yaşadığınız sorunlarda size en hızlı şekilde yardımcı olmak için buradayız.</p>
+    <h2>İade Koşulları</h2>
+    <ul>
+      <li>Ürün teslim tarihinden itibaren <strong>14 gün</strong> içinde iade talebinde bulunabilirsiniz.</li>
+      <li>İade edilecek ürün kullanılmamış, orijinal ambalajında ve faturasıyla birlikte gönderilmelidir.</li>
+      <li>Kullanılmış, takılmış veya ambalajı bozulmuş ürünler iade kapsamı dışındadır.</li>
+      <li>Müşteri kaynaklı hasarlarda iade kabul edilmez.</li>
+    </ul>
+    <h2>Değişim Koşulları</h2>
+    <ul>
+      <li>Yanlış ürün gönderimlerinde değişim ücretsiz yapılmaktadır.</li>
+      <li>Ürün arızası veya üretim hatası durumunda garanti kapsamında değişim sağlanır.</li>
+      <li>Müşteri tercihine bağlı değişimlerde kargo bedeli alıcıya aittir.</li>
+    </ul>
+    <h2>İade Süreci</h2>
+    <p>İade talebinizi <a href="tel:+905415176909" style="color:#c8410a">0541 517 69 09</a> numaralı telefondan veya <a href="https://wa.me/905415176909" style="color:#25d366">WhatsApp</a> üzerinden bizimle paylaşın. Talebiniz değerlendirilerek size kargo bilgisi iletilecektir. İade onayı alınmadan gönderilen ürünler kabul edilmeyecektir.</p>
+    <h2>Para İadesi</h2>
+    <p>İade onaylanan ürünlerin bedeli, ürünün firmamıza ulaşmasından itibaren <strong>3–5 iş günü</strong> içinde ödeme yönteminize iade edilir.</p>
+  </div>
+</div>
+
+<!-- MESAFELİ SATIŞ SÖZLEŞMESİ -->
+<div id="modal-mesafeli-satis" class="trust-modal-overlay" onclick="if(event.target===this)closeTrustModal('mesafeli-satis')">
+  <div class="trust-modal-box">
+    <button class="trust-modal-close" onclick="closeTrustModal('mesafeli-satis')">✕</button>
+    <h1>Mesafeli Satış Sözleşmesi</h1>
+    <h2>1. Taraflar</h2>
+    <p><strong>Satıcı:</strong> SilotechParts – Cumhuriyet, Fatih Cd. NO:303/7, 54900 Pamukova / Sakarya | Tel: 0541 517 69 09<br>
+    <strong>Alıcı:</strong> Sipariş formunda belirtilen kişi/kurum.</p>
+    <h2>2. Konu</h2>
+    <p>İşbu sözleşme, alıcının silotechparts.com.tr üzerinden elektronik ortamda sipariş verdiği ürünlerin satışı ve teslimatına ilişkin olup 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri çerçevesinde düzenlenmiştir.</p>
+    <h2>3. Ürün Bilgileri ve Bedel</h2>
+    <p>Sipariş edilen ürünlerin özellikleri, miktarları ve satış bedelleri sipariş özet sayfasında ve alıcıya gönderilen sipariş onay e-postasında yer almaktadır.</p>
+    <h2>4. Ödeme</h2>
+    <p>Ödeme, sipariş sırasında seçilen yöntemle (havale/EFT veya kredi kartı) gerçekleştirilir. Havale/EFT ile ödemelerde sipariş, ödeme tahsil edildikten sonra işleme alınır.</p>
+    <h2>5. Teslimat</h2>
+    <p>Ürünler, ödeme onayının ardından stok durumuna bağlı olarak en geç <strong>5 iş günü</strong> içinde kargoya verilir. Teslimat süresi kargo firmasına göre değişmekle birlikte genellikle 1–3 iş günüdür.</p>
+    <h2>6. Cayma Hakkı</h2>
+    <p>Alıcı, teslim tarihinden itibaren <strong>14 gün</strong> içinde herhangi bir gerekçe göstermeksizin cayma hakkını kullanabilir. Cayma bildiriminin yazılı veya kalıcı veri saklayıcısıyla yapılması gerekmektedir. Cayma hakkının kullanılamadığı ürünler arasında özellikle sipariş üzerine temin edilen veya kullanılmış ürünler yer alabilir.</p>
+    <h2>7. Uyuşmazlık</h2>
+    <p>İşbu sözleşmeden doğacak uyuşmazlıklarda Sakarya Tüketici Hakem Heyetleri ve Mahkemeleri yetkilidir.</p>
+  </div>
+</div>
+
+<!-- GİZLİLİK / KVKK -->
+<div id="modal-kvkk" class="trust-modal-overlay" onclick="if(event.target===this)closeTrustModal('kvkk')">
+  <div class="trust-modal-box">
+    <button class="trust-modal-close" onclick="closeTrustModal('kvkk')">✕</button>
+    <h1>Gizlilik Politikası & KVKK Aydınlatma Metni</h1>
+    <p>SilotechParts olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında kişisel verilerinizin güvenliğine büyük önem veriyoruz.</p>
+    <h2>Toplanan Veriler</h2>
+    <ul>
+      <li>Ad, soyad, telefon numarası, e-posta adresi</li>
+      <li>Teslimat ve fatura adresi bilgileri</li>
+      <li>Sipariş geçmişi ve ürün tercihleri</li>
+      <li>Site kullanım istatistikleri (anonim)</li>
+    </ul>
+    <h2>Verilerin Kullanım Amacı</h2>
+    <ul>
+      <li>Siparişlerin işleme alınması ve teslimatın gerçekleştirilmesi</li>
+      <li>Müşteri hizmetleri ve destek sağlanması</li>
+      <li>Yasal yükümlülüklerin yerine getirilmesi</li>
+      <li>Açık rızanız halinde pazarlama iletişimleri</li>
+    </ul>
+    <h2>Verilerin Paylaşımı</h2>
+    <p>Kişisel verileriniz; kargo firmaları (teslimat amacıyla), ödeme kuruluşları (tahsilat amacıyla) ve yasal zorunluluk halinde resmi makamlarla paylaşılabilir. Üçüncü taraf pazarlama amaçlı veri paylaşımı yapılmaz.</p>
+    <h2>Haklarınız</h2>
+    <p>KVKK'nın 11. maddesi kapsamında; verilerinize erişim, düzeltme, silme, işlemenin kısıtlanması ve itiraz haklarına sahipsiniz. Taleplerinizi <a href="tel:+905415176909" style="color:#c8410a">0541 517 69 09</a> numarasından iletebilirsiniz.</p>
+    <h2>Çerezler (Cookies)</h2>
+    <p>Sitemiz, kullanıcı deneyimini iyileştirmek amacıyla çerez kullanmaktadır. Tarayıcı ayarlarınızdan çerezleri devre dışı bırakabilirsiniz; ancak bu durumda sitenin bazı özellikleri çalışmayabilir.</p>
+  </div>
+</div>
+
+<!-- SIKÇA SORULAN SORULAR -->
+<div id="modal-sss" class="trust-modal-overlay" onclick="if(event.target===this)closeTrustModal('sss')">
+  <div class="trust-modal-box">
+    <button class="trust-modal-close" onclick="closeTrustModal('sss')">✕</button>
+    <h1>Sıkça Sorulan Sorular</h1>
+    <h2>Parça uyumluluğunu nasıl kontrol edebilirim?</h2>
+    <p>Ürün sayfasındaki teknik detayları inceleyebilir veya WhatsApp hattımızdan makine model ve seri numaranızı paylaşarak doğrulama yaptırabilirsiniz.</p>
+    <h2>Stokta olmayan ürünleri temin edebilir misiniz?</h2>
+    <p>Evet. Mevcut stoğumuzda bulunmayan parçalar için temin süreci başlatıyoruz. Talebinizi iletmeniz yeterlidir; size süre ve fiyat bilgisi aktarırız.</p>
+    <h2>Toplu sipariş indirimi var mı?</h2>
+    <p>Belirli miktarın üzerindeki siparişlerde özel fiyatlandırma yapılabilir. Detaylar için müşteri hizmetlerimizle iletişime geçiniz.</p>
+    <h2>Fatura kesiyor musunuz?</h2>
+    <p>Evet, tüm siparişler için yasal fatura düzenlenmektedir. Bireysel veya kurumsal fatura talep edebilirsiniz.</p>
+    <h2>Ürünlerin garantisi var mı?</h2>
+    <p>Sattığımız tüm orijinal ürünler, üretici firma garantisi kapsamındadır. Garanti süresi ürüne göre değişmekte olup ürün sayfasında belirtilmektedir.</p>
+    <h2>Kargo takibini nasıl yapabilirim?</h2>
+    <p>Siparişiniz kargoya verildikten sonra size takip numarası SMS veya WhatsApp ile iletilecektir. Kargo firmasının web sitesi veya müşteri hattı üzerinden takip yapabilirsiniz.</p>
+    <h2>Ödeme yöntemleri nelerdir?</h2>
+    <p>Havale/EFT ve kredi kartı ile ödeme kabul edilmektedir. Kurumsal müşteriler için açık hesap seçeneği de değerlendirilebilir.</p>
+    <h2>Yurt dışına gönderim yapıyor musunuz?</h2>
+    <p>Şu an için yalnızca Türkiye içi gönderim yapılmaktadır. Yurt dışı talepler için ayrıca iletişime geçiniz.</p>
+  </div>
+</div>
+
+<script>
+function openTrustModal(id) {
+  document.getElementById('modal-' + id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeTrustModal(id) {
+  document.getElementById('modal-' + id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    ['hakkimizda','teslimat','iade','mesafeli-satis','kvkk','sss'].forEach(closeTrustModal);
+  }
+});
+</script>
 
 
 <script>
