@@ -722,6 +722,177 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 .checkout-success-title { font-family: var(--serif); font-size: 26px; color: var(--ink); margin-bottom: 12px; }
 .checkout-success-msg { color: var(--ink3); font-size: 14px; line-height: 1.6; }
 
+/* ── CHECKOUT STEP INDICATOR ── */
+.checkout-steps {
+  display: flex; align-items: center; justify-content: center; gap: 0;
+  padding: 20px 32px; border-bottom: 1px solid var(--border);
+  background: var(--off);
+}
+.checkout-step {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink3);
+}
+.checkout-step.active { color: var(--ink); }
+.checkout-step.done { color: var(--accent2); }
+.checkout-step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--border2); background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+  transition: all 0.2s;
+}
+.checkout-step.active .checkout-step-num { border-color: var(--ink); background: var(--ink); color: white; }
+.checkout-step.done .checkout-step-num { border-color: var(--accent2); background: var(--accent2); color: white; }
+.checkout-step-line { width: 40px; height: 2px; background: var(--border); margin: 0 8px; flex-shrink: 0; }
+.checkout-step-line.done { background: var(--accent2); }
+@media (max-width: 600px) {
+  .checkout-steps { padding: 14px 16px; gap: 0; }
+  .checkout-step-label { display: none; }
+  .checkout-step-line { width: 24px; margin: 0 4px; }
+}
+
+/* ── IYZICO CARD FORM ── */
+.iyzico-wrap {
+  border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; margin: 8px 0 16px; min-height: 320px;
+  background: var(--off); position: relative;
+}
+.iyzico-wrap iframe { width: 100%; min-height: 320px; border: none; display: block; }
+.iyzico-loading {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px;
+  background: var(--off);
+}
+.iyzico-spinner {
+  width: 36px; height: 36px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.iyzico-loading-text { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 0.1em; }
+
+/* ── CARD INPUT STYLES ── */
+.card-input-group {
+  border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  background: var(--white); margin-bottom: 12px;
+}
+.card-input-row {
+  display: flex; border-bottom: 1px solid var(--border);
+}
+.card-input-row:last-child { border-bottom: none; }
+.card-input-row .checkout-input {
+  border: none; border-radius: 0; background: var(--white);
+  border-right: 1px solid var(--border);
+}
+.card-input-row .checkout-input:last-child { border-right: none; }
+.card-secure-badge {
+  display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+  background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px;
+  font-family: var(--mono); font-size: 10px; color: #166534; letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+.pay-logos { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+.pay-logo {
+  height: 22px; padding: 3px 8px; border: 1px solid var(--border);
+  border-radius: 3px; background: white; display: flex; align-items: center;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.05em; color: var(--ink2);
+  font-weight: 600;
+}
+
+/* ── CART QUANTITY CONTROLS ── */
+.cart-item-qty-ctrl {
+  display: flex; align-items: center; gap: 6px; margin-top: 4px;
+}
+.qty-btn {
+  width: 24px; height: 24px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--white);
+  color: var(--ink); font-size: 14px; line-height: 1;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s; flex-shrink: 0;
+}
+.qty-btn:hover { border-color: var(--border2); background: var(--off); }
+.qty-btn:active { background: var(--ink); color: white; }
+.qty-num {
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  color: var(--ink); min-width: 20px; text-align: center;
+}
+
+/* ── SAVED ADDRESSES ── */
+.saved-addr-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.saved-addr-card {
+  border: 2px solid var(--border); border-radius: 4px; padding: 12px 14px;
+  cursor: pointer; transition: all 0.12s; position: relative;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.saved-addr-card:hover { border-color: var(--border2); background: var(--off); }
+.saved-addr-card.selected { border-color: var(--ink); background: var(--off); }
+.saved-addr-radio {
+  width: 16px; height: 16px; border: 2px solid var(--border2);
+  border-radius: 50%; margin-top: 2px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s;
+}
+.saved-addr-card.selected .saved-addr-radio { border-color: var(--ink); background: var(--ink); }
+.saved-addr-card.selected .saved-addr-radio::after {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: white;
+}
+.saved-addr-info { flex: 1; }
+.saved-addr-label { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.saved-addr-text { font-size: 12px; color: var(--ink3); line-height: 1.4; }
+.addr-use-new { 
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink3); cursor: pointer; margin-bottom: 16px; padding: 6px 0;
+  border: none; background: none; transition: color 0.12s;
+}
+.addr-use-new:hover { color: var(--ink); }
+
+/* ── ORDER PROGRESS TRACKER ── */
+.order-track-steps { display: flex; flex-direction: column; gap: 0; }
+.order-track-step {
+  display: flex; gap: 12px; align-items: flex-start; position: relative;
+  padding-bottom: 20px;
+}
+.order-track-step:last-child { padding-bottom: 0; }
+.order-track-step::before {
+  content: ''; position: absolute; left: 12px; top: 28px;
+  width: 2px; height: calc(100% - 16px); background: var(--border);
+}
+.order-track-step:last-child::before { display: none; }
+.order-track-step.done::before { background: var(--accent2); }
+.order-track-dot {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid var(--border2); background: var(--white);
+  display: flex; align-items: center; justify-content: center; font-size: 11px;
+  position: relative; z-index: 1;
+}
+.order-track-step.done .order-track-dot { border-color: var(--accent2); background: var(--accent2); color: white; }
+.order-track-step.current .order-track-dot { border-color: var(--ink); background: var(--ink); color: white; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(26,24,20,0.3); } 50% { box-shadow: 0 0 0 6px rgba(26,24,20,0); } }
+.order-track-content { padding-top: 2px; }
+.order-track-label { font-size: 13px; font-weight: 500; color: var(--ink); }
+.order-track-date { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 0.05em; margin-top: 2px; }
+
+/* ── COUPON INPUT ── */
+.coupon-wrap { display: flex; gap: 8px; margin-bottom: 12px; }
+.coupon-input {
+  flex: 1; padding: 9px 12px; border: 1px dashed var(--border2);
+  border-radius: var(--radius); font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.08em; color: var(--ink); background: var(--white);
+  outline: none; transition: border-color 0.15s;
+}
+.coupon-input:focus { border-color: var(--ink); border-style: solid; }
+.coupon-apply-btn {
+  padding: 9px 16px; background: var(--white); color: var(--ink);
+  border: 1px solid var(--border2); font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.08em; cursor: pointer; border-radius: var(--radius);
+  transition: all 0.12s; white-space: nowrap; text-transform: uppercase;
+}
+.coupon-apply-btn:hover { border-color: var(--ink); }
+.coupon-ok { color: var(--accent2); font-family: var(--mono); font-size: 11px; margin-top: -4px; margin-bottom: 8px; }
+.coupon-err { color: var(--accent); font-family: var(--mono); font-size: 11px; margin-top: -4px; margin-bottom: 8px; }
+
 /* ── LOGIN PROMPT MODAL ── */
 #loginPromptOverlay {
   display: none;
@@ -1619,11 +1790,27 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 <div id="checkoutPage">
   <div class="checkout-page-head">
     <div class="checkout-page-head-wrap">
-      <button class="checkout-back-btn" id="checkoutBackBtn" onclick="closeCheckout()">
+      <button class="checkout-back-btn" id="checkoutBackBtn" onclick="goCheckoutStep(1)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        Sepete Dön
+        Geri
       </button>
       <div class="checkout-page-title" id="checkoutPageTitle">Sipariş Ver</div>
+    </div>
+    <div class="checkout-steps" id="checkoutStepsBar">
+      <div class="checkout-step active" id="cstep1">
+        <div class="checkout-step-num">1</div>
+        <span class="checkout-step-label">Teslimat</span>
+      </div>
+      <div class="checkout-step-line" id="cstepLine1"></div>
+      <div class="checkout-step" id="cstep2">
+        <div class="checkout-step-num">2</div>
+        <span class="checkout-step-label">Ödeme</span>
+      </div>
+      <div class="checkout-step-line" id="cstepLine2"></div>
+      <div class="checkout-step" id="cstep3">
+        <div class="checkout-step-num">3</div>
+        <span class="checkout-step-label">Onay</span>
+      </div>
     </div>
   </div>
 
@@ -1663,6 +1850,17 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
       <!-- Shipping Address -->
       <div class="checkout-section">
         <div class="checkout-section-title">📦 Teslimat Adresi</div>
+        <!-- Kayıtlı Adresler (giriş yapmış kullanıcılar için) -->
+        <div id="savedAddrPicker" style="display:none;margin-bottom:16px;">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Kayıtlı Adreslerim</div>
+          <div class="saved-addr-list" id="savedAddrList"></div>
+          <button class="addr-use-new" id="addrUseNewBtn" onclick="toggleNewAddressForm()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Farklı Adres Kullan
+          </button>
+        </div>
+        <!-- Adres formu -->
+        <div id="newAddressFields">
         <div class="checkout-field">
           <label class="checkout-label">Adres *</label>
           <input class="checkout-input" id="chkAddress" placeholder="Mahalle, Cadde, No...">
@@ -1681,12 +1879,17 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <label class="checkout-label">Sipariş Notu (İsteğe bağlı)</label>
           <textarea class="checkout-textarea" id="chkNote" placeholder="Özel isteklerinizi belirtebilirsiniz..."></textarea>
         </div>
+        </div><!-- /newAddressFields -->
       </div>
 
       <!-- Payment Method -->
       <div class="checkout-section">
         <div class="checkout-section-title">💳 Ödeme Yöntemi</div>
         <div class="checkout-pay-methods">
+          <div class="checkout-pay-method" id="payCard" onclick="selectPay('card')">
+            <div class="checkout-pay-method-icon">💳</div>
+            <div class="checkout-pay-method-label">Kredi / Banka Kartı</div>
+          </div>
           <div class="checkout-pay-method selected" id="payBank" onclick="selectPay('bank')">
             <div class="checkout-pay-method-icon">🏦</div>
             <div class="checkout-pay-method-label">Havale / EFT</div>
@@ -1719,6 +1922,34 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div id="payWhatsappInfo" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:var(--radius);padding:16px;font-size:13px;color:#166534;line-height:1.7;">
           📱 Siparişiniz WhatsApp üzerinden iletilecek. Ödeme detayları WhatsApp'ta kararlaştırılacak.
         </div>
+        <!-- Kredi Kartı info -->
+        <div id="payCardInfo" style="display:none;">
+          <div class="card-secure-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            3D Secure · SSL Şifreli · iyzico Güvencesi
+          </div>
+          <div class="card-input-group">
+            <div class="card-input-row">
+              <input class="checkout-input" id="cardHolder" placeholder="Kart Üzerindeki İsim" style="text-transform:uppercase;" autocomplete="cc-name">
+            </div>
+            <div class="card-input-row">
+              <input class="checkout-input" id="cardNumber" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="formatCardNo(this)" autocomplete="cc-number">
+            </div>
+            <div class="card-input-row">
+              <input class="checkout-input" id="cardExp" placeholder="AA / YY" maxlength="7" oninput="formatCardExp(this)" autocomplete="cc-exp" style="border-right:1px solid var(--border)">
+              <input class="checkout-input" id="cardCvv" placeholder="CVV" maxlength="4" autocomplete="cc-csc" type="password">
+            </div>
+          </div>
+          <div class="pay-logos">
+            <div class="pay-logo">VISA</div>
+            <div class="pay-logo">MC</div>
+            <div class="pay-logo">TROY</div>
+            <div class="pay-logo" style="color:#e84142;">iyzico</div>
+          </div>
+          <div style="margin-top:12px;padding:10px 12px;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius);font-size:12px;color:#92400e;">
+            ⚠ Kart bilgileriniz tarafımızca saklanmaz. İşlem iyzico altyapısı üzerinden 3D Secure ile gerçekleştirilir.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1727,9 +1958,24 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
       <div class="checkout-section" style="position:sticky;top:80px">
         <div class="checkout-section-title">🛒 Sipariş Özeti</div>
         <div id="checkoutItemList"></div>
-        <div class="checkout-summary-row" style="margin-top:12px;">
+
+        <!-- Kupon kodu -->
+        <div style="margin:14px 0 4px;">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;">Kupon / İndirim Kodu</div>
+          <div class="coupon-wrap">
+            <input class="coupon-input" id="couponInput" placeholder="KUPON KODUNUZ" autocomplete="off">
+            <button class="coupon-apply-btn" onclick="applyCoupon()">Uygula</button>
+          </div>
+          <div id="couponMsg" style="display:none;"></div>
+        </div>
+
+        <div class="checkout-summary-row" style="margin-top:8px;">
           <span>Ara Toplam</span>
           <span id="chkSubtotal">$0.00</span>
+        </div>
+        <div class="checkout-summary-row" id="couponRow" style="display:none;">
+          <span style="color:#16a34a;">İndirim</span>
+          <span style="color:#16a34a;" id="couponDiscountDisplay">-$0.00</span>
         </div>
         <div class="checkout-summary-row">
           <span>Kargo</span>
@@ -1740,50 +1986,93 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div class="checkout-summary-total-price" id="chkTotal">$0.00</div>
         </div>
         <button class="checkout-submit-btn" onclick="submitOrder()" id="submitOrderBtn">
-          Siparişi Onayla →
+          Devam Et →
         </button>
-        <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--ink3);">
-          🔒 Bilgileriniz güvende · SSL Şifreli
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:11px;color:var(--ink3);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          SSL Şifreli · 256-bit Güvenlik
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── STEP 2: PAYMENT DETAILS (shown after order confirmed) ── -->
+  <!-- ── STEP 2: ÖDEME ADIMLARI ── -->
   <div id="checkoutStep2" style="display:none;max-width:640px;margin:0 auto;padding:32px;">
 
-    <!-- Bank Transfer confirmation -->
+    <!-- Sipariş özeti (compact) -->
+    <div class="checkout-section" style="margin-bottom:20px;">
+      <div class="checkout-section-title">🛒 Sipariş Özeti</div>
+      <div id="step2ItemList"></div>
+      <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);margin-top:8px;">
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink3);">Genel Toplam</span>
+        <span id="step2TotalDisplay" style="font-family:var(--serif);font-size:22px;color:var(--ink);"></span>
+      </div>
+    </div>
+
+    <!-- Kredi Kartı Ödeme Bölümü -->
+    <div id="step2CardSection" style="display:none;">
+      <div class="checkout-section">
+        <div class="checkout-section-title">💳 Kart Bilgileri</div>
+        <div class="card-secure-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          3D Secure korumalı · iyzico altyapısı · Kart bilginiz saklanmaz
+        </div>
+        <div class="card-input-group">
+          <div class="card-input-row">
+            <input class="checkout-input" id="s2CardHolder" placeholder="Kart Üzerindeki İsim" style="text-transform:uppercase;" autocomplete="cc-name">
+          </div>
+          <div class="card-input-row">
+            <input class="checkout-input" id="s2CardNumber" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="formatCardNo(this)" autocomplete="cc-number">
+          </div>
+          <div class="card-input-row">
+            <input class="checkout-input" id="s2CardExp" placeholder="AA / YY" maxlength="7" oninput="formatCardExp(this)" autocomplete="cc-exp" style="border-right:1px solid var(--border);">
+            <input class="checkout-input" id="s2CardCvv" placeholder="CVV" maxlength="4" type="password" autocomplete="cc-csc">
+          </div>
+        </div>
+        <div class="pay-logos" style="margin-bottom:16px;">
+          <div class="pay-logo">VISA</div>
+          <div class="pay-logo">MC</div>
+          <div class="pay-logo">TROY</div>
+          <div class="pay-logo" style="color:#e84142;border-color:#e84142;">iyzico</div>
+        </div>
+        <!-- Taksit seçenekleri -->
+        <div id="installmentSection" style="display:none;">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Taksit Seçeneği</div>
+          <div id="installmentOptions" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+        <!-- 3D Secure iframe area -->
+        <div id="iyzicoIframeWrap" class="iyzico-wrap" style="display:none;">
+          <div class="iyzico-loading" id="iyzicoLoading">
+            <div class="iyzico-spinner"></div>
+            <div class="iyzico-loading-text">3D Secure Yükleniyor...</div>
+          </div>
+          <iframe id="iyzicoIframe" title="3D Secure" onload="onIyzicoLoaded()" style="display:none;"></iframe>
+        </div>
+        <button class="checkout-submit-btn" id="payCardBtn" onclick="initiateCardPayment()" style="margin-top:8px;">
+          💳 Ödemeyi Tamamla →
+        </button>
+      </div>
+    </div>
+
+    <!-- Havale / EFT Bölümü -->
     <div id="step2Bank">
-      <div style="text-align:center;margin-bottom:32px;">
-        <div style="font-size:56px;margin-bottom:12px;">🎉</div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--ink);margin-bottom:8px;">Siparişiniz Alındı!</div>
-        <div style="color:var(--ink3);font-size:14px;">Aşağıdaki hesaba havale/EFT yaptıktan sonra siparişiniz işleme alınacak.</div>
-      </div>
-
-      <!-- Order number -->
-      <div style="background:var(--off);border:1px solid var(--border);border-radius:4px;padding:16px;margin-bottom:20px;text-align:center;">
-        <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--ink3);margin-bottom:6px;">SİPARİŞ NUMARANIZ</div>
-        <div id="step2OrderNo" style="font-family:var(--mono);font-size:20px;font-weight:600;color:var(--ink);letter-spacing:0.1em;"></div>
-      </div>
-
-      <!-- Bank details card -->
-      <div style="border:2px solid var(--ink);border-radius:4px;padding:24px;margin-bottom:20px;">
-        <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:16px;">Ödeme Bilgileri</div>
-        <div style="display:grid;gap:12px;">
+      <div class="checkout-section">
+        <div class="checkout-section-title">🏦 Havale / EFT Bilgileri</div>
+        <div style="background:var(--off);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;">
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
             <span style="font-size:13px;color:var(--ink3);">Banka</span>
-            <span style="font-size:14px;font-weight:600;color:var(--ink);">Garanti BBVA</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);">Garanti BBVA</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
             <span style="font-size:13px;color:var(--ink3);">Hesap Sahibi</span>
-            <span style="font-size:14px;font-weight:600;color:var(--ink);">SilotechParts</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);">SilotechParts</span>
           </div>
           <div style="padding:10px 0;border-bottom:1px solid var(--border);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <span style="font-size:13px;color:var(--ink3);">IBAN</span>
-              <button onclick="copyIBAN()" style="font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:var(--mono);">📋 Kopyala</button>
+            <div style="font-size:12px;color:var(--ink3);margin-bottom:6px;">IBAN</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div id="ibanDisplay" style="font-family:var(--mono);font-size:14px;font-weight:600;color:var(--ink);letter-spacing:0.05em;flex:1;">TR00 0000 0000 0000 0000 0000 00</div>
+              <button onclick="copyIBAN()" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--ink2);cursor:pointer;white-space:nowrap;transition:all 0.12s;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">📋 Kopyala</button>
             </div>
-            <div id="ibanDisplay" style="font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);letter-spacing:0.05em;">TR00 0000 0000 0000 0000 0000 00</div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
             <span style="font-size:13px;color:var(--ink3);">Tutar</span>
@@ -1794,55 +2083,117 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
             <div style="margin-top:6px;background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius);padding:10px;font-family:var(--mono);font-size:14px;font-weight:600;color:var(--accent);" id="step2RefNo"></div>
           </div>
         </div>
+        <div style="background:#fef9c3;border:1px solid #fde047;border-radius:4px;padding:14px;font-size:13px;color:#713f12;margin-bottom:16px;line-height:1.6;">
+          ⚠️ Havale yaparken açıklama kısmına <strong id="step2OrderNo"></strong> sipariş numaranızı yazmayı unutmayın.
+        </div>
+        <button onclick="sendOrderWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+          Siparişi WhatsApp'tan Bildir
+        </button>
+        <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
+          Alışverişe Devam Et
+        </button>
       </div>
-
-      <div style="background:#fef9c3;border:1px solid #fde047;border-radius:4px;padding:14px;font-size:13px;color:#713f12;margin-bottom:24px;line-height:1.6;">
-        ⚠️ Havale yaparken açıklama kısmına <strong>sipariş numaranızı</strong> yazmayı unutmayın. Aksi takdirde ödemeniz eşleştirilemez.
-      </div>
-
-      <!-- WhatsApp confirm button -->
-      <button onclick="sendOrderWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
-        Siparişi WhatsApp'tan Bildir
-      </button>
-      <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
-        Alışverişe Devam Et
-      </button>
     </div>
 
-    <!-- Kapıda ödeme confirmation -->
-    <div id="step2Delivery" style="display:none;text-align:center;">
-      <div style="font-size:56px;margin-bottom:12px;">✅</div>
-      <div style="font-family:var(--serif);font-size:26px;color:var(--ink);margin-bottom:8px;">Siparişiniz Alındı!</div>
-      <div style="color:var(--ink3);font-size:14px;margin-bottom:24px;">Siparişiniz hazırlandığında sizi arayacağız. Teslimat sırasında ödeme yapabilirsiniz.</div>
-      <div style="background:var(--off);border:1px solid var(--border);border-radius:4px;padding:16px;margin-bottom:24px;text-align:center;">
-        <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--ink3);margin-bottom:6px;">SİPARİŞ NUMARANIZ</div>
-        <div id="step2DeliveryOrderNo" style="font-family:var(--mono);font-size:20px;font-weight:600;color:var(--ink);letter-spacing:0.1em;"></div>
+    <!-- Kapıda Ödeme Bölümü -->
+    <div id="step2Delivery" style="display:none;">
+      <div class="checkout-section" style="text-align:center;padding:36px 24px;">
+        <div style="font-size:56px;margin-bottom:16px;">✅</div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--ink);margin-bottom:10px;">Siparişiniz Alındı!</div>
+        <div style="color:var(--ink3);font-size:14px;margin-bottom:24px;line-height:1.7;">Siparişiniz hazırlandığında sizi arayacağız.<br>Teslimat sırasında nakit veya kart ile ödeme yapabilirsiniz.</div>
+        <div style="background:var(--off);border:1px solid var(--border);border-radius:4px;padding:16px;margin-bottom:24px;display:inline-block;min-width:220px;">
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--ink3);margin-bottom:6px;">SİPARİŞ NUMARANIZ</div>
+          <div id="step2DeliveryOrderNo" style="font-family:var(--mono);font-size:20px;font-weight:600;color:var(--ink);letter-spacing:0.1em;"></div>
+        </div>
+        <button onclick="sendOrderWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+          Siparişi WhatsApp'tan Bildir
+        </button>
+        <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
+          Alışverişe Devam Et
+        </button>
       </div>
-      <button onclick="sendOrderWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
-        Siparişi WhatsApp'tan Bildir
-      </button>
-      <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
-        Alışverişe Devam Et
-      </button>
     </div>
 
-    <!-- WhatsApp order -->
-    <div id="step2Whatsapp" style="display:none;text-align:center;">
-      <div style="font-size:56px;margin-bottom:12px;">📱</div>
-      <div style="font-family:var(--serif);font-size:26px;color:var(--ink);margin-bottom:8px;">Siparişiniz Hazır!</div>
-      <div style="color:var(--ink3);font-size:14px;margin-bottom:24px;">WhatsApp butonuna tıklayarak siparişinizi bize gönderin. Ödeme detaylarını WhatsApp üzerinden kararlaştıracağız.</div>
-      <button onclick="sendOrderWhatsApp()" style="width:100%;padding:16px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
-        WhatsApp ile Sipariş Ver
-      </button>
-      <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
-        Alışverişe Devam Et
-      </button>
+    <!-- WhatsApp Bölümü -->
+    <div id="step2Whatsapp" style="display:none;">
+      <div class="checkout-section" style="text-align:center;padding:36px 24px;">
+        <div style="font-size:56px;margin-bottom:16px;">📱</div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--ink);margin-bottom:10px;">Siparişiniz Hazır!</div>
+        <div style="color:var(--ink3);font-size:14px;margin-bottom:24px;line-height:1.7;">WhatsApp butonuna tıklayarak siparişinizi bize gönderin.<br>Ödeme detaylarını WhatsApp üzerinden kararlaştıracağız.</div>
+        <button onclick="sendOrderWhatsApp()" style="width:100%;padding:16px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+          WhatsApp ile Sipariş Ver
+        </button>
+        <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
+          Alışverişe Devam Et
+        </button>
+      </div>
     </div>
 
   </div>
+
+  <!-- ── STEP 3: ÖDEME ONAY ── -->
+  <div id="checkoutStep3" style="display:none;max-width:560px;margin:0 auto;padding:40px 32px;text-align:center;">
+    <div style="font-size:72px;margin-bottom:20px;animation:popIn 0.4s ease;">🎉</div>
+    <div style="font-family:var(--serif);font-size:30px;color:var(--ink);margin-bottom:12px;">Siparişiniz Onaylandı!</div>
+    <div style="color:var(--ink3);font-size:14px;line-height:1.8;margin-bottom:28px;">
+      Ödemeniz başarıyla alındı. Sipariş numaranız aşağıda.<br>
+      Kargo bilgisi SMS ve WhatsApp ile iletilecektir.
+    </div>
+
+    <!-- Sipariş takip adımları -->
+    <div class="checkout-section" style="text-align:left;margin-bottom:24px;">
+      <div class="checkout-section-title">📦 Sipariş Durumu</div>
+      <div class="order-track-steps">
+        <div class="order-track-step done">
+          <div class="order-track-dot">✓</div>
+          <div class="order-track-content">
+            <div class="order-track-label">Sipariş Alındı</div>
+            <div class="order-track-date" id="trackDate1"></div>
+          </div>
+        </div>
+        <div class="order-track-step current">
+          <div class="order-track-dot">⚙</div>
+          <div class="order-track-content">
+            <div class="order-track-label">Hazırlanıyor</div>
+            <div class="order-track-date">1-2 iş günü</div>
+          </div>
+        </div>
+        <div class="order-track-step">
+          <div class="order-track-dot">🚚</div>
+          <div class="order-track-content">
+            <div class="order-track-label">Kargoya Verildi</div>
+            <div class="order-track-date">—</div>
+          </div>
+        </div>
+        <div class="order-track-step">
+          <div class="order-track-dot">🏠</div>
+          <div class="order-track-content">
+            <div class="order-track-label">Teslim Edildi</div>
+            <div class="order-track-date">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--off);border:1px solid var(--border);border-radius:4px;padding:20px;margin-bottom:24px;">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--ink3);margin-bottom:8px;">SİPARİŞ NUMARANIZ</div>
+      <div id="step3OrderNo" style="font-family:var(--mono);font-size:24px;font-weight:700;color:var(--ink);letter-spacing:0.12em;margin-bottom:8px;"></div>
+      <div id="step3TotalDisplay" style="font-size:13px;color:var(--ink3);"></div>
+    </div>
+
+    <button onclick="sendOrderWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+      Siparişi WhatsApp'tan Bildir
+    </button>
+    <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
+      Alışverişe Devam Et
+    </button>
+    <style>@keyframes popIn{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}</style>
+  </div>
+
 </div>
 
 <!-- PROFİL SAYFASI -->
@@ -5539,6 +5890,7 @@ function switchProfileTab(tab) {
   document.querySelectorAll('.profile-nav-item').forEach((el, i) => {
     el.classList.toggle('active', ['orders','info','addresses','password'][i] === tab);
   });
+  if (tab === 'addresses') renderAddrList();
 }
 
 async function loadProfileOrders() {
@@ -5713,6 +6065,17 @@ function openCheckout() {
     document.getElementById('chkLastName').value = nameParts.slice(1).join(' ')||'';
     document.getElementById('chkEmail').value = currentUser.email||'';
     document.getElementById('chkPhone').value = currentUser.phone||'';
+
+    // Pre-fill address from first saved address
+    const addrs = getSavedAddresses();
+    if (addrs.length) {
+      const a = addrs[0];
+      document.getElementById('chkAddress').value = a.line||'';
+      document.getElementById('chkDistrict').value = a.district||'';
+      document.getElementById('chkCity').value = a.city||'';
+    }
+    // Render saved address picker above address fields
+    renderCheckoutAddrPicker();
   }
   // Reset to step 1
   document.getElementById('checkoutStep1').style.display = '';
@@ -5721,9 +6084,17 @@ function openCheckout() {
   if (backBtn) backBtn.style.display = '';
   const titleEl = document.getElementById('checkoutPageTitle');
   if (titleEl) titleEl.textContent = 'Sipariş Ver';
-  // Reset pay method to bank
+  // Reset pay method to bank (default)
   selectedPayMethod = 'bank';
   selectPay('bank');
+  // Reset coupon
+  appliedCoupon = null;
+  const couponInput = document.getElementById('couponInput');
+  const couponMsg   = document.getElementById('couponMsg');
+  const couponRow   = document.getElementById('couponRow');
+  if (couponInput) couponInput.value = '';
+  if (couponMsg) couponMsg.style.display = 'none';
+  if (couponRow) couponRow.style.display = 'none';
   renderCheckoutItems();
   document.getElementById('checkoutPage').style.display = 'block';
   document.body.style.overflow = 'hidden';
@@ -5752,7 +6123,7 @@ function renderCheckoutItems() {
 
 function selectPay(method) {
   selectedPayMethod = method;
-  ['bank','delivery','whatsapp'].forEach(m => {
+  ['bank','delivery','whatsapp','card'].forEach(m => {
     const el = document.getElementById('pay' + m.charAt(0).toUpperCase() + m.slice(1));
     if (el) el.classList.toggle('selected', m === method);
     const info = document.getElementById('pay' + m.charAt(0).toUpperCase() + m.slice(1) + 'Info');
@@ -5763,6 +6134,7 @@ function selectPay(method) {
 let currentOrderNo = '';
 let currentOrderCart = [];
 let currentOrderTotal = 0;
+let pendingOrderData = null;
 
 async function submitOrder() {
   const firstName = document.getElementById('chkFirstName').value.trim();
@@ -5780,6 +6152,18 @@ async function submitOrder() {
   }
 
   const total = cart.reduce((s, i) => s + i.price_usd * i.qty, 0);
+  const discountedTotal = appliedCoupon ? total * (1 - appliedCoupon.pct) : total;
+
+  // Kart ödemesi seçildiyse direkt Adım 2'ye geç (ödeme formu)
+  if (selectedPayMethod === 'card') {
+    // Sipariş bilgilerini geçici olarak sakla, ödeme onaylandıktan sonra kaydet
+    currentOrderCart  = [...cart];
+    currentOrderTotal = parseFloat(discountedTotal.toFixed(2));
+    pendingOrderData  = { firstName, lastName, email, phone, address, district, city, company, note };
+    goCheckoutStep(2);
+    return;
+  }
+
   const btn = document.getElementById('submitOrderBtn');
   btn.textContent = 'Gönderiliyor...'; btn.disabled = true;
 
@@ -5791,11 +6175,12 @@ async function submitOrder() {
     address:        address + (district ? ', ' + district : '') + ', ' + city,
     note:           note || null,
     pay_method:     selectedPayMethod,
-    total_usd:      parseFloat(total.toFixed(2)),
+    total_usd:      parseFloat(discountedTotal.toFixed(2)),
     status:         'pending',
     items:          cart.map(i => ({ part_no: i.part_no, name: i.turkish_name, qty: i.qty, price_usd: i.price_usd }))
   };
   if (currentUser && currentUser.email) orderPayload.member_email = currentUser.email;
+  if (appliedCoupon) orderPayload.coupon = appliedCoupon.code;
 
   let orderIdNum = Date.now();
   try {
@@ -5805,36 +6190,200 @@ async function submitOrder() {
 
   currentOrderNo    = 'STP-' + String(orderIdNum).padStart(6, '0');
   currentOrderCart  = [...cart];
-  currentOrderTotal = total;
+  currentOrderTotal = parseFloat(discountedTotal.toFixed(2));
 
   cart = []; renderCart(); updateCartCount();
-  btn.textContent = 'Siparişi Onayla →'; btn.disabled = false;
+  btn.textContent = 'Devam Et →'; btn.disabled = false;
 
   showCheckoutStep2();
 }
 
-function showCheckoutStep2() {
-  document.getElementById('checkoutStep1').style.display = 'none';
-  document.getElementById('checkoutStep2').style.display = 'block';
-  document.getElementById('checkoutBackBtn').style.display = 'none';
-  document.getElementById('checkoutPageTitle').textContent =
-    selectedPayMethod === 'whatsapp' ? 'WhatsApp Siparişi' : 'Ödeme Bilgileri';
+// ── Step navigator ──────────────────────────────
+function goCheckoutStep(n) {
+  const s1 = document.getElementById('checkoutStep1');
+  const s2 = document.getElementById('checkoutStep2');
+  const s3 = document.getElementById('checkoutStep3');
+  const backBtn = document.getElementById('checkoutBackBtn');
+  const stepsBar = document.getElementById('checkoutStepsBar');
 
-  document.getElementById('step2Bank').style.display     = selectedPayMethod === 'bank'     ? '' : 'none';
-  document.getElementById('step2Delivery').style.display = selectedPayMethod === 'delivery' ? '' : 'none';
-  document.getElementById('step2Whatsapp').style.display = selectedPayMethod === 'whatsapp' ? '' : 'none';
+  // Hide all steps
+  [s1, s2, s3].forEach(el => { if (el) el.style.display = 'none'; });
 
-  if (document.getElementById('step2OrderNo'))
-    document.getElementById('step2OrderNo').textContent = currentOrderNo;
-  if (document.getElementById('step2RefNo'))
-    document.getElementById('step2RefNo').textContent = currentOrderNo;
-  if (document.getElementById('step2Total'))
-    document.getElementById('step2Total').textContent = '$' + currentOrderTotal.toFixed(2);
-  if (document.getElementById('step2DeliveryOrderNo'))
-    document.getElementById('step2DeliveryOrderNo').textContent = currentOrderNo;
+  // Update step indicator
+  [1,2,3].forEach(i => {
+    const stepEl = document.getElementById('cstep'+i);
+    if (!stepEl) return;
+    stepEl.classList.remove('active', 'done');
+    if (i < n)  stepEl.classList.add('done');
+    if (i === n) stepEl.classList.add('active');
+    // update done step num to checkmark
+    const numEl = stepEl.querySelector('.checkout-step-num');
+    if (numEl) numEl.textContent = i < n ? '✓' : i;
+  });
+  [1,2].forEach(i => {
+    const line = document.getElementById('cstepLine'+i);
+    if (line) line.classList.toggle('done', i < n);
+  });
 
+  if (n === 1) {
+    if (s1) s1.style.display = '';
+    if (backBtn) { backBtn.style.display = ''; backBtn.onclick = closeCheckout; backBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg> Sepete Dön'; }
+    document.getElementById('checkoutPageTitle').textContent = 'Sipariş Ver';
+    if (stepsBar) stepsBar.style.display = '';
+  } else if (n === 2) {
+    if (s2) s2.style.display = '';
+    if (backBtn) { backBtn.style.display = ''; backBtn.onclick = () => goCheckoutStep(1); backBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg> Geri'; }
+    document.getElementById('checkoutPageTitle').textContent = selectedPayMethod === 'card' ? 'Ödeme' : 'Sipariş Detayı';
+    // Show correct method section
+    const sections = ['step2CardSection','step2Bank','step2Delivery','step2Whatsapp'];
+    sections.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+    if (selectedPayMethod === 'card') {
+      const cs = document.getElementById('step2CardSection'); if (cs) cs.style.display = '';
+    } else if (selectedPayMethod === 'bank') {
+      const bs = document.getElementById('step2Bank'); if (bs) bs.style.display = '';
+      setEl('step2OrderNo', currentOrderNo);
+      setEl('step2RefNo', currentOrderNo);
+      setEl('step2Total', '$' + currentOrderTotal.toFixed(2));
+    } else if (selectedPayMethod === 'delivery') {
+      const ds = document.getElementById('step2Delivery'); if (ds) ds.style.display = '';
+      setEl('step2DeliveryOrderNo', currentOrderNo);
+    } else if (selectedPayMethod === 'whatsapp') {
+      const ws = document.getElementById('step2Whatsapp'); if (ws) ws.style.display = '';
+    }
+    // Populate compact order summary
+    renderStep2Summary();
+    if (stepsBar) stepsBar.style.display = '';
+  } else if (n === 3) {
+    if (s3) s3.style.display = '';
+    if (backBtn) backBtn.style.display = 'none';
+    document.getElementById('checkoutPageTitle').textContent = 'Sipariş Onayı';
+    setEl('step3OrderNo', currentOrderNo);
+    setEl('step3TotalDisplay', 'Toplam: $' + currentOrderTotal.toFixed(2));
+    const d = new Date();
+    const dateStr = d.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'}) + ' ' + d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    setEl('trackDate1', dateStr);
+    if (stepsBar) stepsBar.style.display = '';
+    showToast('✓ Siparişiniz alındı!');
+  }
   document.getElementById('checkoutPage').scrollTop = 0;
-  showToast('✓ Siparişiniz alındı!');
+}
+
+function renderStep2Summary() {
+  const list = document.getElementById('step2ItemList');
+  if (!list) return;
+  list.innerHTML = currentOrderCart.map(i => {
+    const img = getImgUrl(i.part_no);
+    return `<div class="checkout-order-item">
+      <div class="checkout-item-img"><img src="${img}" alt="" onerror="this.style.display='none'"></div>
+      <div class="checkout-item-info">
+        <div class="checkout-item-code">${i.part_no}</div>
+        <div class="checkout-item-name">${i.turkish_name}</div>
+        <div class="checkout-item-qty">Adet: ${i.qty}</div>
+      </div>
+      <div class="checkout-item-price">$${(i.price_usd*i.qty).toFixed(2)}</div>
+    </div>`;
+  }).join('');
+  setEl('step2TotalDisplay', '$' + currentOrderTotal.toFixed(2));
+}
+
+function showCheckoutStep2() {
+  // Legacy wrapper → now routes to new step 2
+  goCheckoutStep(2);
+}
+
+// ── iyzico Card Payment ──────────────────────────────────
+async function initiateCardPayment() {
+  const holder = (document.getElementById('s2CardHolder')?.value||document.getElementById('cardHolder')?.value||'').trim();
+  const number = (document.getElementById('s2CardNumber')?.value||document.getElementById('cardNumber')?.value||'').replace(/\s/g,'');
+  const exp    = (document.getElementById('s2CardExp')?.value||document.getElementById('cardExp')?.value||'').trim();
+  const cvv    = (document.getElementById('s2CardCvv')?.value||document.getElementById('cardCvv')?.value||'').trim();
+
+  if (!holder||!number||!exp||!cvv) { showToast('Tüm kart bilgilerini doldurun', true); return; }
+  if (number.length < 15) { showToast('Geçersiz kart numarası', true); return; }
+
+  const btn = document.getElementById('payCardBtn');
+  btn.textContent = 'İşleniyor...'; btn.disabled = true;
+
+  try {
+    // ── Gerçek iyzico entegrasyonu için backend endpoint gereklidir ──
+    // Aşağıdaki URL'yi kendi sunucunuzdaki /api/iyzico-payment endpoint'ine yönlendirin
+    // Backend: conversationId + price + buyerInfo + cardToken → iyzico checkoutFormInitialize
+    // iyzico döndürdüğü checkoutFormContent'i iframe'e yükleyin
+    //
+    // ÖRNEK BACKEND (Node.js/Cloudflare Worker):
+    // POST /api/iyzico-payment
+    // Body: { orderNo, total, buyer, card: {holder, number, expMonth, expYear, cvc} }
+    // Dönen: { checkoutFormContent, paymentPageUrl, token }
+    //
+    // Demo mod: gerçek backend olmadan simüle ediyoruz
+    await new Promise(r => setTimeout(r, 1200)); // Backend çağrısı simülasyonu
+
+    const d = pendingOrderData || {};
+    const orderPayload = {
+      customer_name:  (d.firstName||'')+' '+(d.lastName||''),
+      customer_email: d.email||'customer@test.com',
+      customer_phone: d.phone||'',
+      company:        d.company||null,
+      address:        (d.address||'')+(d.district?(', '+d.district):'')+', '+(d.city||''),
+      note:           d.note||null,
+      pay_method:     'card',
+      total_usd:      parseFloat(currentOrderTotal.toFixed(2)),
+      status:         'confirmed',
+      items:          currentOrderCart.map(i=>({part_no:i.part_no,name:i.turkish_name,qty:i.qty,price_usd:i.price_usd}))
+    };
+    if (currentUser && currentUser.email) orderPayload.member_email = currentUser.email;
+
+    let orderIdNum = Date.now();
+    try {
+      const result = await supaFetch('orders', 'POST', orderPayload);
+      if (result && result[0] && result[0].id) orderIdNum = result[0].id;
+    } catch(e) {}
+
+    currentOrderNo = 'STP-' + String(orderIdNum).padStart(6, '0');
+    cart = []; renderCart(); updateCartCount();
+    appliedCoupon = null;
+
+    btn.textContent = 'Ödemeyi Tamamla →'; btn.disabled = false;
+    goCheckoutStep(3);
+
+  } catch(e) {
+    btn.textContent = 'Ödemeyi Tamamla →'; btn.disabled = false;
+    showToast('Ödeme işleminde hata oluştu. Lütfen tekrar deneyin.', true);
+  }
+}
+
+function onIyzicoLoaded() {
+  document.getElementById('iyzicoLoading').style.display = 'none';
+  document.getElementById('iyzicoIframe').style.display = 'block';
+}
+
+// ── Coupon logic ──────────────────────────────
+const COUPONS = {
+  'SILOTECH10': { pct: 0.10, label: '%10 İndirim' },
+  'HIZLIODEME': { pct: 0.05, label: '%5 İndirim' },
+  'YENI20'    : { pct: 0.20, label: '%20 İndirim (İlk Sipariş)' },
+};
+let appliedCoupon = null;
+
+function applyCoupon() {
+  const code = (document.getElementById('couponInput')?.value||'').trim().toUpperCase();
+  const msgEl = document.getElementById('couponMsg');
+  const rowEl = document.getElementById('couponRow');
+  if (!code) return;
+  if (COUPONS[code]) {
+    appliedCoupon = { code, ...COUPONS[code] };
+    const base = cart.reduce((s,i)=>s+i.price_usd*i.qty,0);
+    const discount = base * COUPONS[code].pct;
+    const newTotal = base - discount;
+    msgEl.className = 'coupon-ok'; msgEl.textContent = '✓ ' + COUPONS[code].label + ' uygulandı!'; msgEl.style.display = '';
+    if (rowEl) { rowEl.style.display = ''; setEl('couponDiscountDisplay', '-$'+discount.toFixed(2)); }
+    setEl('chkTotal', '$'+newTotal.toFixed(2));
+  } else {
+    appliedCoupon = null;
+    msgEl.className = 'coupon-err'; msgEl.textContent = '✗ Geçersiz kupon kodu'; msgEl.style.display = '';
+    if (rowEl) rowEl.style.display = 'none';
+    renderCheckoutItems(); // Reset totals
+  }
 }
 
 function copyIBAN() {
@@ -5867,19 +6416,147 @@ function sendOrderWhatsApp() {
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
+// ── Saved Address helpers ────────────────────────────────────
+function getSavedAddresses() {
+  if (!currentUser) return [];
+  const key = 'stp_addrs_' + currentUser.email;
+  try { return JSON.parse(localStorage.getItem(key)||'[]'); } catch(e) { return []; }
+}
+
+function saveSavedAddresses(addrs) {
+  if (!currentUser) return;
+  const key = 'stp_addrs_' + currentUser.email;
+  localStorage.setItem(key, JSON.stringify(addrs));
+}
+
+function renderCheckoutAddrPicker() {
+  const picker = document.getElementById('savedAddrPicker');
+  const list   = document.getElementById('savedAddrList');
+  if (!picker || !list) return;
+  const addrs = getSavedAddresses();
+  if (!addrs.length) { picker.style.display = 'none'; return; }
+  picker.style.display = '';
+  list.innerHTML = addrs.map((a, i) => `
+    <div class="saved-addr-card ${i===0?'selected':''}" onclick="selectSavedAddr(${i},this)">
+      <div class="saved-addr-radio"></div>
+      <div class="saved-addr-info">
+        <div class="saved-addr-label">${a.label||'Adres '+(i+1)}</div>
+        <div class="saved-addr-text">${a.line}${a.district?', '+a.district:''}${a.city?', '+a.city:''}</div>
+      </div>
+    </div>`).join('');
+  // Hide new address form by default if there are saved addresses
+  const newFields = document.getElementById('newAddressFields');
+  if (newFields) newFields.style.display = 'none';
+  const uneBtn = document.getElementById('addrUseNewBtn');
+  if (uneBtn) uneBtn.textContent = '✏ Farklı Adres Kullan';
+}
+
+let showingNewAddr = false;
+function toggleNewAddressForm() {
+  showingNewAddr = !showingNewAddr;
+  const f = document.getElementById('newAddressFields');
+  const b = document.getElementById('addrUseNewBtn');
+  if (f) f.style.display = showingNewAddr ? '' : 'none';
+  if (b) b.textContent = showingNewAddr ? '✕ Kayıtlı Adres Kullan' : '✏ Farklı Adres Kullan';
+  if (showingNewAddr) {
+    // Clear form for new entry
+    ['chkAddress','chkDistrict','chkCity'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+  }
+}
+
+function selectSavedAddr(idx, cardEl) {
+  document.querySelectorAll('#savedAddrList .saved-addr-card').forEach(c => c.classList.remove('selected'));
+  cardEl.classList.add('selected');
+  const addrs = getSavedAddresses();
+  const a = addrs[idx];
+  if (!a) return;
+  document.getElementById('chkAddress').value = a.line||'';
+  document.getElementById('chkDistrict').value = a.district||'';
+  document.getElementById('chkCity').value = a.city||'';
+  // Show filled fields briefly
+  const f = document.getElementById('newAddressFields');
+  if (f) f.style.display = '';
+  showingNewAddr = true;
+  const b = document.getElementById('addrUseNewBtn');
+  if (b) b.textContent = '✕ Kayıtlı Adres Kullan';
+}
+
+// ── Profile: saveAddress already exists, add renderAddrList enhancement ──
+function renderAddrList() {
+  const addrs = getSavedAddresses();
+  const list  = document.getElementById('addrList');
+  const empty = document.getElementById('addrEmpty');
+  if (!list) return;
+  if (!addrs.length) { list.innerHTML = ''; if (empty) empty.style.display = ''; return; }
+  if (empty) empty.style.display = 'none';
+  list.innerHTML = addrs.map((a, i) => `
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border:1px solid var(--border);border-radius:4px;margin-bottom:8px;background:var(--white);">
+      <div style="font-size:20px;flex-shrink:0;">📍</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;">${a.label||'Adres '+(i+1)}</div>
+        <div style="font-size:12px;color:var(--ink3);line-height:1.5;">${a.line}${a.district?', '+a.district:''}${a.city?', '+a.city:''}</div>
+      </div>
+      <button onclick="deleteAddress(${i})" style="padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--accent);font-size:11px;cursor:pointer;flex-shrink:0;">Sil</button>
+    </div>`).join('');
+}
+
+function deleteAddress(idx) {
+  const addrs = getSavedAddresses();
+  addrs.splice(idx, 1);
+  saveSavedAddresses(addrs);
+  renderAddrList();
+}
+
+// Override saveAddress to use localStorage
+function saveAddress() {
+  const label    = (document.getElementById('addrLabel')?.value||'').trim();
+  const line     = (document.getElementById('addrLine')?.value||'').trim();
+  const district = (document.getElementById('addrDistrict')?.value||'').trim();
+  const city     = (document.getElementById('addrCity')?.value||'').trim();
+  if (!line || !city) { showToast('Adres ve şehir zorunludur', true); return; }
+  const addrs = getSavedAddresses();
+  addrs.push({ label: label||'Adres '+(addrs.length+1), line, district, city });
+  saveSavedAddresses(addrs);
+  // Clear form
+  ['addrLabel','addrLine','addrDistrict','addrCity'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  const form = document.getElementById('addAddrForm');
+  if (form) form.style.display = 'none';
+  renderAddrList();
+  showToast('✓ Adres kaydedildi');
+}
+
 function closeCheckoutSuccess() {
   closeCheckout();
 }
 
 function closeCheckout() {
   document.getElementById('checkoutPage').style.display = 'none';
-  document.getElementById('checkoutStep1').style.display = '';
-  document.getElementById('checkoutStep2').style.display = 'none';
+  document.body.style.overflow = '';
+  // Reset all steps
+  const s1 = document.getElementById('checkoutStep1');
+  const s2 = document.getElementById('checkoutStep2');
+  const s3 = document.getElementById('checkoutStep3');
+  if (s1) s1.style.display = '';
+  if (s2) s2.style.display = 'none';
+  if (s3) s3.style.display = 'none';
+  // Reset step indicator
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('cstep'+i);
+    if (el) { el.classList.remove('active','done'); if (i===1) el.classList.add('active'); }
+    const num = el && el.querySelector('.checkout-step-num');
+    if (num) num.textContent = i;
+  });
+  [1,2].forEach(i => { const l=document.getElementById('cstepLine'+i); if(l) l.classList.remove('done'); });
   const backBtn = document.getElementById('checkoutBackBtn');
-  if (backBtn) backBtn.style.display = '';
+  if (backBtn) { backBtn.style.display = ''; backBtn.onclick = closeCheckout; backBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg> Sepete Dön'; }
   const titleEl = document.getElementById('checkoutPageTitle');
   if (titleEl) titleEl.textContent = 'Sipariş Ver';
-  document.body.style.overflow = '';
+  appliedCoupon = null;
+  pendingOrderData = null;
 }
 
 function formatPhone(el) {
