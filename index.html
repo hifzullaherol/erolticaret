@@ -129,6 +129,9 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 }
 
 .hero-slide.active { opacity: 1; }
+@media (max-width: 768px) {
+  .hero { height: 240px; }
+}
 .hero-dots {
   position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
   display: flex; gap: 8px; z-index: 10;
@@ -1308,7 +1311,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 <!-- HERO -->
 <section class="hero" id="heroSection">
   <div class="hero-slider" id="heroSlider">
-    <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero%201.png?v=4'); background-size: 100% 100%; background-position: center center;"></div>
+    <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero%201.png?v=4'); background-size: 100% 100%; background-position: center center;" data-mobile="https://images.silotechparts.com.tr/mobil%20hero%201.png"></div>
     <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png?v=4'); background-size: 100% 100%; background-position: center center;"></div>
   </div>
   <div class="hero-dots">
@@ -8099,6 +8102,13 @@ window._kurRate = 0;
 // Hero Slider
 (function() {
   var slides = document.querySelectorAll('.hero-slide');
+  // Mobil resim değiştir
+  if (window.innerWidth <= 768) {
+    slides.forEach(function(slide) {
+      var mob = slide.getAttribute('data-mobile');
+      if (mob) slide.style.backgroundImage = "url('" + mob + "')";
+    });
+  }
   var dots = document.querySelectorAll('.hero-dot');
   var current = 0;
   var timer;
