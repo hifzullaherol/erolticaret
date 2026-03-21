@@ -2379,6 +2379,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
     <div class="cart-total-row">
       <div class="cart-total-label" id="totalLabel">Toplam</div>
       <div class="cart-total-price" id="cartTotal">$0.00</div>
+      <div id="cartTotalTL" style="font-family:var(--mono);font-size:13px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:4px;display:none;"></div>
     </div>
     <button class="checkout-btn" onclick="checkout()" id="checkoutBtn">Sipariş Ver</button>
     <button class="whatsapp-btn" onclick="whatsappOrder()">
@@ -6852,7 +6853,8 @@ function renderCart() {
       <div class="cart-item-info">
         <div class="cart-item-code">${i.part_no}</div>
         <div class="cart-item-name">${name}</div>
-        <div class="cart-item-price">$${(i.price_usd*i.qty).toFixed(2)}</div>
+        <div class="cart-item-price">$${(i.price_usd*i.qty).toFixed(2)} <span style="font-family:var(--mono);font-size:9px;color:#c8410a;font-weight:700;">+KDV</span></div>
+        ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(i.price_usd*i.qty*window._kurRate*1.20).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})} <span style="font-size:9px;">KDV dahil</span></div>` : ''}
         <div class="cart-item-actions">
           <button class="qty-btn" onclick="changeQty('${i.part_no}',-1)">−</button>
           <span class="qty-num">${i.qty}</span>
@@ -6864,6 +6866,16 @@ function renderCart() {
   }).join('');
   const total = cart.reduce((s,i)=>s+i.price_usd*i.qty,0);
   document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+  const tlTotalEl = document.getElementById('cartTotalTL');
+  if (tlTotalEl) {
+    if (window._kurRate) {
+      const tlTotal = (total * window._kurRate * 1.20);
+      tlTotalEl.textContent = '₺' + tlTotal.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' (KDV dahil)';
+      tlTotalEl.style.display = 'block';
+    } else {
+      tlTotalEl.style.display = 'none';
+    }
+  }
 }
 
 function changeQty(partNo, d) {
