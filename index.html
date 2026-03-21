@@ -1312,7 +1312,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 <section class="hero" id="heroSection">
   <div class="hero-slider" id="heroSlider">
     <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero%201.png?v=4'); background-size: 100% 100%; background-position: center center;" data-mobile="https://images.silotechparts.com.tr/mobil%20hero%201.png"></div>
-    <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png?v=4'); background-size: 100% 100%; background-position: center center;"></div>
+    <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png?v=4'); background-size: 100% 100%; background-position: center center;" data-mobile="https://images.silotechparts.com.tr/mobil%20hero%202.png"></div>
   </div>
   <div class="hero-dots">
     <span class="hero-dot active" onclick="goSlide(0)"></span>
@@ -8125,7 +8125,7 @@ window._kurRate = 0;
 
   function next() { goSlide((current + 1) % slides.length); }
 
-  function start() { timer = setInterval(next, 4000); }
+  function start() { timer = setInterval(next, 10000); }
   function stop() { clearInterval(timer); }
 
   document.querySelector('.hero-slider')?.addEventListener('mouseenter', stop);
