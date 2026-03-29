@@ -6264,10 +6264,96 @@ async function submitOrder() {
   currentOrderCart  = [...cart];
   currentOrderTotal = parseFloat(discountedTotal.toFixed(2));
 
+  // Admin'e sipariş bildirim maili gönder
+  sendOrderNotificationEmail({
+    orderNo: currentOrderNo,
+    customerName: firstName + ' ' + lastName,
+    email, phone, company,
+    address: address + (district ? ', ' + district : '') + ', ' + city,
+    note,
+    payMethod: selectedPayMethod,
+    total: parseFloat(discountedTotal.toFixed(2)),
+    items: [...cart]
+  });
+
   cart = []; renderCart(); updateCartCount();
   btn.textContent = 'Devam Et →'; btn.disabled = false;
 
   showCheckoutStep2();
+}
+
+// ── Admin Sipariş Bildirim Maili (Resend) ────────────────
+async function sendOrderNotificationEmail(order) {
+  const RESEND_API_KEY = 're_8epBjbMB_2KnPXxNkJzjhStuEucWbmgpU';
+  const ADMIN_EMAIL = 'hifzullaherol@gmail.com';
+  const FROM_EMAIL = 'noreply@silotechparts.com.tr';
+
+  const payLabels = { bank: 'Havale/EFT', card: 'Kredi Kartı', delivery: 'Kapıda Ödeme', whatsapp: 'WhatsApp' };
+  
+  const itemsHtml = order.items.map(i => `
+    <tr>
+      <td style="padding:8px;border-bottom:1px solid #eee;">${i.part_no}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee;">${i.turkish_name}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${i.qty}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">$${(i.price_usd * i.qty).toFixed(2)}</td>
+    </tr>`).join('');
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+      <div style="background:#1a1814;padding:24px;text-align:center;">
+        <h1 style="color:#fff;margin:0;font-size:20px;">🛒 Yeni Sipariş Alındı</h1>
+      </div>
+      <div style="padding:24px;background:#f9f9f9;">
+        <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;">
+          <tr><td style="padding:12px 16px;background:#f0f0f0;font-weight:bold;width:40%;">Sipariş No</td><td style="padding:12px 16px;">${order.orderNo}</td></tr>
+          <tr><td style="padding:12px 16px;background:#f0f0f0;font-weight:bold;">Müşteri</td><td style="padding:12px 16px;">${order.customerName}</td></tr>
+          <tr><td style="padding:12px 16px;background:#f0f0f0;font-weight:bold;">E-posta</td><td style="padding:12px 16px;">${order.email}</td></tr>
+          <tr><td style="padding:12px 16px;background:#f0f0f0;font-weight:bold;">Telefon</td><td style="padding:12px 16px;">${order.phone}</td></tr>
+          ${order.company ? `<tr><td style="padding:12px 16px;background:#f0f0f0;font-weight:bold;">Firma</td><td style="padding:12px 16px;">${order.company}</td></tr>` : ''}
+          <tr><td style="padding:12px 16px;background:#f0f0f0;font-weight:bold;">Adres</td><td style="padding:12px 16px;">${order.address}</td></tr>
+          <tr><td style="padding:12px 16px;background:#f0f0f0;font-weight:bold;">Ödeme</td><td style="padding:12px 16px;">${payLabels[order.payMethod] || order.payMethod}</td></tr>
+          ${order.note ? `<tr><td style="padding:12px 16px;background:#f0f0f0;font-weight:bold;">Not</td><td style="padding:12px 16px;">${order.note}</td></tr>` : ''}
+        </table>
+
+        <h3 style="margin:24px 0 12px;">Sipariş Kalemleri</h3>
+        <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;">
+          <thead>
+            <tr style="background:#1a1814;color:#fff;">
+              <th style="padding:10px 8px;text-align:left;">Parça No</th>
+              <th style="padding:10px 8px;text-align:left;">Ürün</th>
+              <th style="padding:10px 8px;text-align:center;">Adet</th>
+              <th style="padding:10px 8px;text-align:right;">Tutar</th>
+            </tr>
+          </thead>
+          <tbody>${itemsHtml}</tbody>
+          <tfoot>
+            <tr style="background:#f0f0f0;">
+              <td colspan="3" style="padding:12px 8px;font-weight:bold;text-align:right;">TOPLAM</td>
+              <td style="padding:12px 8px;font-weight:bold;text-align:right;">$${order.total.toFixed(2)}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div style="padding:16px;text-align:center;color:#888;font-size:12px;">
+        SilotechParts · silotechparts.com.tr
+      </div>
+    </div>`;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + RESEND_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'SilotechParts <' + FROM_EMAIL + '>',
+        to: [ADMIN_EMAIL],
+        subject: '🛒 Yeni Sipariş: ' + order.orderNo + ' - ' + order.customerName,
+        html
+      })
+    });
+  } catch(e) { /* mail hatası siparişi engellemez */ }
 }
 
 // ── Step navigator ──────────────────────────────
@@ -6414,6 +6500,20 @@ async function initiateCardPayment() {
     currentOrderNo = 'STP-' + String(orderIdNum).padStart(6, '0');
     cart = []; renderCart(); updateCartCount();
     appliedCoupon = null;
+
+    // Kart ödemesi admin bildirimi
+    const d2 = pendingOrderData || {};
+    sendOrderNotification({
+      orderNo:   currentOrderNo,
+      customer:  (d2.firstName||'') + ' ' + (d2.lastName||''),
+      email:     d2.email || '',
+      phone:     d2.phone || '',
+      address:   (d2.address||'') + (d2.district ? ', '+d2.district : '') + ', ' + (d2.city||''),
+      note:      d2.note || '',
+      payMethod: 'card',
+      total:     currentOrderTotal.toFixed(2),
+      items:     currentOrderCart.map(i => ({ part_no: i.part_no, name: i.turkish_name || i.english_name, qty: i.qty, price_usd: i.price_usd }))
+    });
 
     btn.textContent = 'Ödemeyi Tamamla →'; btn.disabled = false;
     goCheckoutStep(3);
