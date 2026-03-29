@@ -1986,6 +1986,10 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <span style="color:#16a34a;">İndirim</span>
           <span style="color:#16a34a;" id="couponDiscountDisplay">-$0.00</span>
         </div>
+        <div class="checkout-summary-row" id="chkKdvRow" style="display:none;">
+          <span>KDV (%20)</span>
+          <span id="chkKdvAmount" style="color:#c8410a;">₺0.00</span>
+        </div>
         <div class="checkout-summary-row">
           <span>Kargo</span>
           <span style="color:#dc2626;font-weight:500;">Alıcıya Aittir</span>
@@ -1993,6 +1997,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div class="checkout-summary-total">
           <div><div class="checkout-summary-total-label">Genel Toplam</div></div>
           <div class="checkout-summary-total-price" id="chkTotal">$0.00</div>
+          <div id="chkTotalTL" style="font-size:13px;color:#1a5c3a;font-weight:600;margin-top:2px;display:none;"></div>
         </div>
         <button class="checkout-submit-btn" onclick="submitOrder()" id="submitOrderBtn">
           Devam Et →
@@ -6191,6 +6196,18 @@ function renderCheckoutItems() {
   }).join('');
   document.getElementById('chkSubtotal').textContent = '$'+total.toFixed(2);
   document.getElementById('chkTotal').textContent = '$'+total.toFixed(2);
+  // KDV ve TL toplam
+  if (window._kurRate) {
+    const tlAra = total * window._kurRate;
+    const tlKdv = tlAra * 0.20;
+    const tlDahil = tlAra * 1.20;
+    const kdvRow = document.getElementById('chkKdvRow');
+    const kdvAmount = document.getElementById('chkKdvAmount');
+    const tlTotal = document.getElementById('chkTotalTL');
+    if (kdvRow) kdvRow.style.display = '';
+    if (kdvAmount) kdvAmount.textContent = '₺' + tlKdv.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    if (tlTotal) { tlTotal.style.display = ''; tlTotal.textContent = '₺' + tlDahil.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' (KDV dahil)'; }
+  }
 }
 
 function selectPay(method) {
@@ -6550,6 +6567,16 @@ function applyCoupon() {
     msgEl.className = 'coupon-ok'; msgEl.textContent = '✓ ' + COUPONS[code].label + ' uygulandı!'; msgEl.style.display = '';
     if (rowEl) { rowEl.style.display = ''; setEl('couponDiscountDisplay', '-$'+discount.toFixed(2)); }
     setEl('chkTotal', '$'+newTotal.toFixed(2));
+    if (window._kurRate) {
+      const tlKdv = newTotal * window._kurRate * 0.20;
+      const tlDahil = newTotal * window._kurRate * 1.20;
+      const kdvRow = document.getElementById('chkKdvRow');
+      const kdvAmount = document.getElementById('chkKdvAmount');
+      const tlTotal = document.getElementById('chkTotalTL');
+      if (kdvRow) kdvRow.style.display = '';
+      if (kdvAmount) kdvAmount.textContent = '₺' + tlKdv.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2});
+      if (tlTotal) { tlTotal.style.display = ''; tlTotal.textContent = '₺' + tlDahil.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' (KDV dahil)'; }
+    }
   } else {
     appliedCoupon = null;
     msgEl.className = 'coupon-err'; msgEl.textContent = '✗ Geçersiz kupon kodu'; msgEl.style.display = '';
