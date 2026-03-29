@@ -5990,13 +5990,18 @@ async function doRegister() {
     });
     const data = await res.json();
     if (!res.ok || data.error) {
-      // Zaten kayıtlı kullanıcı
-      if (data.msg && data.msg.toLowerCase().includes('already')) {
+      const errMsg = (data.error_description || data.msg || '').toLowerCase();
+      if (errMsg.includes('already')) {
         err.textContent = 'Bu e-posta zaten kayıtlı. Giriş yapın.';
+      } else if (errMsg.includes('invalid') || errMsg.includes('unable to validate')) {
+        err.textContent = 'Geçersiz e-posta adresi. Lütfen kontrol edin.';
+      } else if (errMsg.includes('password')) {
+        err.textContent = 'Şifre çok kısa. En az 6 karakter olmalı.';
       } else {
-        err.textContent = data.error_description || data.msg || 'Kayıt başarısız.';
+        err.textContent = 'Kayıt başarısız. Lütfen tekrar deneyin.';
       }
       err.style.display = 'block';
+      btn.textContent = 'Kayıt Ol'; btn.disabled = false;
       return;
     }
 
