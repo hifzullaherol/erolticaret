@@ -1350,7 +1350,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
       <input type="text" id="searchInput" placeholder="Parça no veya isim ara..." oninput="onSearch()">
     </div>
 
-    <button class="login-btn" id="loginBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg><span>Giriş Yap</span></button>
+    <button class="login-btn" id="loginBtn" onclick="currentUser ? openProfile() : openAuth('login')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg><span>Giriş Yap</span></button>
 
     <button class="cart-trigger" onclick="openCart()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
