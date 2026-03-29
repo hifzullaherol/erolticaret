@@ -5745,7 +5745,26 @@ let currentUser = null;
 let selectedPayMethod = 'bank';
 
 function loadCurrentUser() {
-  // Try session token stored in sessionStorage
+  // URL'de Supabase onay token'ı var mı? (#access_token=...)
+  const hash = window.location.hash;
+  if (hash && hash.includes('access_token') && hash.includes('type=signup')) {
+    // E-posta onayı tamamlandı - token'ı temizle, giriş sayfasını aç
+    history.replaceState(null, '', window.location.pathname);
+    setTimeout(() => {
+      openAuth('login');
+      const err = document.getElementById('loginErr');
+      if (err) {
+        err.textContent = '✅ E-posta adresiniz onaylandı! Şimdi giriş yapabilirsiniz.';
+        err.style.display = 'block';
+        err.style.color = '#15803d';
+        err.style.background = '#f0fdf4';
+        err.style.padding = '10px';
+        err.style.borderRadius = '6px';
+      }
+    }, 300);
+    return;
+  }
+  // Normal session yükle
   try {
     const saved = sessionStorage.getItem('stp_user');
     if (saved) currentUser = JSON.parse(saved);
