@@ -6846,17 +6846,35 @@ function setLang(l) {
 // ═══════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════
+// Kategori TR -> EN çeviri tablosu
+const CAT_TRANSLATIONS = {
+  'G160 ÜÇ KAFA KOMPRESÖRLER': 'G160 THREE HEAD COMPRESSORS',
+  'G220 İKİ KAFA KOMPRESÖRLER': 'G220 TWO HEAD COMPRESSORS',
+  'G160 ÜÇ KAFA YEDEK PARÇALARI': 'G160 THREE HEAD SPARE PARTS',
+  'G220 İKİ KAFA YEDEK PARÇALARI': 'G220 TWO HEAD SPARE PARTS',
+  'G220 & G160 ORTAK YEDEK PARÇALARI': 'G220 & G160 COMMON SPARE PARTS',
+  'G230 İKİ KAFA YEDEK PARÇALARI': 'G230 TWO HEAD SPARE PARTS',
+  'ELEKTRİK YEDEK PARÇALARI': 'ELECTRICAL SPARE PARTS',
+  'SİLOBAS YEDEK PARÇALARI': 'SILOBAS SPARE PARTS',
+  'DİZEL YEDEK PARÇALARI': 'DIESEL SPARE PARTS'
+};
+
+function getCatName(c) {
+  if (lang === 'en' && CAT_TRANSLATIONS[c]) return CAT_TRANSLATIONS[c];
+  return c;
+}
+
 function renderCats() {
   const cats = typeof getSortedCats === 'function' ? getSortedCats() : [...new Set(PRODUCTS.map(p=>p.category))].sort();
   const allCount = PRODUCTS.length;
-  const isEn = lang === 'en';
   let html = `<div class="cat-item ${activeCat==='all'?'active':''}" onclick="setCat('all')">
     <span>${t('all')}</span><span class="cat-count">${allCount}</span>
   </div>`;
   cats.forEach(c => {
     const count = PRODUCTS.filter(p => p.category === c).length;
+    const displayName = getCatName(c);
     html += `<div class="cat-item ${activeCat===c?'active':''}" onclick="setCat('${c.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
-      <span title="${c}">${c}</span><span class="cat-count">${count}</span>
+      <span title="${displayName}">${displayName}</span><span class="cat-count">${count}</span>
     </div>`;
   });
   document.getElementById('catList').innerHTML = html;
