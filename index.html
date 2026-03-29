@@ -1996,8 +1996,10 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         </div>
         <div class="checkout-summary-total">
           <div><div class="checkout-summary-total-label">Genel Toplam</div></div>
-          <div class="checkout-summary-total-price" id="chkTotal">$0.00</div>
-          <div id="chkTotalTL" style="font-size:13px;color:#1a5c3a;font-weight:600;margin-top:2px;display:none;"></div>
+          <div>
+            <div class="checkout-summary-total-price" id="chkTotal" style="display:none;">$0.00</div>
+            <div id="chkTotalTL" style="font-family:var(--serif);font-size:26px;color:var(--ink);font-weight:700;display:block;">₺0,00 (KDV dahil)</div>
+          </div>
         </div>
         <button class="checkout-submit-btn" onclick="submitOrder()" id="submitOrderBtn">
           Devam Et →
@@ -6195,7 +6197,9 @@ function renderCheckoutItems() {
     </div>`;
   }).join('');
   document.getElementById('chkSubtotal').textContent = '$'+total.toFixed(2);
-  document.getElementById('chkTotal').textContent = '$'+total.toFixed(2);
+  // Dolar toplam gizli tut
+  const chkTotalEl = document.getElementById('chkTotal');
+  if (chkTotalEl) chkTotalEl.style.display = 'none';
   // KDV ve TL toplam
   if (window._kurRate) {
     const tlAra = total * window._kurRate;
@@ -6206,7 +6210,11 @@ function renderCheckoutItems() {
     const tlTotal = document.getElementById('chkTotalTL');
     if (kdvRow) kdvRow.style.display = '';
     if (kdvAmount) kdvAmount.textContent = '₺' + tlKdv.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2});
-    if (tlTotal) { tlTotal.style.display = ''; tlTotal.textContent = '₺' + tlDahil.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' (KDV dahil)'; }
+    if (tlTotal) { tlTotal.style.display = 'block'; tlTotal.textContent = '₺' + tlDahil.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' (KDV dahil)'; }
+  } else {
+    // Kur yüklenmemişse bekle ve güncelle
+    const tlTotal = document.getElementById('chkTotalTL');
+    if (tlTotal) tlTotal.textContent = 'Kur yükleniyor...';
   }
 }
 
