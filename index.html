@@ -658,29 +658,17 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 
 /* ── CHECKOUT PAGE ── */
 #checkoutPage {
-  display: none; position: fixed; inset: 0; background: var(--off);
+  display: none; position: fixed; inset: 0; background: var(--white);
   z-index: 550; overflow-y: auto;
 }
-
-/* ─── CHECKOUT HEADER ─── */
 .checkout-page-head {
-  background: rgba(255,255,255,0.97);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 10;
+  position: sticky; top: 0; background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+  z-index: 10;
 }
 .checkout-page-head-wrap {
   max-width: 1200px; margin: 0 auto; padding: 0 32px;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 64px; gap: 16px;
-}
-.checkout-logo-wrap { display: flex; flex-direction: column; line-height: 1; }
-.checkout-logo-top { font-family: var(--serif); font-size: 20px; color: var(--ink); }
-.checkout-logo-sub { font-family: var(--mono); font-size: 9px; color: var(--ink3); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 2px; }
-.checkout-secure-badge {
-  display: flex; align-items: center; gap: 6px;
-  font-family: var(--mono); font-size: 10px; color: var(--accent2); letter-spacing: 0.05em;
-  background: #f0fdf4; border: 1px solid #bbf7d0; padding: 5px 12px; border-radius: 20px;
+  display: flex; align-items: center; height: 60px; gap: 16px;
 }
 .checkout-back-btn {
   display: flex; align-items: center; gap: 8px; background: none; border: none;
@@ -688,124 +676,84 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
   padding: 6px 0; transition: color 0.15s;
 }
 .checkout-back-btn:hover { color: var(--ink); }
-.checkout-page-title { display: none; }
+.checkout-page-title { font-family: var(--serif); font-size: 20px; color: var(--ink); }
+.checkout-content { max-width: 1200px; margin: 0 auto; padding: 32px; display: grid; grid-template-columns: 1fr 380px; gap: 32px; }
+@media (max-width: 900px) { .checkout-content { grid-template-columns: 1fr; } }
+.checkout-section { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 24px; margin-bottom: 20px; }
+.checkout-section-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink3); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.checkout-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.checkout-field { margin-bottom: 16px; }
+.checkout-label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
+.checkout-input, .checkout-select, .checkout-textarea {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  font-family: var(--font); font-size: 14px; color: var(--ink); outline: none;
+  background: var(--off); transition: border-color 0.15s; box-sizing: border-box;
+}
+.checkout-input:focus, .checkout-select:focus, .checkout-textarea:focus { border-color: var(--ink); background: var(--white); }
+.checkout-textarea { resize: vertical; min-height: 80px; }
+.checkout-order-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: center; }
+.checkout-order-item:last-child { border-bottom: none; }
+.checkout-item-img { width: 48px; height: 48px; background: var(--off2); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+.checkout-item-img img { width: 100%; height: 100%; object-fit: contain; }
+.checkout-item-info { flex: 1; }
+.checkout-item-code { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 0.15em; }
+.checkout-item-name { font-size: 13px; color: var(--ink); margin: 2px 0; }
+.checkout-item-qty { font-size: 12px; color: var(--ink3); }
+.checkout-item-price { font-family: var(--mono); font-size: 14px; color: var(--ink); font-weight: 500; }
+.checkout-summary-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; color: var(--ink2); }
+.checkout-summary-total { display: flex; justify-content: space-between; padding: 14px 0 0; border-top: 1px solid var(--border); margin-top: 6px; }
+.checkout-summary-total-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink3); }
+.checkout-summary-total-price { font-family: var(--serif); font-size: 26px; color: var(--ink); }
+.checkout-submit-btn {
+  width: 100%; padding: 15px; background: var(--ink); color: var(--white);
+  border: none; font-family: var(--font); font-size: 15px; font-weight: 500;
+  cursor: pointer; border-radius: var(--radius); transition: background 0.15s;
+  margin-top: 16px; letter-spacing: 0.04em;
+}
+.checkout-submit-btn:hover { background: var(--accent); }
+.checkout-pay-methods { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.checkout-pay-method {
+  flex: 1; min-width: 140px; padding: 12px; border: 2px solid var(--border);
+  border-radius: var(--radius); cursor: pointer; text-align: center; transition: all 0.15s;
+}
+.checkout-pay-method.selected { border-color: var(--ink); background: var(--off); }
+.checkout-pay-method-icon { font-size: 22px; margin-bottom: 4px; }
+.checkout-pay-method-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); }
+.checkout-success { display: none; text-align: center; padding: 40px 28px; }
+.checkout-success.show { display: block; }
+.checkout-success-icon { font-size: 60px; margin-bottom: 16px; }
+.checkout-success-title { font-family: var(--serif); font-size: 26px; color: var(--ink); margin-bottom: 12px; }
+.checkout-success-msg { color: var(--ink3); font-size: 14px; line-height: 1.6; }
 
-/* ─── STEP INDICATOR ─── */
+/* ── CHECKOUT STEP INDICATOR ── */
 .checkout-steps {
-  background: var(--white); border-bottom: 1px solid var(--border);
-  padding: 0 32px; display: flex; align-items: stretch;
+  display: flex; align-items: center; justify-content: center; gap: 0;
+  padding: 20px 32px; border-bottom: 1px solid var(--border);
+  background: var(--off);
 }
 .checkout-step {
   display: flex; align-items: center; gap: 10px;
-  padding: 16px 24px; cursor: default;
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--ink3); position: relative; flex-shrink: 0;
-  border-bottom: 3px solid transparent; transition: all 0.2s;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink3);
 }
-.checkout-step.active { color: var(--ink); border-bottom-color: var(--accent); }
-.checkout-step.done { color: var(--accent2); border-bottom-color: var(--accent2); }
+.checkout-step.active { color: var(--ink); }
+.checkout-step.done { color: var(--accent2); }
 .checkout-step-num {
-  width: 28px; height: 28px; border-radius: 50%; border: 2px solid currentColor;
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--border2); background: var(--white);
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; flex-shrink: 0; transition: all 0.2s;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+  transition: all 0.2s;
 }
-.checkout-step.active .checkout-step-num { background: var(--accent); color: white; border-color: var(--accent); }
-.checkout-step.done .checkout-step-num { background: var(--accent2); color: white; border-color: var(--accent2); }
-.checkout-step-line {
-  width: 0; height: 0; margin: 0 4px;
-  border-top: 6px solid transparent; border-bottom: 6px solid transparent;
-  border-left: 8px solid var(--border); flex-shrink: 0; align-self: center;
-}
-.checkout-step-line.done { border-left-color: var(--accent2); }
+.checkout-step.active .checkout-step-num { border-color: var(--ink); background: var(--ink); color: white; }
+.checkout-step.done .checkout-step-num { border-color: var(--accent2); background: var(--accent2); color: white; }
+.checkout-step-line { width: 40px; height: 2px; background: var(--border); margin: 0 8px; flex-shrink: 0; }
+.checkout-step-line.done { background: var(--accent2); }
 @media (max-width: 600px) {
-  .checkout-steps { padding: 0 16px; overflow-x: auto; }
-  .checkout-step { padding: 14px 12px; }
+  .checkout-steps { padding: 14px 16px; gap: 0; }
   .checkout-step-label { display: none; }
-  .checkout-step-line { margin: 0 2px; }
+  .checkout-step-line { width: 24px; margin: 0 4px; }
 }
-
-/* ─── MAIN LAYOUT ─── */
-.checkout-content { max-width: 1200px; margin: 0 auto; padding: 28px 32px; display: grid; grid-template-columns: 1fr 380px; gap: 28px; align-items: start; }
-@media (max-width: 900px) { .checkout-content { grid-template-columns: 1fr; padding: 20px 16px; } }
-
-/* ─── SECTION CARDS ─── */
-.checkout-section { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 20px; }
-.checkout-section-title {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--ink2); padding: 14px 24px; border-bottom: 1px solid var(--border);
-  background: var(--off); font-weight: 600; display: flex; align-items: center; justify-content: space-between;
-}
-.checkout-section-body { padding: 24px; }
-.checkout-section > .checkout-grid-2,
-.checkout-section > .checkout-field,
-.checkout-section > div:not(.checkout-section-title):not(.checkout-section-body) { padding: 0 24px 24px; }
-
-.checkout-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.checkout-field { margin-bottom: 14px; }
-.checkout-field:last-child { margin-bottom: 0; }
-.checkout-label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
-.checkout-input, .checkout-select, .checkout-textarea {
-  width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: var(--radius);
-  font-family: var(--font); font-size: 14px; color: var(--ink); outline: none;
-  background: var(--off); transition: all 0.15s; box-sizing: border-box;
-}
-.checkout-input:focus, .checkout-select:focus, .checkout-textarea:focus { border-color: var(--ink2); background: var(--white); box-shadow: 0 0 0 3px rgba(26,24,20,0.06); }
-.checkout-textarea { resize: vertical; min-height: 80px; }
-
-/* order items in summary */
-.checkout-order-item { display: flex; gap: 12px; padding: 14px 22px; border-bottom: 1px solid var(--border); align-items: center; }
-.checkout-order-item:last-child { border-bottom: none; }
-.checkout-item-img { width: 52px; height: 52px; background: var(--off2); border: 1px solid var(--border); border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
-.checkout-item-img img { width: 100%; height: 100%; object-fit: contain; }
-.checkout-item-info { flex: 1; min-width: 0; }
-.checkout-item-code { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 2px; }
-.checkout-item-name { font-size: 12px; color: var(--ink); line-height: 1.35; }
-.checkout-item-qty { font-size: 11px; color: var(--ink3); margin-top: 2px; }
-.checkout-item-price { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
-
-/* summary rows */
-.checkout-summary-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 13px; color: var(--ink2); }
-.checkout-summary-total { display: flex; justify-content: space-between; align-items: center; padding: 12px 0 4px; border-top: 1px solid var(--border); margin-top: 8px; }
-.checkout-summary-total-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink3); }
-.checkout-summary-total-price { font-family: var(--serif); font-size: 28px; color: var(--ink); }
-
-/* submit button */
-.checkout-submit-btn {
-  width: 100%; padding: 15px; background: var(--accent); color: var(--white);
-  border: none; font-family: var(--font); font-size: 15px; font-weight: 600;
-  cursor: pointer; border-radius: var(--radius); transition: all 0.2s;
-  margin-top: 14px; letter-spacing: 0.03em;
-}
-.checkout-submit-btn:hover { background: #b83808; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,65,10,0.25); }
-.checkout-submit-btn:active { transform: translateY(0); }
-
-/* pay methods */
-.checkout-pay-methods { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.checkout-pay-method {
-  flex: 1; min-width: 120px; padding: 14px 12px; border: 2px solid var(--border);
-  border-radius: 4px; cursor: pointer; text-align: center; transition: all 0.15s;
-}
-.checkout-pay-method:hover { border-color: var(--border2); background: var(--off); }
-.checkout-pay-method.selected { border-color: var(--ink); background: var(--off); }
-.checkout-pay-method-icon { font-size: 22px; margin-bottom: 6px; }
-.checkout-pay-method-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); }
-
-/* success */
-.checkout-success { display: none; text-align: center; padding: 48px 28px; }
-.checkout-success.show { display: block; }
-.checkout-success-icon { font-size: 60px; margin-bottom: 16px; }
-.checkout-success-title { font-family: var(--serif); font-size: 28px; color: var(--ink); margin-bottom: 12px; }
-.checkout-success-msg { color: var(--ink3); font-size: 14px; line-height: 1.6; }
-
-/* trust badges inside summary */
-.checkout-trust-badges {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 16px 22px; border-top: 1px solid var(--border);
-}
-.checkout-trust-badge {
-  display: flex; align-items: center; gap: 7px; padding: 8px 10px;
-  border: 1px solid var(--border); border-radius: 3px; background: var(--off);
-}
-.checkout-trust-badge-text { font-family: var(--mono); font-size: 9px; color: var(--ink3); letter-spacing: 0.06em; line-height: 1.3; text-transform: uppercase; }
 
 /* ── IYZICO CARD FORM ── */
 .iyzico-wrap {
@@ -1350,7 +1298,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
       <input type="text" id="searchInput" placeholder="Parça no veya isim ara..." oninput="onSearch()">
     </div>
 
-    <button class="login-btn" id="loginBtn" onclick="currentUser ? openProfile() : openAuth('login')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg><span>Giriş Yap</span></button>
+    <button class="login-btn" id="loginBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg><span>Giriş Yap</span></button>
 
     <button class="cart-trigger" onclick="openCart()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
@@ -1851,36 +1799,26 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 <div id="checkoutPage">
   <div class="checkout-page-head">
     <div class="checkout-page-head-wrap">
-      <div style="display:flex;align-items:center;gap:20px;">
-        <button class="checkout-back-btn" id="checkoutBackBtn" onclick="goCheckoutStep(1)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          Geri
-        </button>
-        <div class="checkout-logo-wrap">
-          <span class="checkout-logo-top">SilotechParts</span>
-          <span class="checkout-logo-sub">Industrial Components</span>
-        </div>
-      </div>
-      <div class="checkout-secure-badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        256 Bit SSL Güvenli Alışveriş
-      </div>
-      <div class="checkout-page-title" id="checkoutPageTitle" style="display:none;">Sipariş Ver</div>
+      <button class="checkout-back-btn" id="checkoutBackBtn" onclick="goCheckoutStep(1)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        Geri
+      </button>
+      <div class="checkout-page-title" id="checkoutPageTitle">Sipariş Ver</div>
     </div>
     <div class="checkout-steps" id="checkoutStepsBar">
       <div class="checkout-step active" id="cstep1">
         <div class="checkout-step-num">1</div>
-        <span class="checkout-step-label">Teslimat Bilgileri</span>
+        <span class="checkout-step-label">Teslimat</span>
       </div>
       <div class="checkout-step-line" id="cstepLine1"></div>
       <div class="checkout-step" id="cstep2">
         <div class="checkout-step-num">2</div>
-        <span class="checkout-step-label">Ödeme İşlemleri</span>
+        <span class="checkout-step-label">Ödeme</span>
       </div>
       <div class="checkout-step-line" id="cstepLine2"></div>
       <div class="checkout-step" id="cstep3">
         <div class="checkout-step-num">3</div>
-        <span class="checkout-step-label">Sipariş Onayı</span>
+        <span class="checkout-step-label">Onay</span>
       </div>
     </div>
   </div>
@@ -1892,7 +1830,6 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
       <!-- Personal Info -->
       <div class="checkout-section">
         <div class="checkout-section-title">👤 Kişisel Bilgiler</div>
-        <div style="padding:20px 24px;">
         <div class="checkout-grid-2">
           <div class="checkout-field">
             <label class="checkout-label">Ad *</label>
@@ -1917,13 +1854,11 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <label class="checkout-label">Şirket Adı (İsteğe bağlı)</label>
           <input class="checkout-input" id="chkCompany" placeholder="ABC Makine Ltd. Şti.">
         </div>
-        </div><!-- /section padding -->
       </div>
 
       <!-- Shipping Address -->
       <div class="checkout-section">
         <div class="checkout-section-title">📦 Teslimat Adresi</div>
-        <div style="padding:20px 24px;">
         <!-- Kayıtlı Adresler (giriş yapmış kullanıcılar için) -->
         <div id="savedAddrPicker" style="display:none;margin-bottom:16px;">
           <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Kayıtlı Adreslerim</div>
@@ -1954,13 +1889,11 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <textarea class="checkout-textarea" id="chkNote" placeholder="Özel isteklerinizi belirtebilirsiniz..."></textarea>
         </div>
         </div><!-- /newAddressFields -->
-        </div><!-- /section padding -->
       </div>
 
       <!-- Payment Method -->
       <div class="checkout-section">
         <div class="checkout-section-title">💳 Ödeme Yöntemi</div>
-        <div style="padding:20px 24px;">
         <div class="checkout-pay-methods">
           <div class="checkout-pay-method" id="payCard" onclick="selectPay('card')">
             <div class="checkout-pay-method-icon">💳</div>
@@ -2031,72 +1964,49 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 
     <!-- Right: order summary -->
     <div>
-      <div class="checkout-section" style="position:sticky;top:80px;overflow:hidden;">
-        <div class="checkout-section-title">Sepetteki Ürünler</div>
-        <div id="checkoutItemList" style="border-bottom:1px solid var(--border);"></div>
+      <div class="checkout-section" style="position:sticky;top:80px">
+        <div class="checkout-section-title">🛒 Sipariş Özeti</div>
+        <div id="checkoutItemList"></div>
 
-        <div style="padding:16px 22px;">
-          <!-- Kupon kodu -->
-          <div style="margin-bottom:14px;">
-            <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;">Kupon / İndirim Kodu</div>
-            <div class="coupon-wrap">
-              <input class="coupon-input" id="couponInput" placeholder="KUPON KODUNUZ" autocomplete="off">
-              <button class="coupon-apply-btn" onclick="applyCoupon()">Uygula</button>
-            </div>
-            <div id="couponMsg" style="display:none;"></div>
+        <!-- Kupon kodu -->
+        <div style="margin:14px 0 4px;">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;">Kupon / İndirim Kodu</div>
+          <div class="coupon-wrap">
+            <input class="coupon-input" id="couponInput" placeholder="KUPON KODUNUZ" autocomplete="off">
+            <button class="coupon-apply-btn" onclick="applyCoupon()">Uygula</button>
           </div>
-
-          <div class="checkout-summary-row">
-            <span>Ara Toplam</span>
-            <span id="chkSubtotal" style="font-family:var(--mono);">$0.00</span>
-          </div>
-          <div class="checkout-summary-row" id="couponRow" style="display:none;">
-            <span style="color:#16a34a;">İndirim</span>
-            <span style="color:#16a34a;font-family:var(--mono);" id="couponDiscountDisplay">-$0.00</span>
-          </div>
-          <div class="checkout-summary-row">
-            <span>Kargo (DHL Kargo)</span>
-            <span style="font-family:var(--mono);font-weight:600;color:var(--ink);">Alıcıya Aittir</span>
-          </div>
-          <div class="checkout-summary-total">
-            <div class="checkout-summary-total-label">Genel Toplam</div>
-            <div class="checkout-summary-total-price" id="chkTotal">$0.00</div>
-          </div>
-          <button class="checkout-submit-btn" onclick="submitOrder()" id="submitOrderBtn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Ödeme Adımına Geç
-          </button>
-          <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:0.08em;text-transform:uppercase;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            SSL Şifreli · 256-bit Güvenlik
-          </div>
+          <div id="couponMsg" style="display:none;"></div>
         </div>
 
-        <div class="checkout-trust-badges">
-          <div class="checkout-trust-badge">
-            <span style="font-size:14px;">🔒</span>
-            <div class="checkout-trust-badge-text">Güvenli Alışveriş</div>
-          </div>
-          <div class="checkout-trust-badge">
-            <span style="font-size:14px;">↩️</span>
-            <div class="checkout-trust-badge-text">14 Gün İade</div>
-          </div>
-          <div class="checkout-trust-badge">
-            <span style="font-size:14px;">✅</span>
-            <div class="checkout-trust-badge-text">%100 Orijinal</div>
-          </div>
-          <div class="checkout-trust-badge">
-            <span style="font-size:14px;">💳</span>
-            <div class="checkout-trust-badge-text">Taksit İmkânı</div>
-          </div>
+        <div class="checkout-summary-row" style="margin-top:8px;">
+          <span>Ara Toplam</span>
+          <span id="chkSubtotal">$0.00</span>
+        </div>
+        <div class="checkout-summary-row" id="couponRow" style="display:none;">
+          <span style="color:#16a34a;">İndirim</span>
+          <span style="color:#16a34a;" id="couponDiscountDisplay">-$0.00</span>
+        </div>
+        <div class="checkout-summary-row">
+          <span>Kargo</span>
+          <span style="color:#dc2626;font-weight:500;">Alıcıya Aittir</span>
+        </div>
+        <div class="checkout-summary-total">
+          <div><div class="checkout-summary-total-label">Genel Toplam</div></div>
+          <div class="checkout-summary-total-price" id="chkTotal">$0.00</div>
+        </div>
+        <button class="checkout-submit-btn" onclick="submitOrder()" id="submitOrderBtn">
+          Devam Et →
+        </button>
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:11px;color:var(--ink3);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          SSL Şifreli · 256-bit Güvenlik
         </div>
       </div>
     </div>
   </div>
 
   <!-- ── STEP 2: ÖDEME ADIMLARI ── -->
-  <div id="checkoutStep2" style="display:none;" class="checkout-content">
-    <div>
+  <div id="checkoutStep2" style="display:none;max-width:640px;margin:0 auto;padding:32px;">
 
     <!-- Sipariş özeti (compact) -->
     <div class="checkout-section" style="margin-bottom:20px;">
@@ -2145,7 +2055,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
             <div class="iyzico-spinner"></div>
             <div class="iyzico-loading-text">3D Secure Yükleniyor...</div>
           </div>
-          <iframe id="iyzicoIframe" title="3D Secure" style="display:none;"></iframe>
+          <iframe id="iyzicoIframe" title="3D Secure" onload="onIyzicoLoaded()" style="display:none;"></iframe>
         </div>
         <button class="checkout-submit-btn" id="payCardBtn" onclick="initiateCardPayment()" style="margin-top:8px;">
           💳 Ödemeyi Tamamla →
@@ -2231,42 +2141,15 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
       </div>
     </div>
 
-    </div><!-- /step2 left col -->
-
-    <!-- Step2 Right: summary -->
-    <div>
-      <div class="checkout-section" style="position:sticky;top:80px;overflow:hidden;">
-        <div class="checkout-section-title">Sipariş Özeti</div>
-        <div id="step2ItemList" style="border-bottom:1px solid var(--border);"></div>
-        <div style="padding:16px 22px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">
-            <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink3);">Kargo (DHL Kargo)</span>
-            <span style="font-family:var(--mono);font-size:12px;color:var(--ink);">Alıcıya Aittir</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0 4px;">
-            <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);">Genel Toplam</span>
-            <span id="step2TotalDisplay" style="font-family:var(--serif);font-size:26px;color:var(--ink);"></span>
-          </div>
-        </div>
-        <div class="checkout-trust-badges">
-          <div class="checkout-trust-badge"><span style="font-size:14px;">🔒</span><div class="checkout-trust-badge-text">SSL Güvenli</div></div>
-          <div class="checkout-trust-badge"><span style="font-size:14px;">↩️</span><div class="checkout-trust-badge-text">14 Gün İade</div></div>
-          <div class="checkout-trust-badge"><span style="font-size:14px;">✅</span><div class="checkout-trust-badge-text">%100 Orijinal</div></div>
-          <div class="checkout-trust-badge"><span style="font-size:14px;">🚚</span><div class="checkout-trust-badge-text">DHL Kargo</div></div>
-        </div>
-      </div>
-    </div>
-  </div><!-- /step2 checkout-content -->
+  </div>
 
   <!-- ── STEP 3: ÖDEME ONAY ── -->
-  <div id="checkoutStep3" style="display:none;max-width:640px;margin:0 auto;padding:40px 32px;text-align:center;">
-    <div style="width:80px;height:80px;background:#f0fdf4;border:2px solid #bbf7d0;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;animation:popIn 0.4s ease;">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1a5c3a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-    </div>
-    <div style="font-family:var(--serif);font-size:30px;color:var(--ink);margin-bottom:12px;">Siparişiniz Alındı!</div>
+  <div id="checkoutStep3" style="display:none;max-width:560px;margin:0 auto;padding:40px 32px;text-align:center;">
+    <div style="font-size:72px;margin-bottom:20px;animation:popIn 0.4s ease;">🎉</div>
+    <div style="font-family:var(--serif);font-size:30px;color:var(--ink);margin-bottom:12px;">Siparişiniz Onaylandı!</div>
     <div style="color:var(--ink3);font-size:14px;line-height:1.8;margin-bottom:28px;">
-      Siparişiniz başarıyla işleme alındı.<br>
-      Kargo takip numaranız WhatsApp ile iletilecektir.
+      Ödemeniz başarıyla alındı. Sipariş numaranız aşağıda.<br>
+      Kargo bilgisi SMS ve WhatsApp ile iletilecektir.
     </div>
 
     <!-- Sipariş takip adımları -->
@@ -5910,7 +5793,6 @@ function switchAuthTab(tab) {
   document.getElementById('tabRegister').classList.toggle('active', tab==='register');
   document.getElementById('authLoginBody').style.display = tab==='login' ? '' : 'none';
   document.getElementById('authRegisterBody').style.display = tab==='register' ? '' : 'none';
-  // Kayıt formunu sıfırla (onay mesajı gösterilmişse temizle)
   if (tab === 'register') {
     const successMsg = document.getElementById('regSuccessMsg');
     const btn = document.getElementById('regSubmitBtn');
@@ -5938,8 +5820,8 @@ async function doLogin() {
     });
     const data = await res.json();
     if (!res.ok || data.error) {
-      // E-posta onaylanmamış kontrolü
-      if (data.error_description && data.error_description.toLowerCase().includes('email not confirmed')) {
+      const em = (data.error_description || data.msg || '').toLowerCase();
+      if (em.includes('email not confirmed')) {
         err.textContent = '📧 E-posta adresiniz henüz onaylanmamış. Gelen kutunuzu kontrol edin.';
       } else {
         err.textContent = 'E-posta veya şifre hatalı.';
@@ -5978,46 +5860,36 @@ async function doRegister() {
 
   btn.textContent = 'Kayıt olunuyor...'; btn.disabled = true;
   try {
-    // Sign up with Supabase Auth — e-posta onayı aktif
     const res = await fetch(SUPA_URL + '/auth/v1/signup', {
       method: 'POST',
       headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        password: pass,
-        data: { full_name: name, phone }
-      })
+      body: JSON.stringify({ email, password: pass, data: { full_name: name, phone } })
     });
     const data = await res.json();
     if (!res.ok || data.error) {
-      const errMsg = (data.error_description || data.msg || '').toLowerCase();
-      if (errMsg.includes('already')) {
+      const em = (data.error_description || data.msg || '').toLowerCase();
+      if (em.includes('already')) {
         err.textContent = 'Bu e-posta zaten kayıtlı. Giriş yapın.';
-      } else if (errMsg.includes('invalid') || errMsg.includes('unable to validate')) {
+      } else if (em.includes('invalid') || em.includes('unable to validate')) {
         err.textContent = 'Geçersiz e-posta adresi. Lütfen kontrol edin.';
-      } else if (errMsg.includes('password')) {
-        err.textContent = 'Şifre çok kısa. En az 6 karakter olmalı.';
       } else {
-        err.textContent = 'Kayıt başarısız. Lütfen tekrar deneyin.';
+        err.textContent = data.error_description || data.msg || 'Kayıt başarısız.';
       }
       err.style.display = 'block';
       btn.textContent = 'Kayıt Ol'; btn.disabled = false;
       return;
     }
 
-    // Profili members tablosuna kaydet (onay beklenmeden)
+    // Profili kaydet
     try {
       await supaFetch('members', 'POST', { full_name: name, email, phone });
-    } catch(e2) { /* tablo henüz yok olabilir */ }
+    } catch(e2) {}
 
-    // E-posta onayı gerektiğinde access_token gelmez — formu gizle, mesaj göster
+    // Onay maili gönderildi - formu gizle
     btn.style.display = 'none';
-    // Form alanlarını gizle
     document.querySelectorAll('#authRegisterBody .auth-field').forEach(f => f.style.display = 'none');
     successMsg.style.display = 'block';
-    // Scroll kilidini kaldır (overlay açık kalacak ama sayfa kilitlenmesin)
     document.body.style.overflow = '';
-    successMsg.style.display = 'block';
 
   } catch(e) {
     err.textContent = 'Bağlantı hatası: ' + e.message;
@@ -6538,16 +6410,6 @@ function onIyzicoLoaded() {
   document.getElementById('iyzicoIframe').style.display = 'block';
 }
 
-// iframe src atanınca onload'u JS ile bağla
-(function() {
-  const iframe = document.getElementById('iyzicoIframe');
-  if (iframe) iframe.onload = function() {
-    if (iframe.src && iframe.src !== 'about:blank' && iframe.src !== window.location.href) {
-      onIyzicoLoaded();
-    }
-  };
-})();
-
 // ── Coupon logic ──────────────────────────────
 const COUPONS = {
   'SILOTECH10': { pct: 0.10, label: '%10 İndirim' },
@@ -6856,7 +6718,6 @@ function setLang(l) {
 // ═══════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════
-// Kategori TR -> EN çeviri tablosu
 const CAT_TRANSLATIONS = {
   'G160 ÜÇ KAFA KOMPRESÖRLER': 'G160 THREE HEAD COMPRESSORS',
   'G220 İKİ KAFA KOMPRESÖRLER': 'G220 TWO HEAD COMPRESSORS',
@@ -6868,23 +6729,22 @@ const CAT_TRANSLATIONS = {
   'SİLOBAS YEDEK PARÇALARI': 'SILOBAS SPARE PARTS',
   'DİZEL YEDEK PARÇALARI': 'DIESEL SPARE PARTS'
 };
-
-function getCatName(c) {
-  if (lang === 'en' && CAT_TRANSLATIONS[c]) return CAT_TRANSLATIONS[c];
-  return c;
+function getCatName(cat) {
+  if (lang === 'en' && CAT_TRANSLATIONS[cat]) return CAT_TRANSLATIONS[cat];
+  return cat;
 }
 
 function renderCats() {
   const cats = typeof getSortedCats === 'function' ? getSortedCats() : [...new Set(PRODUCTS.map(p=>p.category))].sort();
   const allCount = PRODUCTS.length;
+  const isEn = lang === 'en';
   let html = `<div class="cat-item ${activeCat==='all'?'active':''}" onclick="setCat('all')">
     <span>${t('all')}</span><span class="cat-count">${allCount}</span>
   </div>`;
   cats.forEach(c => {
     const count = PRODUCTS.filter(p => p.category === c).length;
-    const displayName = getCatName(c);
     html += `<div class="cat-item ${activeCat===c?'active':''}" onclick="setCat('${c.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
-      <span title="${displayName}">${displayName}</span><span class="cat-count">${count}</span>
+      <span title="${getCatName(c)}">${getCatName(c)}</span><span class="cat-count">${count}</span>
     </div>`;
   });
   document.getElementById('catList').innerHTML = html;
