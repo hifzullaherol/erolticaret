@@ -5898,8 +5898,12 @@ function updateHeaderAuth() {
 function openAuth(tab='login') {
   switchAuthTab(tab||'login');
   document.getElementById('authOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
-function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); }
+function closeAuth() {
+  document.getElementById('authOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
 
 function switchAuthTab(tab) {
   document.getElementById('tabLogin').classList.toggle('active', tab==='login');
@@ -6005,6 +6009,9 @@ async function doRegister() {
     btn.style.display = 'none';
     // Form alanlarını gizle
     document.querySelectorAll('#authRegisterBody .auth-field').forEach(f => f.style.display = 'none');
+    successMsg.style.display = 'block';
+    // Scroll kilidini kaldır (overlay açık kalacak ama sayfa kilitlenmesin)
+    document.body.style.overflow = '';
     successMsg.style.display = 'block';
 
   } catch(e) {
