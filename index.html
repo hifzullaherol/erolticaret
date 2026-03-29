@@ -2145,7 +2145,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
             <div class="iyzico-spinner"></div>
             <div class="iyzico-loading-text">3D Secure Yükleniyor...</div>
           </div>
-          <iframe id="iyzicoIframe" title="3D Secure" onload="onIyzicoLoaded()" style="display:none;"></iframe>
+          <iframe id="iyzicoIframe" title="3D Secure" style="display:none;"></iframe>
         </div>
         <button class="checkout-submit-btn" id="payCardBtn" onclick="initiateCardPayment()" style="margin-top:8px;">
           💳 Ödemeyi Tamamla →
@@ -6537,6 +6537,16 @@ function onIyzicoLoaded() {
   document.getElementById('iyzicoLoading').style.display = 'none';
   document.getElementById('iyzicoIframe').style.display = 'block';
 }
+
+// iframe src atanınca onload'u JS ile bağla
+(function() {
+  const iframe = document.getElementById('iyzicoIframe');
+  if (iframe) iframe.onload = function() {
+    if (iframe.src && iframe.src !== 'about:blank' && iframe.src !== window.location.href) {
+      onIyzicoLoaded();
+    }
+  };
+})();
 
 // ── Coupon logic ──────────────────────────────
 const COUPONS = {
