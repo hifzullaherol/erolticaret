@@ -2060,7 +2060,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
             <div class="iyzico-spinner"></div>
             <div class="iyzico-loading-text">3D Secure Yükleniyor...</div>
           </div>
-          <iframe id="iyzicoIframe" title="3D Secure" onload="onIyzicoLoaded()" style="display:none;"></iframe>
+          <iframe id="iyzicoIframe" title="3D Secure" style="display:none;"></iframe>
         </div>
         <button class="checkout-submit-btn" id="payCardBtn" onclick="initiateCardPayment()" style="margin-top:8px;">
           💳 Ödemeyi Tamamla →
@@ -6173,17 +6173,6 @@ function openCheckout() {
   if (couponMsg) couponMsg.style.display = 'none';
   if (couponRow) couponRow.style.display = 'none';
   renderCheckoutItems();
-  // Kur henüz gelmemişse çek ve güncelle
-  if (!window._kurRate) {
-    fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')
-      .then(r => r.json())
-      .then(data => {
-        window._kurRate = data.usd['try'];
-        renderCheckoutItems();
-        const badge = document.getElementById('kurBadge');
-        if (badge) badge.textContent = '1$ = ₺' + window._kurRate.toFixed(2);
-      }).catch(() => {});
-  }
   document.getElementById('checkoutPage').style.display = 'block';
   document.body.style.overflow = 'hidden';
   closeCart();
@@ -8337,8 +8326,6 @@ window._kurRate = 0;
     const badge = document.getElementById('kurBadge');
     if (badge) badge.textContent = '1$ = ₺' + rate.toFixed(2);
     if (typeof renderGrid === 'function') renderGrid();
-    // Checkout açıksa KDV/TL toplamını güncelle
-    if (typeof renderCheckoutItems === 'function') renderCheckoutItems();
   } catch(e) {
     console.warn('Kur alınamadı:', e);
   }
