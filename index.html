@@ -6173,6 +6173,17 @@ function openCheckout() {
   if (couponMsg) couponMsg.style.display = 'none';
   if (couponRow) couponRow.style.display = 'none';
   renderCheckoutItems();
+  // Kur henüz gelmemişse çek ve güncelle
+  if (!window._kurRate) {
+    fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')
+      .then(r => r.json())
+      .then(data => {
+        window._kurRate = data.usd['try'];
+        renderCheckoutItems();
+        const badge = document.getElementById('kurBadge');
+        if (badge) badge.textContent = '1$ = ₺' + window._kurRate.toFixed(2);
+      }).catch(() => {});
+  }
   document.getElementById('checkoutPage').style.display = 'block';
   document.body.style.overflow = 'hidden';
   closeCart();
@@ -6414,6 +6425,7 @@ function goCheckoutStep(n) {
     sections.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     if (selectedPayMethod === 'card') {
       const cs = document.getElementById('step2CardSection'); if (cs) cs.style.display = '';
+      setEl('step2Total', '$' + currentOrderTotal.toFixed(2));
     } else if (selectedPayMethod === 'bank') {
       const bs = document.getElementById('step2Bank'); if (bs) bs.style.display = '';
       setEl('step2OrderNo', currentOrderNo);
@@ -8325,6 +8337,8 @@ window._kurRate = 0;
     const badge = document.getElementById('kurBadge');
     if (badge) badge.textContent = '1$ = ₺' + rate.toFixed(2);
     if (typeof renderGrid === 'function') renderGrid();
+    // Checkout açıksa KDV/TL toplamını güncelle
+    if (typeof renderCheckoutItems === 'function') renderCheckoutItems();
   } catch(e) {
     console.warn('Kur alınamadı:', e);
   }
