@@ -2019,59 +2019,46 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
     <div class="checkout-section" style="margin-bottom:20px;">
       <div class="checkout-section-title">🛒 Sipariş Özeti</div>
       <div id="step2ItemList"></div>
-      <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);margin-top:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;border-top:1px solid var(--border);margin-top:8px;">
         <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink3);">Genel Toplam</span>
         <span id="step2TotalDisplay" style="font-family:var(--serif);font-size:22px;color:#1a5c3a;font-weight:700;"></span>
       </div>
     </div>
 
-    <!-- Kredi Kartı Ödeme Bölümü -->
+    <!-- Kredi Kartı Bölümü -->
     <div id="step2CardSection" style="display:none;">
       <div class="checkout-section">
         <div class="checkout-section-title">💳 Kart Bilgileri</div>
         <div class="card-secure-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           3D Secure korumalı · iyzico altyapısı · Kart bilginiz saklanmaz
         </div>
         <div class="card-input-group">
-          <div class="card-input-row">
-            <input class="checkout-input" id="s2CardHolder" placeholder="Kart Üzerindeki İsim" style="text-transform:uppercase;" autocomplete="cc-name">
-          </div>
-          <div class="card-input-row">
-            <input class="checkout-input" id="s2CardNumber" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="formatCardNo(this)" autocomplete="cc-number">
-          </div>
+          <div class="card-input-row"><input class="checkout-input" id="s2CardHolder" placeholder="Kart Üzerindeki İsim" style="text-transform:uppercase;" autocomplete="cc-name"></div>
+          <div class="card-input-row"><input class="checkout-input" id="s2CardNumber" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="formatCardNo(this)" autocomplete="cc-number"></div>
           <div class="card-input-row">
             <input class="checkout-input" id="s2CardExp" placeholder="AA / YY" maxlength="7" oninput="formatCardExp(this)" autocomplete="cc-exp" style="border-right:1px solid var(--border);">
             <input class="checkout-input" id="s2CardCvv" placeholder="CVV" maxlength="4" type="password" autocomplete="cc-csc">
           </div>
         </div>
         <div class="pay-logos" style="margin-bottom:16px;">
-          <div class="pay-logo">VISA</div>
-          <div class="pay-logo">MC</div>
-          <div class="pay-logo">TROY</div>
+          <div class="pay-logo">VISA</div><div class="pay-logo">MC</div><div class="pay-logo">TROY</div>
           <div class="pay-logo" style="color:#e84142;border-color:#e84142;">iyzico</div>
         </div>
-        <!-- Taksit seçenekleri -->
         <div id="installmentSection" style="display:none;">
           <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Taksit Seçeneği</div>
           <div id="installmentOptions" style="display:flex;flex-direction:column;gap:6px;"></div>
         </div>
-        <!-- 3D Secure iframe area -->
         <div id="iyzicoIframeWrap" class="iyzico-wrap" style="display:none;">
-          <div class="iyzico-loading" id="iyzicoLoading">
-            <div class="iyzico-spinner"></div>
-            <div class="iyzico-loading-text">3D Secure Yükleniyor...</div>
-          </div>
+          <div class="iyzico-loading" id="iyzicoLoading"><div class="iyzico-spinner"></div><div class="iyzico-loading-text">3D Secure Yükleniyor...</div></div>
           <iframe id="iyzicoIframe" title="3D Secure" style="display:none;"></iframe>
         </div>
-        <button class="checkout-submit-btn" id="payCardBtn" onclick="initiateCardPayment()" style="margin-top:8px;">
-          💳 Ödemeyi Tamamla →
-        </button>
+        <button class="checkout-submit-btn" id="payCardBtn" onclick="initiateCardPayment()" style="margin-top:8px;">💳 Ödemeyi Tamamla →</button>
       </div>
     </div>
 
     <!-- Havale / EFT Bölümü -->
-    <div id="step2Bank">
+    <div id="step2Bank" style="display:none;">
       <div class="checkout-section">
         <div class="checkout-section-title">🏦 Havale / EFT Bilgileri</div>
         <div style="background:var(--off);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;">
@@ -2087,7 +2074,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
             <div style="font-size:12px;color:var(--ink3);margin-bottom:6px;">IBAN</div>
             <div style="display:flex;align-items:center;gap:10px;">
               <div id="ibanDisplay" style="font-family:var(--mono);font-size:14px;font-weight:600;color:var(--ink);letter-spacing:0.05em;flex:1;">TR63 0001 0005 4965 3896 0350 01</div>
-              <button onclick="copyIBAN()" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--ink2);cursor:pointer;white-space:nowrap;transition:all 0.12s;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">📋 Kopyala</button>
+              <button onclick="copyIBAN()" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--ink2);cursor:pointer;white-space:nowrap;">📋 Kopyala</button>
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
@@ -2102,11 +2089,11 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div style="background:#fef9c3;border:1px solid #fde047;border-radius:4px;padding:14px;font-size:13px;color:#713f12;margin-bottom:16px;line-height:1.6;">
           ⚠️ Havale yaparken açıklama kısmına <strong id="step2OrderNo"></strong> sipariş numaranızı yazmayı unutmayın.
         </div>
-        <button onclick="sendOrderWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
+        <button onclick="completeOrderAndWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
           Siparişi WhatsApp'tan Bildir
         </button>
-        <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
+        <button onclick="completeOrderOnly()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
           Alışverişe Devam Et
         </button>
       </div>
@@ -2122,27 +2109,27 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--ink3);margin-bottom:6px;">SİPARİŞ NUMARANIZ</div>
           <div id="step2DeliveryOrderNo" style="font-family:var(--mono);font-size:20px;font-weight:600;color:var(--ink);letter-spacing:0.1em;"></div>
         </div>
-        <button onclick="sendOrderWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
+        <button onclick="completeOrderAndWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
           Siparişi WhatsApp'tan Bildir
         </button>
-        <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
+        <button onclick="completeOrderOnly()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
           Alışverişe Devam Et
         </button>
       </div>
     </div>
 
-    <!-- WhatsApp Bölümü -->
+    <!-- WhatsApp Siparişi Bölümü -->
     <div id="step2Whatsapp" style="display:none;">
       <div class="checkout-section" style="text-align:center;padding:36px 24px;">
         <div style="font-size:56px;margin-bottom:16px;">📱</div>
         <div style="font-family:var(--serif);font-size:26px;color:var(--ink);margin-bottom:10px;">Siparişiniz Hazır!</div>
         <div style="color:var(--ink3);font-size:14px;margin-bottom:24px;line-height:1.7;">WhatsApp butonuna tıklayarak siparişinizi bize gönderin.<br>Ödeme detaylarını WhatsApp üzerinden kararlaştıracağız.</div>
-        <button onclick="sendOrderWhatsApp()" style="width:100%;padding:16px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
+        <button onclick="completeOrderAndWhatsApp()" style="width:100%;padding:16px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
           WhatsApp ile Sipariş Ver
         </button>
-        <button onclick="closeCheckoutSuccess()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
+        <button onclick="completeOrderOnly()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
           Alışverişe Devam Et
         </button>
       </div>
@@ -6598,6 +6585,15 @@ function applyCoupon() {
 function copyIBAN() {
   const iban = 'TR630001000549653896035001';
   navigator.clipboard.writeText(iban).then(() => showToast('✓ IBAN kopyalandı'));
+}
+
+function completeOrderAndWhatsApp() {
+  sendOrderWhatsApp();
+  goCheckoutStep(3);
+}
+
+function completeOrderOnly() {
+  goCheckoutStep(3);
 }
 
 function sendOrderWhatsApp() {
