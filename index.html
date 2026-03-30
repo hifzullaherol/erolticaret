@@ -1998,7 +1998,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div><div class="checkout-summary-total-label">Genel Toplam</div></div>
           <div>
             <div class="checkout-summary-total-price" id="chkTotal" style="display:none;">$0.00</div>
-            <div id="chkTotalTL" style="font-family:var(--serif);font-size:26px;color:var(--ink);font-weight:700;display:block;">₺0,00 (KDV dahil)</div>
+            <div id="chkTotalTL" style="font-family:var(--serif);font-size:26px;color:#1a5c3a;font-weight:700;display:block;">₺0,00 (KDV dahil)</div>
           </div>
         </div>
         <button class="checkout-submit-btn" onclick="submitOrder()" id="submitOrderBtn">
@@ -2021,7 +2021,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
       <div id="step2ItemList"></div>
       <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);margin-top:8px;">
         <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink3);">Genel Toplam</span>
-        <span id="step2TotalDisplay" style="font-family:var(--serif);font-size:22px;color:var(--ink);"></span>
+        <span id="step2TotalDisplay" style="font-family:var(--serif);font-size:22px;color:#1a5c3a;font-weight:700;"></span>
       </div>
     </div>
 
@@ -2092,7 +2092,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
             <span style="font-size:13px;color:var(--ink3);">Tutar</span>
-            <span id="step2Total" style="font-family:var(--serif);font-size:22px;color:var(--ink);font-weight:600;"></span>
+            <span id="step2Total" style="font-family:var(--serif);font-size:22px;color:#1a5c3a;font-weight:700;"></span>
           </div>
           <div style="padding:10px 0;">
             <span style="font-size:13px;color:var(--ink3);">Açıklama (Zorunlu)</span>
@@ -6422,12 +6422,12 @@ function goCheckoutStep(n) {
     sections.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     if (selectedPayMethod === 'card') {
       const cs = document.getElementById('step2CardSection'); if (cs) cs.style.display = '';
-      setEl('step2Total', '$' + currentOrderTotal.toFixed(2));
+      setEl('step2Total', fmtTL(currentOrderTotal));
     } else if (selectedPayMethod === 'bank') {
       const bs = document.getElementById('step2Bank'); if (bs) bs.style.display = '';
       setEl('step2OrderNo', currentOrderNo);
       setEl('step2RefNo', currentOrderNo);
-      setEl('step2Total', '$' + currentOrderTotal.toFixed(2));
+      setEl('step2Total', fmtTL(currentOrderTotal));
     } else if (selectedPayMethod === 'delivery') {
       const ds = document.getElementById('step2Delivery'); if (ds) ds.style.display = '';
       setEl('step2DeliveryOrderNo', currentOrderNo);
@@ -6442,7 +6442,7 @@ function goCheckoutStep(n) {
     if (backBtn) backBtn.style.display = 'none';
     document.getElementById('checkoutPageTitle').textContent = 'Sipariş Onayı';
     setEl('step3OrderNo', currentOrderNo);
-    setEl('step3TotalDisplay', 'Toplam: $' + currentOrderTotal.toFixed(2));
+    setEl('step3TotalDisplay', 'Toplam: ' + fmtTL(currentOrderTotal));
     const d = new Date();
     const dateStr = d.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'}) + ' ' + d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
     setEl('trackDate1', dateStr);
@@ -6467,7 +6467,7 @@ function renderStep2Summary() {
       <div class="checkout-item-price">$${(i.price_usd*i.qty).toFixed(2)}</div>
     </div>`;
   }).join('');
-  setEl('step2TotalDisplay', '$' + currentOrderTotal.toFixed(2));
+  setEl('step2TotalDisplay', fmtTL(currentOrderTotal));
 }
 
 function showCheckoutStep2() {
