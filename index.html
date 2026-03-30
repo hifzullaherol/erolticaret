@@ -6316,7 +6316,7 @@ async function submitOrder() {
 // ── Admin Sipariş Bildirim Maili (Resend) ────────────────
 async function sendOrderNotificationEmail(order) {
   try {
-    await fetch('https://cdyftkdlhggwcsrebdje.supabase.co/functions/v1/send-order-email', {
+    await fetch('https://cdyftkdlhggwcsrebdje.supabase.co/functions/v1/bright-responder', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
