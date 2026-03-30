@@ -6842,6 +6842,11 @@ const T = {
 
 function t(k) { return T[lang][k] || k; }
 
+function fmtTL(usd) {
+  if (!window._kurRate || window._kurRate === 0) return '₺ yükleniyor...';
+  const tl = usd * window._kurRate * 1.20;
+  return '₺' + tl.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' (KDV dahil)';
+}
 function setEl(id, val, prop='textContent') {
   const el = document.getElementById(id);
   if (el) el[prop] = val;
@@ -8334,6 +8339,24 @@ window._kurRate = 0;
     const badge = document.getElementById('kurBadge');
     if (badge) badge.textContent = '1$ = ₺' + rate.toFixed(2);
     if (typeof renderGrid === 'function') renderGrid();
+    // Checkout açıksa toplam alanlarını güncelle
+    if (typeof fmtTL === 'function' && typeof currentOrderTotal !== 'undefined' && currentOrderTotal > 0) {
+      const s2t = document.getElementById('step2Total');
+      if (s2t && s2t.offsetParent !== null) s2t.textContent = fmtTL(currentOrderTotal);
+      const s2td = document.getElementById('step2TotalDisplay');
+      if (s2td && s2td.offsetParent !== null) s2td.textContent = fmtTL(currentOrderTotal);
+      const s3td = document.getElementById('step3TotalDisplay');
+      if (s3td && s3td.offsetParent !== null) s3td.textContent = 'Toplam: ' + fmtTL(currentOrderTotal);
+      const chkTL = document.getElementById('chkTotalTL');
+      if (chkTL) {
+        chkTL.style.display = 'block';
+        if (typeof total !== 'undefined') {
+          const t = currentOrderTotal;
+          const tlDahil = t * rate * 1.20;
+          chkTL.textContent = '₺' + tlDahil.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' (KDV dahil)';
+        }
+      }
+    }
   } catch(e) {
     console.warn('Kur alınamadı:', e);
   }
