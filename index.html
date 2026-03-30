@@ -6328,6 +6328,7 @@ async function sendOrderNotificationEmail(order) {
         note:      order.note || '',
         payMethod: order.payMethod,
         total:     order.total,
+        kurRate:   window._kurRate || 0,
         items:     order.items.map(i => ({
           part_no:   i.part_no,
           name:      i.turkish_name || i.name || i.part_no,
