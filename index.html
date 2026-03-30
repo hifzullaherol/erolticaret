@@ -6633,10 +6633,7 @@ function confirmLegalAndProceed() {
   if (!cb2 || !cb2.checked) {
     showToast('Lütfen Mesafeli Satış Sözleşmesi\'ni onaylayın.', true); return;
   }
-  // WhatsApp yöntemi ise WhatsApp'ı aç
-  if (selectedPayMethod === 'whatsapp' || selectedPayMethod === 'bank') {
-    sendOrderWhatsApp();
-  }
+  // WhatsApp yöntemi olsa bile otomatik açma, Step 3'e geç
   goCheckoutStep(3);
 }
 
