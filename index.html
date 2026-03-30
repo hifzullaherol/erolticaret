@@ -6468,6 +6468,7 @@ function renderStep2Summary() {
     </div>`;
   }).join('');
   setEl('step2TotalDisplay', fmtTL(currentOrderTotal));
+  waitForKurAndUpdate();
 }
 
 function showCheckoutStep2() {
@@ -6846,6 +6847,29 @@ function fmtTL(usd) {
   if (!window._kurRate || window._kurRate === 0) return '₺ yükleniyor...';
   const tl = usd * window._kurRate * 1.20;
   return '₺' + tl.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' (KDV dahil)';
+}
+
+function waitForKurAndUpdate() {
+  if (window._kurRate && window._kurRate > 0) return;
+  const ids = ['step2Total','step2TotalDisplay','chkTotalTL'];
+  let attempts = 0;
+  const iv = setInterval(function() {
+    attempts++;
+    if ((window._kurRate && window._kurRate > 0) || attempts > 40) {
+      clearInterval(iv);
+      if (!window._kurRate || window._kurRate === 0) return;
+      const s2t = document.getElementById('step2Total');
+      if (s2t) s2t.textContent = fmtTL(currentOrderTotal);
+      const s2td = document.getElementById('step2TotalDisplay');
+      if (s2td) s2td.textContent = fmtTL(currentOrderTotal);
+      const chkTL = document.getElementById('chkTotalTL');
+      if (chkTL) {
+        const tl = currentOrderTotal * window._kurRate * 1.20;
+        chkTL.textContent = '₺' + tl.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' (KDV dahil)';
+        chkTL.style.display = 'block';
+      }
+    }
+  }, 250);
 }
 function setEl(id, val, prop='textContent') {
   const el = document.getElementById(id);
@@ -8319,6 +8343,19 @@ window._kurRate = 0;
   try {
     const res = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
     const data = await res.json(); const rate = data.usd['try']; window._kurRate = rate;
+    // Checkout açıksa toplam alanlarını hemen güncelle
+    if (typeof currentOrderTotal !== 'undefined' && currentOrderTotal > 0 && typeof fmtTL === 'function') {
+      ['step2Total','step2TotalDisplay'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = fmtTL(currentOrderTotal);
+      });
+      var chkTL = document.getElementById('chkTotalTL');
+      if (chkTL) {
+        var tl = currentOrderTotal * rate * 1.20;
+        chkTL.textContent = '₺' + tl.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' (KDV dahil)';
+        chkTL.style.display = 'block';
+      }
+    }
     // Her p-price div'inin altına TL fiyatı ekle
     document.querySelectorAll('.p-price').forEach(function(el) {
       const text = el.textContent.trim();
