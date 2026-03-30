@@ -6623,6 +6623,7 @@ function sendOrderWhatsApp() {
   }
 
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  goCheckoutStep(3);
 }
 
 // ── Saved Address helpers ────────────────────────────────────
