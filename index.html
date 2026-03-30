@@ -2089,12 +2089,56 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div style="background:#fef9c3;border:1px solid #fde047;border-radius:4px;padding:14px;font-size:13px;color:#713f12;margin-bottom:16px;line-height:1.6;">
           ⚠️ Havale yaparken açıklama kısmına <strong id="step2OrderNo"></strong> sipariş numaranızı yazmayı unutmayın.
         </div>
-        <button onclick="completeOrderAndWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
-          Siparişi WhatsApp'tan Bildir
-        </button>
-        <button onclick="completeOrderOnly()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
-          Alışverişe Devam Et
+
+    <!-- Yasal Belgeler Onay Bölümü -->
+    <div id="step2Legal" style="margin-top:20px;">
+      <div class="checkout-section">
+        <div class="checkout-section-title">📋 Yasal Bildirimler</div>
+
+        <!-- Ön Bilgilendirme Formu -->
+        <div style="border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--off);cursor:pointer;" onclick="toggleLegal('onBilgi')">
+            <span style="font-size:13px;font-weight:600;color:var(--ink);">Ön Bilgilendirme Formu</span>
+            <span id="onBilgiArrow" style="font-size:12px;color:var(--ink3);">▼</span>
+          </div>
+          <div id="onBilgiContent" style="display:none;padding:16px;font-size:12px;color:var(--ink2);line-height:1.7;max-height:200px;overflow-y:auto;border-top:1px solid var(--border);">
+            <p><strong>Satıcı:</strong> SilotechParts – Cumhuriyet, Fatih Cd. NO:303/7, 54900 Pamukova / Sakarya | Tel: 0541 517 69 09</p>
+            <p style="margin-top:8px;"><strong>Ürün ve Hizmet Bilgisi:</strong> Sipariş edilen ürünlerin temel özellikleri, miktarları ve satış bedelleri sipariş özet sayfasında yer almaktadır.</p>
+            <p style="margin-top:8px;"><strong>Teslimat:</strong> Ürünler ödeme onayının ardından stok durumuna bağlı olarak en geç 5 iş günü içinde kargoya verilir.</p>
+            <p style="margin-top:8px;"><strong>Cayma Hakkı:</strong> Teslim tarihinden itibaren 14 gün içinde herhangi bir gerekçe göstermeksizin cayma hakkınızı kullanabilirsiniz.</p>
+            <p style="margin-top:8px;"><strong>Ödeme:</strong> Sipariş sırasında seçilen yöntemle (Havale/EFT, Kredi Kartı, Kapıda Ödeme veya WhatsApp) gerçekleştirilir.</p>
+          </div>
+        </div>
+
+        <!-- Mesafeli Satış Sözleşmesi -->
+        <div style="border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--off);cursor:pointer;" onclick="toggleLegal('mesafeliSatis')">
+            <span style="font-size:13px;font-weight:600;color:var(--ink);">Mesafeli Satış Sözleşmesi</span>
+            <span id="mesafeliSatisArrow" style="font-size:12px;color:var(--ink3);">▼</span>
+          </div>
+          <div id="mesafeliSatisContent" style="display:none;padding:16px;font-size:12px;color:var(--ink2);line-height:1.7;max-height:200px;overflow-y:auto;border-top:1px solid var(--border);">
+            <p><strong>1. Taraflar</strong><br>Satıcı: SilotechParts – Cumhuriyet, Fatih Cd. NO:303/7, 54900 Pamukova / Sakarya<br>Alıcı: Sipariş formunda belirtilen kişi/kurum.</p>
+            <p style="margin-top:8px;"><strong>2. Konu</strong><br>Bu sözleşme, alıcının silotechparts.com.tr üzerinden sipariş verdiği ürünlerin satışı ve teslimatına ilişkin olup 6502 sayılı Kanun kapsamında düzenlenmiştir.</p>
+            <p style="margin-top:8px;"><strong>3. Ürün Bilgileri ve Bedel</strong><br>Sipariş edilen ürünlerin özellikleri ve bedelleri sipariş özet sayfasında yer almaktadır.</p>
+            <p style="margin-top:8px;"><strong>4. Ödeme</strong><br>Havale/EFT ile ödemelerde sipariş, ödeme tahsil edildikten sonra işleme alınır.</p>
+            <p style="margin-top:8px;"><strong>5. Teslimat</strong><br>Ürünler en geç 5 iş günü içinde kargoya verilir. Teslimat süresi genellikle 1–3 iş günüdür.</p>
+            <p style="margin-top:8px;"><strong>6. Cayma Hakkı</strong><br>Alıcı teslim tarihinden itibaren 14 gün içinde cayma hakkını kullanabilir.</p>
+            <p style="margin-top:8px;"><strong>7. Uyuşmazlık</strong><br>Sakarya Tüketici Hakem Heyetleri ve Mahkemeleri yetkilidir.</p>
+          </div>
+        </div>
+
+        <!-- Onay Kutuları -->
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:10px;">
+          <input type="checkbox" id="checkOnBilgi" style="margin-top:3px;width:16px;height:16px;cursor:pointer;accent-color:var(--accent2);">
+          <span style="font-size:13px;color:var(--ink2);line-height:1.5;"><strong>Ön Bilgilendirme Formu</strong>'nu okudum ve onaylıyorum.</span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:20px;">
+          <input type="checkbox" id="checkMesafeli" style="margin-top:3px;width:16px;height:16px;cursor:pointer;accent-color:var(--accent2);">
+          <span style="font-size:13px;color:var(--ink2);line-height:1.5;"><strong>Mesafeli Satış Sözleşmesi</strong>'ni okudum ve onaylıyorum.</span>
+        </label>
+
+        <button onclick="confirmLegalAndProceed()" id="legalConfirmBtn" style="width:100%;padding:14px;background:var(--ink);color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;">
+          Siparişi Onayla →
         </button>
       </div>
     </div>
@@ -2109,13 +2153,6 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--ink3);margin-bottom:6px;">SİPARİŞ NUMARANIZ</div>
           <div id="step2DeliveryOrderNo" style="font-family:var(--mono);font-size:20px;font-weight:600;color:var(--ink);letter-spacing:0.1em;"></div>
         </div>
-        <button onclick="completeOrderAndWhatsApp()" style="width:100%;padding:14px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
-          Siparişi WhatsApp'tan Bildir
-        </button>
-        <button onclick="completeOrderOnly()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
-          Alışverişe Devam Et
-        </button>
       </div>
     </div>
 
@@ -2125,13 +2162,6 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div style="font-size:56px;margin-bottom:16px;">📱</div>
         <div style="font-family:var(--serif);font-size:26px;color:var(--ink);margin-bottom:10px;">Siparişiniz Hazır!</div>
         <div style="color:var(--ink3);font-size:14px;margin-bottom:24px;line-height:1.7;">WhatsApp butonuna tıklayarak siparişinizi bize gönderin.<br>Ödeme detaylarını WhatsApp üzerinden kararlaştıracağız.</div>
-        <button onclick="completeOrderAndWhatsApp()" style="width:100%;padding:16px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
-          WhatsApp ile Sipariş Ver
-        </button>
-        <button onclick="completeOrderOnly()" style="width:100%;padding:12px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:14px;cursor:pointer;">
-          Alışverişe Devam Et
-        </button>
       </div>
     </div>
 
@@ -6587,6 +6617,31 @@ function copyIBAN() {
   navigator.clipboard.writeText(iban).then(() => showToast('✓ IBAN kopyalandı'));
 }
 
+function toggleLegal(id) {
+  const content = document.getElementById(id + 'Content');
+  const arrow = document.getElementById(id + 'Arrow');
+  if (!content) return;
+  const isOpen = content.style.display !== 'none';
+  content.style.display = isOpen ? 'none' : 'block';
+  if (arrow) arrow.textContent = isOpen ? '▼' : '▲';
+}
+
+function confirmLegalAndProceed() {
+  const cb1 = document.getElementById('checkOnBilgi');
+  const cb2 = document.getElementById('checkMesafeli');
+  if (!cb1 || !cb1.checked) {
+    showToast('Lütfen Ön Bilgilendirme Formu\'nu onaylayın.', true); return;
+  }
+  if (!cb2 || !cb2.checked) {
+    showToast('Lütfen Mesafeli Satış Sözleşmesi\'ni onaylayın.', true); return;
+  }
+  // WhatsApp yöntemi ise WhatsApp'ı aç
+  if (selectedPayMethod === 'whatsapp' || selectedPayMethod === 'bank') {
+    sendOrderWhatsApp();
+  }
+  goCheckoutStep(3);
+}
+
 function completeOrderAndWhatsApp() {
   sendOrderWhatsApp();
   goCheckoutStep(3);
@@ -6611,9 +6666,9 @@ function sendOrderWhatsApp() {
   msg += `💳 *Ödeme:* ${pay}\n\n`;
   msg += `📦 *Ürünler:*\n`;
   currentOrderCart.forEach(i => {
-    msg += `• ${i.part_no} - ${i.turkish_name} x${i.qty} = $${(i.price_usd * i.qty).toFixed(2)}\n`;
+    msg += `• ${i.part_no} - ${i.turkish_name} x${i.qty} = ${fmtTL(i.price_usd * i.qty)}\n`;
   });
-  msg += `\n💰 *Genel Toplam: $${currentOrderTotal.toFixed(2)}*`;
+  msg += `\n💰 *Genel Toplam: ${fmtTL(currentOrderTotal)}*`;
   if (selectedPayMethod === 'bank') {
     msg += `\n\n📌 Havale açıklaması: *${currentOrderNo}*`;
   }
