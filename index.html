@@ -5997,6 +5997,7 @@ async function loadProfileOrders() {
         <div class="profile-order-body">
           ${o.address?`<div style="font-size:12px;color:var(--ink3);margin-bottom:12px;">📍 ${o.address}</div>`:''}
           ${o.note?`<div style="font-size:12px;color:#713f12;background:#fef9c3;padding:8px 12px;border-radius:4px;margin-bottom:12px;">📝 ${o.note}</div>`:''}
+          ${(o.status==='shipped'&&o.tracking_no)?`<div style="font-size:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;padding:10px 14px;border-radius:6px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">🚚 <span><strong>Kargo Takip No:</strong> ${o.tracking_no}</span></div>`:''}
           ${itemsHtml||'<div style="color:var(--ink3);font-size:13px;">Ürün bilgisi yok</div>'}
           <div style="text-align:right;padding-top:10px;font-family:var(--serif);font-size:16px;font-weight:700;">Toplam: $${(o.total_usd||0).toFixed(2)}</div>
         </div>
@@ -7290,6 +7291,39 @@ async function updateOrderStatus(orderId, newStatus) {
   }
 }
 
+function admSelectStatus(orderId, newStatus) {
+  // Butonu görsel olarak güncelle
+  const o = _allOrders.find(x => x.id === orderId);
+  if (!o) return;
+  Object.keys(ORDER_STATUSES).forEach(k => {
+    const btn = document.getElementById(`statusBtn_${orderId}_${k}`);
+    if (!btn) return;
+    const v = ORDER_STATUSES[k];
+    btn.style.background = k === newStatus ? v.bg : 'var(--white)';
+    btn.style.fontWeight = k === newStatus ? '700' : '400';
+  });
+  // Kargo alanını göster/gizle
+  const trackingArea = document.getElementById(`trackingInputArea_${orderId}`);
+  if (trackingArea) trackingArea.style.display = newStatus === 'shipped' ? 'flex' : 'none';
+  // Durumu güncelle
+  updateOrderStatus(orderId, newStatus);
+}
+
+async function saveTrackingNo(orderId) {
+  const input = document.getElementById(`trackingNoInput_${orderId}`);
+  if (!input) return;
+  const trackingNo = input.value.trim();
+  if (!trackingNo) { showToast('Lütfen takip numarası girin', true); return; }
+  try {
+    await supaFetch(`orders?id=eq.${orderId}`, 'PATCH', { tracking_no: trackingNo });
+    const idx = _allOrders.findIndex(o => o.id === orderId);
+    if (idx > -1) _allOrders[idx].tracking_no = trackingNo;
+    showToast('✓ Kargo takip numarası kaydedildi');
+  } catch(e) {
+    showToast('Kayıt hatası: ' + e.message, true);
+  }
+}
+
 function updateOrdersBadge() {
   const pending = _allOrders.filter(o => o.status === 'pending').length;
   const badge = document.getElementById('admOrdersBadge');
@@ -7351,9 +7385,15 @@ function openOrderDetail(orderId) {
       <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em;margin-bottom:8px;">DURUMU GÜNCELLE</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         ${Object.entries(ORDER_STATUSES).map(([k,v]) =>
-          `<button onclick="updateOrderStatus(${o.id},'${k}');closeAdmModal('admOrderModal');" style="padding:7px 14px;border:1px solid ${v.border};background:${o.status===k?v.bg:'var(--white)'};color:${v.color};border-radius:var(--radius);font-family:var(--mono);font-size:11px;cursor:pointer;font-weight:${o.status===k?'700':'400'};">${v.label}</button>`
+          `<button onclick="admSelectStatus(${o.id},'${k}')" id="statusBtn_${o.id}_${k}" style="padding:7px 14px;border:1px solid ${v.border};background:${o.status===k?v.bg:'var(--white)'};color:${v.color};border-radius:var(--radius);font-family:var(--mono);font-size:11px;cursor:pointer;font-weight:${o.status===k?'700':'400'};">${v.label}</button>`
         ).join('')}
       </div>
+      <div id="trackingInputArea_${o.id}" style="margin-top:12px;display:${o.status==='shipped'?'flex':'none'};gap:8px;align-items:center;flex-wrap:wrap;">
+        <input id="trackingNoInput_${o.id}" type="text" placeholder="Kargo takip numarası girin..." value="${o.tracking_no||''}"
+          style="flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius);font-family:var(--mono);font-size:12px;outline:none;"/>
+        <button onclick="saveTrackingNo(${o.id})" style="padding:8px 16px;background:var(--ink);color:white;border:none;border-radius:var(--radius);font-family:var(--mono);font-size:11px;cursor:pointer;white-space:nowrap;">💾 Kaydet</button>
+      </div>
+      ${o.tracking_no ? `<div style="margin-top:8px;font-size:12px;color:#1d4ed8;">📦 Mevcut takip no: <strong>${o.tracking_no}</strong></div>` : ''}
     </div>`;
 
   document.getElementById('admOrderModal').classList.add('open');
