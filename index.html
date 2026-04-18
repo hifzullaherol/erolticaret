@@ -6499,16 +6499,16 @@ async function initiateCardPayment() {
 
     // Kart ödemesi admin bildirimi
     const d2 = pendingOrderData || {};
-    sendOrderNotification({
-      orderNo:   currentOrderNo,
-      customer:  (d2.firstName||'') + ' ' + (d2.lastName||''),
-      email:     d2.email || '',
-      phone:     d2.phone || '',
-      address:   (d2.address||'') + (d2.district ? ', '+d2.district : '') + ', ' + (d2.city||''),
-      note:      d2.note || '',
-      payMethod: 'card',
-      total:     currentOrderTotal.toFixed(2),
-      items:     currentOrderCart.map(i => ({ part_no: i.part_no, name: i.turkish_name || i.english_name, qty: i.qty, price_usd: i.price_usd }))
+    sendOrderNotificationEmail({
+      orderNo:      currentOrderNo,
+      customerName: (d2.firstName||'') + ' ' + (d2.lastName||''),
+      email:        d2.email || '',
+      phone:        d2.phone || '',
+      address:      (d2.address||'') + (d2.district ? ', '+d2.district : '') + ', ' + (d2.city||''),
+      note:         d2.note || '',
+      payMethod:    'card',
+      total:        currentOrderTotal,
+      items:        currentOrderCart.map(i => ({ part_no: i.part_no, turkish_name: i.turkish_name || i.english_name, qty: i.qty, price_usd: i.price_usd }))
     });
 
     btn.textContent = 'Ödemeyi Tamamla →'; btn.disabled = false;
