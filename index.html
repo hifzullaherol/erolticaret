@@ -1935,7 +1935,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div id="payCardInfo" style="display:none;">
           <div class="card-secure-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            3D Secure · SSL Şifreli · iyzico Güvencesi
+            3D Secure · SSL Şifreli · PayTR Güvencesi
           </div>
           <div style="margin-top:10px;padding:10px 12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:var(--radius);font-size:12px;color:#0369a1;">
             🔒 Kart bilgilerinizi bir sonraki adımda güvenli şekilde gireceksiniz.
@@ -2013,7 +2013,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         <div class="checkout-section-title">💳 Kart Bilgileri</div>
         <div class="card-secure-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-          3D Secure korumalı · iyzico altyapısı · Kart bilginiz saklanmaz
+          3D Secure korumalı · PayTR altyapısı · Kart bilginiz saklanmaz
         </div>
         <div class="card-input-group">
           <div class="card-input-row"><input class="checkout-input" id="s2CardHolder" placeholder="Kart Üzerindeki İsim" style="text-transform:uppercase;" autocomplete="cc-name"></div>
@@ -2025,7 +2025,11 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
         </div>
         <div class="pay-logos" style="margin-bottom:16px;">
           <div class="pay-logo">VISA</div><div class="pay-logo">MC</div><div class="pay-logo">TROY</div>
-          <div class="pay-logo" style="color:#e84142;border-color:#e84142;">iyzico</div>
+          <div class="pay-logo" style="color:#ff6600;border-color:#ff6600;">PayTR</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:8px 10px;background:#fff8f5;border:1px solid #ffe0cc;border-radius:6px;">
+          <img src="https://www.paytr.com/img/paytr-logo.svg" alt="PayTR Güvenli Ödeme" style="height:22px;" onerror="this.style.display='none'">
+          <span style="font-family:var(--mono);font-size:10px;color:#ff6600;">🔒 256-bit SSL ile Korumalı · 3D Secure</span>
         </div>
         <div id="installmentSection" style="display:none;">
           <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Taksit Seçeneği</div>
@@ -8159,7 +8163,9 @@ setCat = function(c) {
       <div style="display:flex;align-items:center;gap:10px;">
         <span style="font-family:'DM Mono',monospace;font-size:10px;color:#4a4540;">🔒 SSL Güvenli</span>
         <span style="color:#4a4540;font-size:10px;">|</span>
-        <span style="font-family:'DM Mono',monospace;font-size:10px;color:#4a4540;">VISA &nbsp; MC &nbsp; TROY &nbsp; iyzico</span>
+        <img src="https://www.paytr.com/img/paytr-logo.svg" alt="PayTR" style="height:16px;filter:brightness(0) invert(0.5);" onerror="this.style.display='none'">
+        <span style="color:#4a4540;font-size:10px;">|</span>
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:#4a4540;">VISA &nbsp; MC &nbsp; TROY &nbsp; PayTR</span>
       </div>
       <div style="font-family:'DM Mono',monospace;font-size:10px;color:#4a4540;letter-spacing:0.1em;">silotechparts.com.tr</div>
     </div>
@@ -8237,12 +8243,12 @@ setCat = function(c) {
       <strong>Mesleki Davranış Kuralları:</strong> Pamukova Esnaf ve Sanatkarlar Odası etik ve davranış kurallarına uyulmaktadır. Ayrıntılar için odanın resmi web sitesini ziyaret ediniz.
     </p>
     <h2>Ödeme Güvenliği</h2>
-    <p>Kredi kartlı ödemeler iyzico altyapısı üzerinden gerçekleştirilmektedir. Kart bilgileriniz tarafımızca saklanmamaktadır.</p>
+    <p>Kredi kartlı ödemeler PayTR güvenli ödeme altyapısı üzerinden gerçekleştirilmektedir. Kart bilgileriniz tarafımızca saklanmamaktadır.</p>
     <div style="display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap;">
-      <img src="https://www.iyzico.com/assets/images/iyzico/logo.svg" alt="iyzico ile Öde" style="height:28px;" onerror="this.style.display='none'">
-      <img src="https://www.iyzico.com/assets/images/badges/visa.svg" alt="Visa" style="height:24px;" onerror="this.style.display='none'">
-      <img src="https://www.iyzico.com/assets/images/badges/mastercard.svg" alt="Mastercard" style="height:24px;" onerror="this.style.display='none'">
-      <span style="font-family:'DM Mono',monospace;font-size:11px;color:#666;">🔒 SSL Güvenli Bağlantı</span>
+      <img src="https://www.paytr.com/img/paytr-logo.svg" alt="PayTR Güvenli Ödeme" style="height:28px;" onerror="this.style.display='none'">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" style="height:20px;" onerror="this.style.display='none'">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png" alt="Mastercard" style="height:24px;" onerror="this.style.display='none'">
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:#666;">🔒 256-bit SSL · 3D Secure</span>
     </div>
   </div>
 </div>
