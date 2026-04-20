@@ -2035,9 +2035,12 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
           <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Taksit Seçeneği</div>
           <div id="installmentOptions" style="display:flex;flex-direction:column;gap:6px;"></div>
         </div>
-        <div id="iyzicoIframeWrap" class="iyzico-wrap" style="display:none;">
-          <div class="iyzico-loading" id="iyzicoLoading"><div class="iyzico-spinner"></div><div class="iyzico-loading-text">3D Secure Yükleniyor...</div></div>
-          <iframe id="iyzicoIframe" title="3D Secure" style="display:none;"></iframe>
+        <div id="paytrIframeWrap" style="display:none;margin-top:12px;">
+          <div id="paytrLoading" style="display:flex;align-items:center;gap:10px;padding:16px;background:#fff8f5;border-radius:6px;margin-bottom:8px;">
+            <div style="width:18px;height:18px;border:2px solid #ff6600;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+            <span style="font-family:var(--mono);font-size:11px;color:#ff6600;">3D Secure Yükleniyor...</span>
+          </div>
+          <iframe id="paytrIframe" src="" frameborder="0" scrolling="no" style="width:100%;height:500px;display:none;border:1px solid var(--border);border-radius:6px;"></iframe>
         </div>
         <button class="checkout-submit-btn" id="payCardBtn" onclick="initiateCardPayment()" style="margin-top:8px;">💳 Ödemeyi Tamamla →</button>
       </div>
@@ -6432,82 +6435,119 @@ function showCheckoutStep2() {
   goCheckoutStep(2);
 }
 
-// ── iyzico Card Payment ──────────────────────────────────
+// ── PayTR Card Payment ──────────────────────────────────────
+const PAYTR_WORKER_URL = 'https://paytr-silotech.hifzullaherol.workers.dev'; // ← Worker URL'nizi buraya yazın
+
 async function initiateCardPayment() {
-  const holder = (document.getElementById('s2CardHolder')?.value||document.getElementById('cardHolder')?.value||'').trim();
-  const number = (document.getElementById('s2CardNumber')?.value||document.getElementById('cardNumber')?.value||'').replace(/\s/g,'');
-  const exp    = (document.getElementById('s2CardExp')?.value||document.getElementById('cardExp')?.value||'').trim();
-  const cvv    = (document.getElementById('s2CardCvv')?.value||document.getElementById('cardCvv')?.value||'').trim();
-
-  if (!holder||!number||!exp||!cvv) { showToast('Tüm kart bilgilerini doldurun', true); return; }
-  if (number.length < 15) { showToast('Geçersiz kart numarası', true); return; }
-
   const btn = document.getElementById('payCardBtn');
   btn.textContent = 'İşleniyor...'; btn.disabled = true;
 
   try {
-    // ── Gerçek iyzico entegrasyonu için backend endpoint gereklidir ──
-    // Aşağıdaki URL'yi kendi sunucunuzdaki /api/iyzico-payment endpoint'ine yönlendirin
-    // Backend: conversationId + price + buyerInfo + cardToken → iyzico checkoutFormInitialize
-    // iyzico döndürdüğü checkoutFormContent'i iframe'e yükleyin
-    //
-    // ÖRNEK BACKEND (Node.js/Cloudflare Worker):
-    // POST /api/iyzico-payment
-    // Body: { orderNo, total, buyer, card: {holder, number, expMonth, expYear, cvc} }
-    // Dönen: { checkoutFormContent, paymentPageUrl, token }
-    //
-    // Demo mod: gerçek backend olmadan simüle ediyoruz
-    await new Promise(r => setTimeout(r, 1200)); // Backend çağrısı simülasyonu
-
     const d = pendingOrderData || {};
+
+    // TL karşılığı hesapla (kur * tutar * 100 = kuruş)
+    const rate = window._kurRate || 35;
+    const totalTL = Math.round(currentOrderTotal * rate * 1.20 * 100); // KDV dahil kuruş
+
+    // Sipariş numarası oluştur
+    const tempOrderId = 'STP' + Date.now();
+
+    // Sepet için PayTR formatı: [[ad, fiyat_kuruş, adet], ...]
+    const basketItems = currentOrderCart.map(i => [
+      (i.turkish_name || i.english_name || '').substring(0, 50),
+      String(Math.round(i.price_usd * rate * 1.20 * 100)),
+      String(i.qty)
+    ]);
+
+    // Kullanıcı IP (tarayıcıdan alınamaz, Worker geçici IP kullanır)
+    const payload = {
+      orderNo:        tempOrderId,
+      totalTL:        totalTL,
+      email:          d.email || 'musteri@test.com',
+      phone:          (d.phone || '05000000000').replace(/\s/g,''),
+      name:           (d.firstName || '') + ' ' + (d.lastName || ''),
+      address:        (d.address || '') + (d.district ? ', ' + d.district : '') + ', ' + (d.city || ''),
+      city:           d.city || 'İstanbul',
+      userIp:         '1.2.3.4',
+      basketItems:    basketItems,
+      merchantOkUrl:  window.location.origin + '/?paytr=success&oid=' + tempOrderId,
+      merchantFailUrl:window.location.origin + '/?paytr=fail&oid=' + tempOrderId,
+      callbackUrl:    PAYTR_WORKER_URL + '/paytr/callback'
+    };
+
+    // Worker'dan token al
+    const res = await fetch(PAYTR_WORKER_URL + '/paytr/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!data.token) {
+      throw new Error(data.error || 'Token alınamadı');
+    }
+
+    // Siparişi veritabanına kaydet (beklemede)
     const orderPayload = {
       customer_name:  (d.firstName||'')+' '+(d.lastName||''),
-      customer_email: d.email||'customer@test.com',
+      customer_email: d.email||'',
       customer_phone: d.phone||'',
       company:        d.company||null,
       address:        (d.address||'')+(d.district?(', '+d.district):'')+', '+(d.city||''),
       note:           d.note||null,
       pay_method:     'card',
       total_usd:      parseFloat(currentOrderTotal.toFixed(2)),
-      status:         'confirmed',
+      status:         'pending',
       items:          currentOrderCart.map(i=>({part_no:i.part_no,name:i.turkish_name,qty:i.qty,price_usd:i.price_usd}))
     };
     if (currentUser && currentUser.email) orderPayload.member_email = currentUser.email;
 
-    let orderIdNum = Date.now();
     try {
       const result = await supaFetch('orders', 'POST', orderPayload);
-      if (result && result[0] && result[0].id) orderIdNum = result[0].id;
+      if (result && result[0] && result[0].id) {
+        currentOrderNo = 'STP-' + String(result[0].id).padStart(6, '0');
+      }
     } catch(e) {}
 
-    currentOrderNo = 'STP-' + String(orderIdNum).padStart(6, '0');
-    cart = []; renderCart(); updateCartCount();
-    appliedCoupon = null;
+    // PayTR iFrame'i göster
+    btn.style.display = 'none';
+    const wrap = document.getElementById('paytrIframeWrap');
+    const iframe = document.getElementById('paytrIframe');
+    const loading = document.getElementById('paytrLoading');
 
-    // Kart ödemesi admin bildirimi
-    const d2 = pendingOrderData || {};
-    sendOrderNotificationEmail({
-      orderNo:      currentOrderNo,
-      customerName: (d2.firstName||'') + ' ' + (d2.lastName||''),
-      email:        d2.email || '',
-      phone:        d2.phone || '',
-      address:      (d2.address||'') + (d2.district ? ', '+d2.district : '') + ', ' + (d2.city||''),
-      note:         d2.note || '',
-      payMethod:    'card',
-      total:        currentOrderTotal,
-      items:        currentOrderCart.map(i => ({ part_no: i.part_no, turkish_name: i.turkish_name || i.english_name, qty: i.qty, price_usd: i.price_usd }))
+    wrap.style.display = 'block';
+    iframe.src = 'https://www.paytr.com/odeme/guvenli/' + data.token;
+    iframe.onload = () => {
+      loading.style.display = 'none';
+      iframe.style.display = 'block';
+    };
+
+    // PayTR'dan mesaj dinle (ödeme sonucu)
+    window.addEventListener('message', async function paytrMsg(e) {
+      if (e.origin !== 'https://www.paytr.com') return;
+      if (e.data === 'paytr_payment_success') {
+        window.removeEventListener('message', paytrMsg);
+        cart = []; renderCart(); updateCartCount();
+        appliedCoupon = null;
+        wrap.style.display = 'none';
+        goCheckoutStep(3);
+      } else if (e.data === 'paytr_payment_failed') {
+        window.removeEventListener('message', paytrMsg);
+        wrap.style.display = 'none';
+        btn.textContent = '💳 Ödemeyi Tamamla →'; btn.disabled = false; btn.style.display = '';
+        showToast('Ödeme başarısız. Lütfen kart bilgilerinizi kontrol edin.', true);
+      }
     });
 
-    btn.textContent = 'Ödemeyi Tamamla →'; btn.disabled = false;
-    goCheckoutStep(3);
-
   } catch(e) {
-    btn.textContent = 'Ödemeyi Tamamla →'; btn.disabled = false;
-    showToast('Ödeme işleminde hata oluştu. Lütfen tekrar deneyin.', true);
+    btn.textContent = '💳 Ödemeyi Tamamla →'; btn.disabled = false;
+    showToast('Hata: ' + e.message, true);
   }
 }
 
 function onIyzicoLoaded() {
+
   document.getElementById('iyzicoLoading').style.display = 'none';
   document.getElementById('iyzicoIframe').style.display = 'block';
 }
