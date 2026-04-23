@@ -8080,6 +8080,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 renderCats(); applyFilters(); loadCurrentUser();
 
+// ── PayTR yönlendirme kontrolü ──────────────────────────────
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('paytr') === 'success') {
+    // URL'yi temizle
+    window.history.replaceState({}, '', window.location.pathname);
+    // Checkout açık değilse açma, sadece onay sayfasını göster
+    setTimeout(() => {
+      const overlay = document.getElementById('checkoutOverlay');
+      if (overlay) {
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        goCheckoutStep(3);
+      }
+    }, 300);
+  } else if (params.get('paytr') === 'fail') {
+    window.history.replaceState({}, '', window.location.pathname);
+    setTimeout(() => {
+      showToast('Ödeme işlemi başarısız veya iptal edildi.', true);
+    }, 300);
+  }
+})();
+
 // ═══════════════════════════════════════════
 // MOBİL FİLTRE & ARAMA
 // ═══════════════════════════════════════════
