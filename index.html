@@ -2010,19 +2010,7 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
     <!-- Kredi Kartı -->
     <div id="step2CardSection" style="display:none;">
       <div class="checkout-section">
-        <div class="checkout-section-title">💳 Kart Bilgileri</div>
-        <div class="card-secure-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-          3D Secure korumalı · PayTR altyapısı · Kart bilginiz saklanmaz
-        </div>
-        <div class="card-input-group">
-          <div class="card-input-row"><input class="checkout-input" id="s2CardHolder" placeholder="Kart Üzerindeki İsim" style="text-transform:uppercase;" autocomplete="cc-name"></div>
-          <div class="card-input-row"><input class="checkout-input" id="s2CardNumber" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="formatCardNo(this)" autocomplete="cc-number"></div>
-          <div class="card-input-row">
-            <input class="checkout-input" id="s2CardExp" placeholder="AA / YY" maxlength="7" oninput="formatCardExp(this)" autocomplete="cc-exp" style="border-right:1px solid var(--border);">
-            <input class="checkout-input" id="s2CardCvv" placeholder="CVV" maxlength="4" type="password" autocomplete="cc-csc">
-          </div>
-        </div>
+        <div class="checkout-section-title">💳 Kart ile Ödeme</div>
         <div class="pay-logos" style="margin-bottom:16px;">
           <div class="pay-logo">VISA</div><div class="pay-logo">MC</div><div class="pay-logo">TROY</div>
           <div class="pay-logo" style="color:#ff6600;border-color:#ff6600;">PayTR</div>
@@ -6222,6 +6210,14 @@ function selectPay(method) {
     const info = document.getElementById('pay' + m.charAt(0).toUpperCase() + m.slice(1) + 'Info');
     if (info) info.style.display = m === method ? '' : 'none';
   });
+  // Kart seçilince step2CardSection'ı göster ve otomatik PayTR'ı başlat
+  if (method === 'card') {
+    const cardSection = document.getElementById('step2CardSection');
+    if (cardSection && cardSection.style.display !== 'none') {
+      // Zaten step2'deyiz, direkt başlat
+      setTimeout(() => initiateCardPayment(), 300);
+    }
+  }
 }
 
 let currentOrderNo = '';
@@ -6254,6 +6250,8 @@ async function submitOrder() {
     currentOrderTotal = parseFloat(discountedTotal.toFixed(2));
     pendingOrderData  = { firstName, lastName, email, phone, address, district, city, company, note };
     goCheckoutStep(2);
+    // Otomatik PayTR başlat
+    setTimeout(() => initiateCardPayment(), 400);
     return;
   }
 
