@@ -6216,7 +6216,7 @@ function selectPay(method) {
     const cardSection = document.getElementById('step2CardSection');
     if (cardSection && cardSection.style.display !== 'none') {
       // Zaten step2'deyiz, direkt başlat
-      setTimeout(() => initiateCardPayment(), 300);
+      setTimeout(() => initiateCardPayment(), 800);
     }
   }
 }
@@ -6252,7 +6252,7 @@ async function submitOrder() {
     pendingOrderData  = { firstName, lastName, email, phone, address, district, city, company, note };
     goCheckoutStep(2);
     // Otomatik PayTR başlat
-    setTimeout(() => initiateCardPayment(), 400);
+    setTimeout(() => initiateCardPayment(), 800);
     return;
   }
 
@@ -6544,7 +6544,7 @@ async function initiateCardPayment() {
     });
 
   } catch(e) {
-    btn.textContent = '💳 Ödemeyi Tamamla →'; btn.disabled = false;
+    btn.textContent = '💳 Ödemeyi Tamamla →'; btn.disabled = false; btn.style.display = '';
     showToast('Hata: ' + e.message, true);
   }
 }
