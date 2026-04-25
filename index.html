@@ -6327,34 +6327,6 @@ async function sendOrderNotificationEmail(order) {
       })
     });
   } catch(e) { console.error('Mail hatası:', e); }
-
-  // ── WhatsApp Bildirimi ──────────────────────────
-  try {
-    const kur = window._kurRate || 0;
-    const payLabels = { bank: 'Havale/EFT', card: 'Kredi Kartı', delivery: 'Kapıda Ödeme', whatsapp: 'WhatsApp' };
-    const itemLines = order.items.map(i =>
-      `• ${i.turkish_name || i.name || i.part_no} x${i.qty} ($${Number(i.price_usd).toFixed(2)})`
-    ).join('\n');
-    const totalTL = kur > 0 ? `₺${(order.total * kur * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2})} (KDV dahil)` : '';
-
-    const msg = encodeURIComponent(
-`🛒 *YENİ SİPARİŞ* - ${order.orderNo}
-
-👤 *Müşteri:* ${order.customerName}
-📧 ${order.email}
-📞 ${order.phone}
-📍 ${order.address}
-💳 *Ödeme:* ${payLabels[order.payMethod] || order.payMethod}
-
-📦 *Ürünler:*
-${itemLines}
-
-💰 *Toplam:* $${Number(order.total).toFixed(2)}${totalTL ? ' / ' + totalTL : ''}
-${order.note ? '\n📝 Not: ' + order.note : ''}`
-    );
-
-    window.open('https://wa.me/905415176909?text=' + msg, '_blank');
-  } catch(e) { console.error('WhatsApp hatası:', e); }
 }
 
 
@@ -6562,19 +6534,6 @@ async function initiateCardPayment() {
         cart = []; renderCart(); updateCartCount();
         appliedCoupon = null;
         wrap.style.display = 'none';
-        // WhatsApp bildirimi
-        const d = pendingOrderData || {};
-        sendOrderNotificationEmail({
-          orderNo:      currentOrderNo || 'STP-???',
-          customerName: (d.firstName||'') + ' ' + (d.lastName||''),
-          email:        d.email || '',
-          phone:        d.phone || '',
-          address:      (d.address||'') + (d.district ? ', '+d.district : '') + ', ' + (d.city||''),
-          note:         d.note || '',
-          payMethod:    'card',
-          total:        currentOrderTotal,
-          items:        currentOrderCart.map(i => ({ part_no: i.part_no, turkish_name: i.turkish_name || i.english_name, qty: i.qty, price_usd: i.price_usd }))
-        });
         goCheckoutStep(3);
       } else if (e.data === 'paytr_payment_failed') {
         window.removeEventListener('message', paytrMsg);
