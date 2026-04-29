@@ -1322,6 +1322,118 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 
 </section>
 
+<!-- ── PARTNER LOGO BANDI ── -->
+<style>
+.partners-band {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+  padding: 0;
+}
+.partners-band::before,
+.partners-band::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+.partners-band::before { left: 0; background: linear-gradient(to right, var(--white), transparent); }
+.partners-band::after  { right: 0; background: linear-gradient(to left, var(--white), transparent); }
+.partners-label {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding: 12px 0 6px;
+}
+.partners-track-wrap { overflow: hidden; }
+.partners-track {
+  display: flex;
+  width: max-content;
+  animation: partnerScroll 30s linear infinite;
+}
+.partners-track:hover { animation-play-state: paused; }
+@keyframes partnerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.partner-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 40px;
+  border-right: 1px solid var(--border);
+  min-width: 160px;
+  height: 68px;
+  flex-shrink: 0;
+}
+.partner-item img {
+  max-height: 38px;
+  max-width: 120px;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.55;
+  transition: filter 0.3s, opacity 0.3s;
+}
+.partner-item img:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+</style>
+
+<div class="partners-band" id="partnersBand">
+  <p class="partners-label">Çalıştığımız Firmalar</p>
+  <div class="partners-track-wrap">
+    <div class="partners-track" id="partnersTrack"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PARTNER LOGOLARI — buraya logo ekleyin / çıkarın
+   Her obje: { name: "Firma Adı", logo: "https://..." }
+   logo URL yoksa sadece isim gösterilir.
+============================================================ */
+window.PARTNER_LOGOS = [
+  { name: "Firma 1", logo: "" },
+  { name: "Firma 2", logo: "" },
+  { name: "Firma 3", logo: "" },
+  { name: "Firma 4", logo: "" },
+  { name: "Firma 5", logo: "" },
+  { name: "Firma 6", logo: "" },
+];
+
+(function() {
+  var logos = window.PARTNER_LOGOS;
+  if (!logos || logos.length === 0) {
+    document.getElementById('partnersBand').style.display = 'none';
+    return;
+  }
+  var track = document.getElementById('partnersTrack');
+  function buildItems() {
+    var html = '';
+    logos.forEach(function(p) {
+      html += '<div class="partner-item">';
+      if (p.logo) {
+        html += '<img src="' + p.logo + '" alt="' + p.name + '" title="' + p.name + '" loading="lazy">';
+      } else {
+        html += '<span style="font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:0.05em;white-space:nowrap;">' + p.name + '</span>';
+      }
+      html += '</div>';
+    });
+    return html;
+  }
+  var items = buildItems();
+  track.innerHTML = items + items; /* iki kopya = sonsuz döngü */
+})();
+</script>
+<!-- ── /PARTNER LOGO BANDI ── -->
+
 <!-- MOBİL ARAMA BARI -->
 <div class="mob-search-bar" id="mobSearchBar">
   <input type="text" id="mobSearchInput" placeholder="Parça no veya isim ara..." oninput="document.getElementById('searchInput').value=this.value;onSearch();" autocomplete="off">
