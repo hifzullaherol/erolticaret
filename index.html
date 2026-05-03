@@ -8304,6 +8304,10 @@ setCat = function(c) {
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:48px;">
       <div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#8a857e;margin-bottom:14px;">Yaptığımız İşler</div>
+        <a href="#yaptigimiz-isler" onclick="event.preventDefault();openTrustModal('yaptigimiz-isler')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">Hizmetlerimiz</a>
+      </div>
+      <div>
         <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#8a857e;margin-bottom:14px;">Kurumsal</div>
         <a href="#hakkimizda" onclick="event.preventDefault();openTrustModal('hakkimizda')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">Hakkımızda</a>
         <a href="#teslimat" onclick="event.preventDefault();openTrustModal('teslimat')" style="display:block;color:#e8e4de;text-decoration:none;font-size:14px;margin-bottom:8px;transition:color 0.15s;" onmouseover="this.style.color='#c8a87c'" onmouseout="this.style.color='#e8e4de'">Teslimat Bilgileri</a>
@@ -8389,6 +8393,72 @@ setCat = function(c) {
 .trust-modal-box table th { background: #f7f6f3; font-weight: 600; }
 @media (max-width: 600px) { .trust-modal-box { padding: 24px 20px; } }
 </style>
+
+<!-- YAPTIĞIMIZ İŞLER -->
+<div id="modal-yaptigimiz-isler" class="trust-modal-overlay" onclick="if(event.target===this)closeTrustModal('yaptigimiz-isler')">
+  <div class="trust-modal-box" style="max-width:860px;">
+    <button class="trust-modal-close" onclick="closeTrustModal('yaptigimiz-isler')">✕</button>
+    <h1>Yaptığımız İşler</h1>
+    <p>Silobas kompresörleri ve endüstriyel ekipmanlar konusunda yılların tecrübesiyle, müşterilerimize uçtan uca çözümler sunuyoruz.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:24px 0;">
+
+      <div style="background:#f7f6f3;border:1px solid #e8e4de;border-radius:8px;padding:22px 20px;border-top:3px solid #1a5c3a;">
+        <div style="font-size:22px;margin-bottom:10px;">⚙️</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:#1a1814;">Orijinal Yedek Parça Tedariki</div>
+        <div style="font-size:13px;color:#4a4540;line-height:1.7;">G160 ve G220 serisi silobas kompresörlerine ait tüm orijinal yedek parçaları stokta bulunduruyoruz. Karter, gömlek, piston, biyel kolu ve daha fazlası.</div>
+        <div style="margin-top:12px;display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#1a5c3a;background:#edf7f0;padding:3px 10px;border-radius:20px;">Hızlı Teslimat</div>
+      </div>
+
+      <div style="background:#f7f6f3;border:1px solid #e8e4de;border-radius:8px;padding:22px 20px;border-top:3px solid #1a5c3a;">
+        <div style="font-size:22px;margin-bottom:10px;">🔧</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:#1a1814;">Kompresör Revizyonu</div>
+        <div style="font-size:13px;color:#4a4540;line-height:1.7;">G160 ve G220 kompresörlerin komple revizyonunu yapıyoruz. Hasarlı parçaların tespiti, değişimi ve kompresörün fabrika performansına kavuşturulması.</div>
+        <div style="margin-top:12px;display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#1a5c3a;background:#edf7f0;padding:3px 10px;border-radius:20px;">Garantili İşçilik</div>
+      </div>
+
+      <div style="background:#f7f6f3;border:1px solid #e8e4de;border-radius:8px;padding:22px 20px;border-top:3px solid #1a5c3a;">
+        <div style="font-size:22px;margin-bottom:10px;">💬</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:#1a1814;">Teknik Danışmanlık</div>
+        <div style="font-size:13px;color:#4a4540;line-height:1.7;">Kompresörünüzdeki arıza belirtilerini telefon veya WhatsApp üzerinden değerlendiriyor, doğru parçayı ve çözümü hızla tespit ediyoruz.</div>
+        <div style="margin-top:12px;display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#1a5c3a;background:#edf7f0;padding:3px 10px;border-radius:20px;">Uzaktan Destek</div>
+      </div>
+
+      <div style="background:#f7f6f3;border:1px solid #e8e4de;border-radius:8px;padding:22px 20px;border-top:3px solid #1a5c3a;">
+        <div style="font-size:22px;margin-bottom:10px;">⚡</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:#1a1814;">Elektrik &amp; Dizel Sistemleri</div>
+        <div style="font-size:13px;color:#4a4540;line-height:1.7;">Hem elektrikli hem de dizel silobas kompresörlerine yönelik parça ve servis desteği sunuyoruz. Şase, motor ve tahrik sistemleri dahil.</div>
+        <div style="margin-top:12px;display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#1a5c3a;background:#edf7f0;padding:3px 10px;border-radius:20px;">Her Sistem</div>
+      </div>
+
+      <div style="background:#f7f6f3;border:1px solid #e8e4de;border-radius:8px;padding:22px 20px;border-top:3px solid #1a5c3a;">
+        <div style="font-size:22px;margin-bottom:10px;">🚚</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:#1a1814;">Türkiye Geneli Kargo</div>
+        <div style="font-size:13px;color:#4a4540;line-height:1.7;">Tüm Türkiye'ye hızlı ve güvenli kargo ile teslimat gerçekleştiriyoruz. Acil parça ihtiyaçlarında aynı gün kargo seçeneği mevcuttur.</div>
+        <div style="margin-top:12px;display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#1a5c3a;background:#edf7f0;padding:3px 10px;border-radius:20px;">Aynı Gün Kargo</div>
+      </div>
+
+      <div style="background:#f7f6f3;border:1px solid #e8e4de;border-radius:8px;padding:22px 20px;border-top:3px solid #1a5c3a;">
+        <div style="font-size:22px;margin-bottom:10px;">🏢</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:#1a1814;">Kurumsal &amp; Toplu Satış</div>
+        <div style="font-size:13px;color:#4a4540;line-height:1.7;">Nakliyat firmaları, çimento fabrikaları ve filo işletmecileri için özel fiyatlandırma ve periyodik parça tedarik anlaşmaları yapıyoruz.</div>
+        <div style="margin-top:12px;display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#1a5c3a;background:#edf7f0;padding:3px 10px;border-radius:20px;">Kurumsal Fiyat</div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://wa.me/905415176909" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+        WhatsApp ile Yaz
+      </a>
+      <a href="tel:+905415176909" style="display:inline-flex;align-items:center;gap:8px;background:#1a1814;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        Telefon ile Ara
+      </a>
+    </div>
+  </div>
+</div>
 
 <!-- HAKKIMIZDA -->
 <div id="modal-hakkimizda" class="trust-modal-overlay" onclick="if(event.target===this)closeTrustModal('hakkimizda')">
@@ -8616,7 +8686,7 @@ function closeTrustModal(id) {
 }
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    ['hakkimizda','teslimat','iade','mesafeli-satis','kvkk','sss','iletisim'].forEach(closeTrustModal);
+    ['yaptigimiz-isler','hakkimizda','teslimat','iade','mesafeli-satis','kvkk','sss','iletisim'].forEach(closeTrustModal);
   }
 });
 </script>
