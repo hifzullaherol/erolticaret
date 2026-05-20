@@ -2618,7 +2618,8 @@ window.PARTNER_LOGOS = [
         <div class="adm-stat">Toplam <b id="admTotal">217</b></div>
         <div class="adm-stat">Resimli <b id="admImg" style="color:#16a34a">205</b></div>
         <div class="adm-stat">Resimsiz <b id="admNoImg" style="color:#dc2626">12</b></div>
-        <button class="adm-save-btn" onclick="admSave()">💾 Kaydet &amp; İndir</button>
+        <button class="adm-save-btn" onclick="admPublishToGitHub()" id="admPublishBtn">🚀 GitHub'a Yayınla</button>
+        <button class="adm-save-btn" onclick="admSave()" style="background:var(--ink2);font-size:11px;padding:8px 14px;">💾 İndir</button>
         <button class="adm-close-btn" onclick="toggleAdmin()">✕ Kapat</button>
       </div>
     </div>
@@ -8063,6 +8064,119 @@ async function admSave() {
       if (btn) { btn.textContent = '💾 Kaydet & İndir'; btn.disabled = false; }
     }
   }, 80);
+}
+
+// ── GITHUB PUBLISH ──
+const GH_OWNER = 'hifzullaherol';
+const GH_REPO  = 'erolticaret';
+const GH_FILE  = 'index.html';
+const GH_BRANCH = 'main';
+
+function getGHToken() {
+  return localStorage.getItem('gh_token') || '';
+}
+function setGHToken(t) {
+  localStorage.setItem('gh_token', t.trim());
+}
+
+function buildUpdatedHTML() {
+  const prodJSON     = JSON.stringify(PRODUCTS);
+  const imgJSON      = JSON.stringify(PRODUCT_IMAGES);
+  const catOrderJSON = JSON.stringify(window._catOrder || getSortedCats());
+
+  let out = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+  // Admin paneli kapalı hale getir
+  out = out.replace(/id="adminPanel" style="display:\s*block[^"]*"/, 'id="adminPanel" style="display: none;"');
+
+  // Butonları sıfırla
+  out = out.replace(
+    /<button[^>]*id="admPublishBtn"[^>]*>.*?<\/button>/,
+    '<button class="adm-save-btn" onclick="admPublishToGitHub()" id="admPublishBtn">🚀 GitHub\'a Yayınla</button>'
+  );
+  out = out.replace(/⏳ Yayınlanıyor\.\.\./g, '🚀 GitHub\'a Yayınla');
+
+  // Verileri güncelle
+  out = out.replace(/const PRODUCTS\s*=\s*\[[\s\S]*?\];/, 'const PRODUCTS = ' + prodJSON + ';');
+  out = out.replace(/const PRODUCT_IMAGES\s*=\s*\{[\s\S]*?\};/, 'const PRODUCT_IMAGES = ' + imgJSON + ';');
+  out = out.replace(/const CAT_ORDER\s*=\s*\[[\s\S]*?\];/, 'const CAT_ORDER = ' + catOrderJSON + ';');
+
+  return out;
+}
+
+async function admPublishToGitHub() {
+  let token = getGHToken();
+
+  if (!token) {
+    token = prompt(
+      '🔑 GitHub Personal Access Token girin:\n\n' +
+      'Nasıl alınır:\n' +
+      '1. github.com → Settings → Developer settings\n' +
+      '2. Personal access tokens → Tokens (classic)\n' +
+      '3. Generate new token → repo yetkisi seç\n\n' +
+      'Token bir kez kaydedilir, tekrar sorulmaz.'
+    );
+    if (!token) return;
+    setGHToken(token);
+  }
+
+  const btn = document.getElementById('admPublishBtn');
+  const origText = btn ? btn.textContent : '';
+  if (btn) { btn.textContent = '⏳ Yayınlanıyor...'; btn.disabled = true; }
+
+  try {
+    // 1) Mevcut dosyanın SHA'sını al
+    const metaRes = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,
+      { headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' } }
+    );
+    if (!metaRes.ok) {
+      if (metaRes.status === 401) {
+        localStorage.removeItem('gh_token');
+        throw new Error('Token geçersiz! Lütfen tekrar deneyin ve doğru token girin.');
+      }
+      throw new Error('GitHub dosya bilgisi alınamadı: ' + metaRes.status);
+    }
+    const meta = await metaRes.json();
+    const sha = meta.sha;
+
+    // 2) Güncellenmiş HTML'i hazırla ve base64'e çevir
+    const updatedHTML = buildUpdatedHTML();
+    const b64 = btoa(unescape(encodeURIComponent(updatedHTML)));
+
+    // 3) Commit at
+    const now = new Date().toLocaleString('tr-TR');
+    const commitRes = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: 'Bearer ' + token,
+          Accept: 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: `Admin: ürün kataloğu güncellendi (${now})`,
+          content: b64,
+          sha: sha,
+          branch: GH_BRANCH
+        })
+      }
+    );
+
+    if (!commitRes.ok) {
+      const errData = await commitRes.json().catch(() => ({}));
+      throw new Error('Commit hatası: ' + (errData.message || commitRes.status));
+    }
+
+    showToast('✅ GitHub\'a başarıyla yayınlandı! Site birkaç dakikada güncellenir.');
+
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+    console.error('GitHub publish error:', e);
+  } finally {
+    if (btn) { btn.textContent = origText; btn.disabled = false; }
+  }
 }
 
 // ── CATEGORY MANAGEMENT ──
