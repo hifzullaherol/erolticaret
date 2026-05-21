@@ -5936,7 +5936,11 @@ window.PARTNER_LOGOS = [
         <input class="adm-input" id="pfTr" placeholder="G220 KARTER ISLENMIS" oninput="pfAutoTranslate()">
       </div>
       <div class="adm-field">
-        <label class="adm-label">İngilizce Ad <span id="pfEnStatus" style="font-size:10px;color:var(--ink3);font-weight:400;margin-left:6px"></span></label>
+        <label class="adm-label">İngilizce Ad
+          <span id="pfEnStatus" style="font-size:10px;color:var(--ink3);font-weight:400;margin-left:6px"></span>
+          <button type="button" onclick="pfGoogleTranslate()" title="Google Translate ile çevir"
+            style="margin-left:8px;font-size:10px;padding:2px 8px;border:1px solid var(--border);border-radius:3px;background:var(--white);cursor:pointer;color:var(--ink2);">🌐 Çevir</button>
+        </label>
         <input class="adm-input" id="pfEn" placeholder="G220 OIL HOUSING" oninput="this._userEdited=true" onfocus="this._userEdited=true">
       </div>
       <div class="adm-field">
@@ -8173,6 +8177,13 @@ function pfAutoTranslate() {
       status.textContent = '';
     }
   }, 400);
+}
+
+function pfGoogleTranslate() {
+  const tr = (document.getElementById('pfTr')?.value||'').trim();
+  if (!tr) { showToast('Önce Türkçe adı girin', true); return; }
+  const url = 'https://translate.google.com/?sl=tr&tl=en&text=' + encodeURIComponent(tr) + '&op=translate';
+  window.open(url, '_blank', 'width=700,height=500');
 }
 
 // ── ÜRÜN MODAL RESİM ──
