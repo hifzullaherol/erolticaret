@@ -5501,10 +5501,13 @@ window.PARTNER_LOGOS = [
       <input type="file" id="xlsFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(this.files[0])">
     </div>
     <div class="adm-prod-toolbar">
-      <div class="adm-search" style="max-width:280px">
+      <div class="adm-search" style="max-width:260px">
         <svg class="adm-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
         <input type="text" placeholder="Ara..." oninput="renderProdTable()" id="admProdSearch" style="background:var(--white);">
       </div>
+      <select id="admCatFilter" onchange="renderProdTable()" style="height:34px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--ink);font-family:var(--mono);font-size:11px;padding:0 10px;cursor:pointer;max-width:220px;">
+        <option value="">Tüm Kategoriler</option>
+      </select>
       <button class="adm-add-btn" onclick="openAddProd()">+ Yeni Ürün</button>
       <button class="adm-add-btn" onclick="exportXls()" style="background:var(--white);color:var(--ink);border:1px solid var(--border);margin-left:auto;">↓ Excel İndir</button>
     </div>
@@ -7966,7 +7969,22 @@ function skipAllUm() { closeAdmModal('admUnmatchedModal'); renderGrid(); showToa
 // ── PRODUCT TABLE ──
 function renderProdTable() {
   const q=(document.getElementById('admProdSearch')?.value||'').toLowerCase();
-  const list=PRODUCTS.filter(p=>!q||p.part_no.toLowerCase().includes(q)||p.turkish_name.toLowerCase().includes(q)||p.english_name.toLowerCase().includes(q));
+  const catF=(document.getElementById('admCatFilter')?.value||'');
+
+  // Kategori dropdown'ını güncelle
+  const sel=document.getElementById('admCatFilter');
+  if(sel){
+    const cats=[...new Set(PRODUCTS.map(p=>p.category))].sort();
+    const cur=sel.value;
+    sel.innerHTML='<option value="">Tüm Kategoriler ('+PRODUCTS.length+')</option>'+
+      cats.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c} (${PRODUCTS.filter(p=>p.category===c).length})</option>`).join('');
+  }
+
+  const list=PRODUCTS.filter(p=>{
+    const matchQ=!q||p.part_no.toLowerCase().includes(q)||p.turkish_name.toLowerCase().includes(q)||p.english_name.toLowerCase().includes(q);
+    const matchCat=!catF||p.category===catF;
+    return matchQ&&matchCat;
+  });
   document.getElementById('admProdBody').innerHTML=list.map((p,i)=>{
     const idx=PRODUCTS.indexOf(p);
     const hasImg=!!PRODUCT_IMAGES[p.part_no];
