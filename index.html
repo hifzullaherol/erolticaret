@@ -6067,8 +6067,15 @@ async function supaFetch(path, method='GET', body=null) {
 let currentUser = null;
 let selectedPayMethod = 'bank';
 
-function loadCurrentUser() { updateHeaderAuth(); }
-function saveCurrentUser(u) { currentUser = u; updateHeaderAuth(); }
+function loadCurrentUser() { 
+  if (window.currentUser) currentUser = window.currentUser;
+  updateHeaderAuth(); 
+}
+function saveCurrentUser(u) { 
+  currentUser = u; 
+  window.currentUser = u;
+  updateHeaderAuth(); 
+}
 
 function updateHeaderAuth() {
   const user = currentUser || window.currentUser;
@@ -6327,12 +6334,13 @@ function showProfileMsg(elId, msg, success) {
 function openCheckout() {
   if (!cart.length) return;
   // Pre-fill from logged in user
-  if (currentUser) {
-    const nameParts = (currentUser.full_name||'').split(' ');
+  const _cu = currentUser || window.currentUser;
+  if (_cu) {
+    const nameParts = (_cu.full_name||'').split(' ');
     document.getElementById('chkFirstName').value = nameParts[0]||'';
     document.getElementById('chkLastName').value = nameParts.slice(1).join(' ')||'';
-    document.getElementById('chkEmail').value = currentUser.email||'';
-    document.getElementById('chkPhone').value = currentUser.phone||'';
+    document.getElementById('chkEmail').value = _cu.email||'';
+    document.getElementById('chkPhone').value = _cu.phone||'';
 
     // Pre-fill address from first saved address
     const addrs = getSavedAddresses();
@@ -6475,7 +6483,7 @@ async function submitOrder() {
     status:         'pending',
     items:          cart.map(i => ({ part_no: i.part_no, name: i.turkish_name, qty: i.qty, price_usd: i.price_usd }))
   };
-  if (currentUser && currentUser.email) orderPayload.member_email = currentUser.email;
+  const _u = currentUser || window.currentUser; if (_u && _u.email) orderPayload.member_email = _u.email;
   if (appliedCoupon) orderPayload.coupon = appliedCoupon.code;
 
   let orderIdNum = Date.now();
@@ -6706,7 +6714,7 @@ async function initiateCardPayment() {
       status:         'pending',
       items:          currentOrderCart.map(i=>({part_no:i.part_no,name:i.turkish_name,qty:i.qty,price_usd:i.price_usd}))
     };
-    if (currentUser && currentUser.email) orderPayload.member_email = currentUser.email;
+    const _u = currentUser || window.currentUser; if (_u && _u.email) orderPayload.member_email = _u.email;
 
     try {
       if (window._fsCreateOrder) {
