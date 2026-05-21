@@ -5933,11 +5933,11 @@ window.PARTNER_LOGOS = [
       </div>
       <div class="adm-field">
         <label class="adm-label">Türkçe Ad *</label>
-        <input class="adm-input" id="pfTr" placeholder="G220 KARTER ISLENMIS">
+        <input class="adm-input" id="pfTr" placeholder="G220 KARTER ISLENMIS" oninput="pfAutoTranslate()">
       </div>
       <div class="adm-field">
-        <label class="adm-label">İngilizce Ad</label>
-        <input class="adm-input" id="pfEn" placeholder="G220 OIL HOUSING">
+        <label class="adm-label">İngilizce Ad <span id="pfEnStatus" style="font-size:10px;color:var(--ink3);font-weight:400;margin-left:6px"></span></label>
+        <input class="adm-input" id="pfEn" placeholder="G220 OIL HOUSING" oninput="this._userEdited=true" onfocus="this._userEdited=true">
       </div>
       <div class="adm-field">
         <label class="adm-label">Kategori *</label>
@@ -5956,6 +5956,10 @@ window.PARTNER_LOGOS = [
           </div>
           <div id="pfImgPlaceholder" style="color:var(--ink3);font-size:12px">📷 Resim seç veya sürükle</div>
           <input type="file" id="pfImgInput" accept="image/*" style="display:none" onchange="pfHandleImg(this.files[0])">
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <input type="text" id="pfImgUrl" placeholder="veya URL yapıştır..." class="adm-input" style="flex:1;font-size:12px" oninput="pfHandleUrl(this.value)">
+          <button type="button" onclick="pfApplyUrl()" style="padding:0 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--ink);font-size:12px;cursor:pointer;white-space:nowrap;">URL Yükle</button>
         </div>
         <button type="button" id="pfImgClear" onclick="pfClearImg()" style="display:none;margin-top:4px;font-size:11px;color:var(--ink3);background:none;border:none;cursor:pointer;">✕ Resmi Kaldır</button>
       </div>
@@ -8021,7 +8025,7 @@ function renderProdTable() {
 function openAddProd() {
   editProdIdx=-1;
   document.getElementById('prodModalTitle').textContent='Yeni Ürün';
-  ['pfPartNo','pfTr','pfEn','pfPrice','pfCat'].forEach(id=>document.getElementById(id).value='');
+  ['pfPartNo','pfTr','pfEn','pfPrice','pfCat'].forEach(id=>{ const el=document.getElementById(id); el.value=''; el._userEdited=false; });
   document.getElementById('pfPartNo').disabled=false;
   pfClearImg();
   fillCatDl(); openAdmModal('admProdModal');
@@ -8044,6 +8048,43 @@ function fillCatDl() {
   const cats = [...fromProducts, ...extra].sort();
   document.getElementById('catDl').innerHTML=cats.map(c=>`<option value="${c}">`).join('');
 }
+// ── OTOMATİK ÇEVİRİ (Claude API) ──
+let _pfTranslateTimer = null;
+function pfAutoTranslate() {
+  const tr = (document.getElementById('pfTr')?.value||'').trim();
+  const enInp = document.getElementById('pfEn');
+  const status = document.getElementById('pfEnStatus');
+  clearTimeout(_pfTranslateTimer);
+  if (!tr || tr.length < 3) return;
+  // Kullanıcı kendisi yazdıysa müdahale etme
+  _pfTranslateTimer = setTimeout(async () => {
+    if (status) status.textContent = '⏳ çevriliyor...';
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 100,
+          messages: [{
+            role: 'user',
+            content: 'Translate this Turkish industrial/mechanical part name to English. Return ONLY the English name, nothing else, no explanation, no punctuation at end:\n' + tr
+          }]
+        })
+      });
+      const data = await res.json();
+      const translated = data?.content?.[0]?.text?.trim();
+      if (translated && enInp && !enInp._userEdited) {
+        enInp.value = translated;
+        if (status) status.textContent = '✓ otomatik';
+        setTimeout(() => { if(status) status.textContent = ''; }, 2000);
+      }
+    } catch(e) {
+      if (status) status.textContent = '';
+    }
+  }, 800);
+}
+
 // ── ÜRÜN MODAL RESİM ──
 let _pfImgData = undefined; // undefined=değişmedi, null=silindi, string=yeni resim
 function pfHandleImg(file) {
@@ -8060,6 +8101,14 @@ function pfSetImg(src) {
   document.getElementById('pfImgClear').style.display = 'inline-block';
   document.getElementById('pfImgInput').value = '';
 }
+function pfHandleUrl(val) {
+  // URL yazılınca önizleme güncelle ama henüz kaydetme
+}
+function pfApplyUrl() {
+  const url = (document.getElementById('pfImgUrl')?.value||'').trim();
+  if (!url) return;
+  pfSetImg(url);
+}
 function pfClearImg() {
   window._pfImgData = undefined;
   document.getElementById('pfImgThumb').src = '';
@@ -8068,6 +8117,8 @@ function pfClearImg() {
   document.getElementById('pfImgClear').style.display = 'none';
   const inp = document.getElementById('pfImgInput');
   if (inp) inp.value = '';
+  const url = document.getElementById('pfImgUrl');
+  if (url) url.value = '';
 }
 
 function saveProd() {
