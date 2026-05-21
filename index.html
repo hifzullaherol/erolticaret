@@ -9242,8 +9242,22 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 window._fbDoGoogle = async function() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    // Hemen currentUser'ı set et ve header'ı güncelle
+    window.currentUser = {
+      uid: user.uid,
+      full_name: user.displayName || user.email.split('@')[0],
+      email: user.email,
+      phone: user.phoneNumber || '',
+    };
+    try { currentUser = window.currentUser; } catch(e) {}
+    if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
+    // Firestore'a kaydet
+    if (window._fsSaveMember) {
+      await window._fsSaveMember(user.uid, { full_name: window.currentUser.full_name, email: user.email, phone: '' });
+    }
     if (typeof closeAuth === 'function') closeAuth();
-    if (typeof showToast === 'function') showToast('✓ Hoş geldiniz, ' + (result.user.displayName || result.user.email) + '!');
+    if (typeof showToast === 'function') showToast('✓ Hoş geldiniz, ' + window.currentUser.full_name + '!');
   } catch(e) {
     const errEl = document.getElementById('loginErr') || document.getElementById('regErr');
     if (errEl) { errEl.textContent = 'Google girişi başarısız. Lütfen tekrar deneyin.'; errEl.style.display = 'block'; }
@@ -9270,7 +9284,16 @@ window._fbDoLogin = async function() {
   if (!email || !pass) { err.textContent='E-posta ve şifre gerekli.'; err.style.display='block'; return; }
   btn.textContent = 'Giriş yapılıyor...'; btn.disabled = true;
   try {
-    await signInWithEmailAndPassword(auth, email, pass);
+    const result = await signInWithEmailAndPassword(auth, email, pass);
+    const user = result.user;
+    window.currentUser = {
+      uid: user.uid,
+      full_name: user.displayName || email.split('@')[0],
+      email: user.email,
+      phone: '',
+    };
+    try { currentUser = window.currentUser; } catch(e) {}
+    if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
     if (typeof closeAuth === 'function') closeAuth();
     if (typeof showToast === 'function') showToast('✓ Hoş geldiniz!');
   } catch(e) {
@@ -9303,6 +9326,13 @@ window._fbDoRegister = async function() {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(result.user, { displayName: name });
+    window.currentUser = { uid: result.user.uid, full_name: name, email, phone };
+    try { currentUser = window.currentUser; } catch(e) {}
+    if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
+    // Firestore'a kaydet
+    if (window._fsSaveMember) {
+      try { await window._fsSaveMember(result.user.uid, { full_name: name, email, phone }); } catch(e2) {}
+    }
     btn.style.display = 'none';
     document.querySelectorAll('#authRegisterBody .auth-field').forEach(f => f.style.display = 'none');
     successMsg.style.display = 'block';
