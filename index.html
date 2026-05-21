@@ -6172,7 +6172,7 @@ async function loadProfileOrders() {
   listEl.innerHTML = '';
   try {
     const email = currentUser.email;
-    const orders = await supaFetch(`orders?member_email=eq.${encodeURIComponent(email)}&order=created_at.desc&limit=50`);
+    const orders = window._fsGetMyOrders ? await window._fsGetMyOrders(email) : [];
     loadEl.style.display = 'none';
     if (!orders || !orders.length) { emptyEl.style.display = 'block'; return; }
     const payLabels = {bank:'Havale/EFT', delivery:'Kapıda Ödeme', whatsapp:'WhatsApp'};
@@ -6226,7 +6226,7 @@ async function saveUserInfo() {
   if (!name) { showProfileMsg('infoMsg','Ad soyad zorunlu.',false); return; }
   btn.textContent = 'Kaydediliyor...'; btn.disabled = true;
   try {
-    await supaFetch(`members?email=eq.${encodeURIComponent(currentUser.email)}`, 'PATCH', {full_name:name, phone});
+    if (window._fsSaveMember && currentUser.uid) await window._fsSaveMember(currentUser.uid, {full_name:name, phone});
     currentUser.full_name = name; currentUser.phone = phone;
     saveCurrentUser(currentUser);
     document.getElementById('profileName').textContent = name;
@@ -6479,9 +6479,11 @@ async function submitOrder() {
 
   let orderIdNum = Date.now();
   try {
-    const result = await supaFetch('orders', 'POST', orderPayload);
-    if (result && result[0] && result[0].id) orderIdNum = result[0].id;
-  } catch(e) { /* proceed even if Supabase unreachable */ }
+    if (window._fsCreateOrder) {
+      const result = await window._fsCreateOrder(orderPayload);
+      if (result && result.id) orderIdNum = result.id;
+    }
+  } catch(e) { /* proceed even if Firestore unreachable */ }
 
   currentOrderNo    = 'STP-' + String(orderIdNum).padStart(6, '0');
   currentOrderCart  = [...cart];
@@ -6706,9 +6708,9 @@ async function initiateCardPayment() {
     if (currentUser && currentUser.email) orderPayload.member_email = currentUser.email;
 
     try {
-      const result = await supaFetch('orders', 'POST', orderPayload);
-      if (result && result[0] && result[0].id) {
-        currentOrderNo = 'STP-' + String(result[0].id).padStart(6, '0');
+      if (window._fsCreateOrder) {
+        const result = await window._fsCreateOrder(orderPayload);
+        if (result && result.id) currentOrderNo = 'STP-' + String(result.id).substring(0,8).toUpperCase();
       }
     } catch(e) {}
 
@@ -7473,7 +7475,7 @@ async function loadOrders() {
   listWrap.style.display = 'none';
 
   try {
-    const data = await supaFetch('orders?order=created_at.desc&limit=200');
+    const data = window._fsGetAllOrders ? await window._fsGetAllOrders() : [];
     _allOrders = Array.isArray(data) ? data : [];
     loadEl.style.display = 'none';
     listWrap.style.display = '';
@@ -7530,7 +7532,7 @@ function renderOrdersTable() {
 
 async function updateOrderStatus(orderId, newStatus) {
   try {
-    await supaFetch(`orders?id=eq.${orderId}`, 'PATCH', { status: newStatus });
+    if (window._fsUpdateOrder) await window._fsUpdateOrder(orderId, { status: newStatus });
     const idx = _allOrders.findIndex(o => o.id === orderId);
     if (idx > -1) _allOrders[idx].status = newStatus;
     updateOrdersBadge();
@@ -7565,7 +7567,7 @@ async function saveTrackingNo(orderId) {
   const trackingNo = input.value.trim();
   if (!trackingNo) { showToast('Lütfen takip numarası girin', true); return; }
   try {
-    await supaFetch(`orders?id=eq.${orderId}`, 'PATCH', { tracking_no: trackingNo });
+    if (window._fsUpdateOrder) await window._fsUpdateOrder(orderId, { tracking_no: trackingNo });
     const idx = _allOrders.findIndex(o => o.id === orderId);
     if (idx > -1) _allOrders[idx].tracking_no = trackingNo;
     showToast('✓ Kargo takip numarası kaydedildi');
@@ -9192,6 +9194,7 @@ window._kurRate = 0;
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, getDoc, getDocs, setDoc, updateDoc, query, where, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC65eiKyI1GTNmS0IfkcI8ZQJIoDvla324",
@@ -9204,6 +9207,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
@@ -9307,6 +9311,38 @@ window._fbLogout = async function() {
   if (typeof closeProfile === 'function') closeProfile();
   if (typeof showToast === 'function') showToast('Çıkış yapıldı');
   if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
+};
+
+// ── FIRESTORE YARDIMCI FONKSİYONLARI ──
+window._fsCreateOrder = async function(orderData) {
+  orderData.created_at = serverTimestamp();
+  const ref = await addDoc(collection(db, 'orders'), orderData);
+  return { id: ref.id, ...orderData };
+};
+
+window._fsGetMyOrders = async function(email) {
+  const q = query(collection(db, 'orders'), where('customer_email', '==', email), orderBy('created_at', 'desc'), limit(50));
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+};
+
+window._fsGetAllOrders = async function() {
+  const q = query(collection(db, 'orders'), orderBy('created_at', 'desc'), limit(200));
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+};
+
+window._fsUpdateOrder = async function(orderId, data) {
+  await updateDoc(doc(db, 'orders', orderId), data);
+};
+
+window._fsSaveMember = async function(uid, data) {
+  await setDoc(doc(db, 'members', uid), data, { merge: true });
+};
+
+window._fsGetMember = async function(uid) {
+  const snap = await getDoc(doc(db, 'members', uid));
+  return snap.exists() ? { id: snap.id, ...snap.data() } : null;
 };
 </script>
 </body></html>
