@@ -6071,11 +6071,12 @@ function loadCurrentUser() { updateHeaderAuth(); }
 function saveCurrentUser(u) { currentUser = u; updateHeaderAuth(); }
 
 function updateHeaderAuth() {
+  const user = currentUser || window.currentUser;
   const btn = document.getElementById('loginBtn');
   if (!btn) return;
-  if (currentUser) {
-    const initial = (currentUser.full_name||'U')[0].toUpperCase();
-    const firstName = (currentUser.full_name||'Kullanıcı').split(' ')[0];
+  if (user) {
+    const initial = (user.full_name||'U')[0].toUpperCase();
+    const firstName = (user.full_name||'Kullanıcı').split(' ')[0];
     btn.innerHTML = `<span class="user-avatar">${initial}</span><span>${firstName}</span>`;
     btn.classList.add('logged');
     btn.onclick = openProfile;
@@ -9212,7 +9213,7 @@ const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
 // Auth state değişince global currentUser'ı güncelle
-onAuthStateChanged(auth, (firebaseUser) => {
+onAuthStateChanged(auth, async (firebaseUser) => {
   if (firebaseUser) {
     window.currentUser = {
       uid: firebaseUser.uid,
@@ -9220,8 +9221,20 @@ onAuthStateChanged(auth, (firebaseUser) => {
       email: firebaseUser.email,
       phone: firebaseUser.phoneNumber || '',
     };
+    // Firestore'dan ek profil bilgisi al
+    try {
+      const member = await window._fsGetMember(firebaseUser.uid);
+      if (member) {
+        window.currentUser.full_name = member.full_name || window.currentUser.full_name;
+        window.currentUser.phone = member.phone || window.currentUser.phone;
+      }
+    } catch(e) {}
   } else {
     window.currentUser = null;
+  }
+  // Header'ı güncelle — hem global hem local currentUser'ı ayarla
+  if (typeof currentUser !== 'undefined') {
+    try { currentUser = window.currentUser; } catch(e) {}
   }
   if (typeof updateHeaderAuth === 'function') updateHeaderAuth();
 });
