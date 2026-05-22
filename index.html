@@ -2771,6 +2771,7 @@ window.PARTNER_LOGOS = [
         <button class="adm-tab" id="tabCatBtn" onclick="admTab('cat')">Kategoriler</button>
         <button class="adm-tab" id="tabOrdersBtn" onclick="admTab('orders')" style="position:relative;">🛒 Siparişler <span id="admOrdersBadge" style="display:none;background:#dc2626;color:white;border-radius:99px;font-size:9px;padding:1px 5px;margin-left:4px;vertical-align:middle;"></span></button>
         <button class="adm-tab" id="tabBannerBtn" onclick="admTab('banner')">🖼 Bannerlar</button>
+        <button class="adm-tab" id="tabPartnerBtn" onclick="admTab('partner')">🏢 Firmalar</button>
       </div>
       <div class="adm-actions">
         <div class="adm-stat">Toplam <b id="admTotal">217</b></div>
@@ -5847,6 +5848,67 @@ window.PARTNER_LOGOS = [
     </p>
   </div>
 
+  <!-- ÇALIŞTIĞIMIZ FİRMALAR TAB -->
+  <div class="adm-content" id="admPartnerTab" style="display:none;">
+    <div class="adm-prod-toolbar" style="margin-bottom:20px;">
+      <div style="font-family:var(--serif);font-size:20px;color:var(--ink);">Çalıştığımız Firmalar</div>
+      <button onclick="admAddPartner()" class="adm-save-btn" style="margin-left:auto;">+ Firma Ekle</button>
+    </div>
+
+    <!-- Partner kartları grid -->
+    <div id="admPartnerGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px;"></div>
+
+    <p style="font-family:var(--mono);font-size:10px;color:var(--ink3);margin-top:8px;letter-spacing:0.05em;">
+      💡 Değişiklikler sadece bellekte tutulur. Kaydetmek için üstteki <b>GitHub'a Yayınla</b> butonunu kullanın.
+    </p>
+  </div>
+
+  <!-- FIRMA EKLE/DÜZENLE MODAL -->
+  <div class="adm-modal" id="admPartnerModal" style="display:none;" onclick="if(event.target===this)closeAdmModal('admPartnerModal')">
+    <div class="adm-modal-box" style="max-width:480px;">
+      <div class="adm-modal-head">
+        <div id="partnerModalTitle" style="font-family:var(--serif);font-size:18px;color:var(--ink);">Firma Ekle</div>
+        <button onclick="closeAdmModal('admPartnerModal')" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--ink3);">✕</button>
+      </div>
+      <div class="adm-modal-body" style="padding:20px 24px;">
+
+        <!-- Resim önizleme -->
+        <div style="margin-bottom:16px;">
+          <label class="adm-label">Logo / Resim</label>
+          <div id="partnerImgPreviewBox" style="width:100%;height:120px;background:var(--off);border:1px solid var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden;position:relative;">
+            <img id="partnerImgThumb" src="" alt="" style="max-width:100%;max-height:100%;object-fit:contain;display:none;">
+            <span id="partnerImgPlaceholder" style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em;">RESİM YOK</span>
+          </div>
+
+          <!-- Dosya yükleme -->
+          <div class="adm-upload-zone" onclick="document.getElementById('partnerImgFileInput').click()" style="margin-bottom:8px;">
+            <div style="font-size:20px;margin-bottom:4px;">📁</div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em;">DOSYADAN SEÇ (JPG / PNG / WEBP)</div>
+          </div>
+          <input type="file" id="partnerImgFileInput" accept="image/*" style="display:none" onchange="partnerHandleFile(this.files[0])">
+
+          <!-- URL girişi -->
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" id="partnerImgUrl" class="adm-input" placeholder="veya resim URL'si yapıştır..." style="flex:1;" oninput="partnerPreviewUrl(this.value)">
+            <button onclick="partnerClearImg()" class="adm-btn-ghost" style="padding:8px 12px;white-space:nowrap;font-size:12px;">✕ Temizle</button>
+          </div>
+        </div>
+
+        <!-- Firma adı -->
+        <div class="adm-field" style="margin-bottom:12px;">
+          <label class="adm-label">Firma Adı *</label>
+          <input type="text" id="partnerName" class="adm-input" placeholder="Alışan Logistics">
+        </div>
+
+      </div>
+      <div class="adm-modal-actions">
+        <button onclick="savePartner()" class="adm-btn-primary">Kaydet</button>
+        <button id="partnerDeleteBtn" onclick="deletePartner()" class="adm-btn-danger" style="display:none;">Sil</button>
+        <button onclick="closeAdmModal('admPartnerModal')" class="adm-btn-ghost">İptal</button>
+      </div>
+    </div>
+  </div>
+
   <!-- SİPARİŞLER TAB -->
   <div class="adm-content" id="admOrdersTab" style="display:none">
     <div class="adm-prod-toolbar" style="margin-bottom:16px;">
@@ -7668,12 +7730,15 @@ function admTab(t) {
   document.getElementById('admCatTab').style.display = t==='cat' ? 'block' : 'none';
   document.getElementById('admOrdersTab').style.display = t==='orders' ? 'block' : 'none';
   document.getElementById('admBannerTab').style.display = t==='banner' ? 'block' : 'none';
+  document.getElementById('admPartnerTab').style.display = t==='partner' ? 'block' : 'none';
   document.getElementById('tabImgBtn').classList.toggle('active', t==='img');
   document.getElementById('tabProdBtn').classList.toggle('active', t==='prod');
   document.getElementById('tabCatBtn').classList.toggle('active', t==='cat');
   document.getElementById('tabOrdersBtn').classList.toggle('active', t==='orders');
   document.getElementById('tabBannerBtn').classList.toggle('active', t==='banner');
+  document.getElementById('tabPartnerBtn').classList.toggle('active', t==='partner');
   if (t==='banner') renderAdmBanners();
+  if (t==='partner') renderAdmPartners();
   if (t==='prod') renderProdTable();
   if (t==='cat') renderCatTable();
   if (t==='orders') loadOrders();
@@ -8562,8 +8627,11 @@ async function admSave() {
       out = out.replace(/const PRODUCT_IMAGES\s*=\s*\{[\s\S]*?\};/, function() {
         return 'const PRODUCT_IMAGES = ' + imgJSON + ';';
       });
-      out = out.replace(/const CAT_ORDER\s*=\s*\[[\s\S]*?\];/, function() {
+      out = out.replace(/const CAT_ORDER\s*=\s*\[\s\S]*?\];/, function() {
         return 'const CAT_ORDER = ' + catOrderJSON + ';';
+      });
+      out = out.replace(/window\.PARTNER_LOGOS\s*=\s*\[[\s\S]*?\];/, function() {
+        return 'window.PARTNER_LOGOS = ' + JSON.stringify(window.PARTNER_LOGOS) + ';';
       });
 
       // İndir
@@ -8621,6 +8689,7 @@ async function buildUpdatedHTML() {
   out = out.replace(/const PRODUCTS\s*=\s*\[[\s\S]*?\];/, 'const PRODUCTS = ' + prodJSON + ';');
   out = out.replace(/const PRODUCT_IMAGES\s*=\s*\{[\s\S]*?\};/, 'const PRODUCT_IMAGES = ' + imgJSON + ';');
   out = out.replace(/const CAT_ORDER\s*=\s*\[[\s\S]*?\];/, 'const CAT_ORDER = ' + catOrderJSON + ';');
+  out = out.replace(/window\.PARTNER_LOGOS\s*=\s*\[[\s\S]*?\];/, 'window.PARTNER_LOGOS = ' + JSON.stringify(window.PARTNER_LOGOS) + ';');
 
   return out;
 }
@@ -9486,6 +9555,182 @@ window._kurRate = 0;
   start();
 })();
 </script>
+
+
+// ═══════════════════════════════════════════
+// ÇALIŞTIĞIMIZ FİRMALAR (ADMİN)
+// ═══════════════════════════════════════════
+let _editingPartnerIdx = -1;
+let _partnerImgData = null;   // base64 veya URL
+let _partnerImgFile = null;   // ham dosya
+
+function renderAdmPartners() {
+  const grid = document.getElementById('admPartnerGrid');
+  const logos = window.PARTNER_LOGOS || [];
+  if (!logos.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3);font-family:var(--mono);font-size:12px;">Henüz firma eklenmemiş.</div>';
+    return;
+  }
+  grid.innerHTML = logos.map((p, i) => `
+    <div style="border:1px solid var(--border);border-radius:6px;background:var(--white);overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:100px;background:var(--off);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:8px;cursor:pointer;" onclick="admEditPartner(${i})">
+        ${p.logo
+          ? `<img src="${p.logo}" alt="${p.name}" style="max-width:100%;max-height:84px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><span style="display:none;font-size:28px;">🏢</span>`
+          : `<span style="font-size:28px;">🏢</span>`}
+      </div>
+      <div style="padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <div style="font-size:12px;font-weight:500;color:var(--ink);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.name}">${p.name}</div>
+        <div style="display:flex;gap:4px;flex-shrink:0;">
+          <button onclick="admEditPartner(${i})" style="padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);cursor:pointer;font-size:11px;color:var(--ink2);">✏</button>
+          <button onclick="admDeletePartnerDirect(${i})" style="padding:4px 8px;border:1px solid #fca5a5;border-radius:var(--radius);background:var(--white);cursor:pointer;font-size:11px;color:#dc2626;">🗑</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function admAddPartner() {
+  _editingPartnerIdx = -1;
+  _partnerImgData = null;
+  _partnerImgFile = null;
+  document.getElementById('partnerModalTitle').textContent = 'Firma Ekle';
+  document.getElementById('partnerName').value = '';
+  document.getElementById('partnerImgUrl').value = '';
+  document.getElementById('partnerImgThumb').style.display = 'none';
+  document.getElementById('partnerImgThumb').src = '';
+  document.getElementById('partnerImgPlaceholder').style.display = '';
+  document.getElementById('partnerImgFileInput').value = '';
+  document.getElementById('partnerDeleteBtn').style.display = 'none';
+  document.getElementById('admPartnerModal').style.display = 'flex';
+}
+
+function admEditPartner(idx) {
+  const p = (window.PARTNER_LOGOS || [])[idx];
+  if (!p) return;
+  _editingPartnerIdx = idx;
+  _partnerImgData = p.logo || null;
+  _partnerImgFile = null;
+  document.getElementById('partnerModalTitle').textContent = 'Firmayı Düzenle';
+  document.getElementById('partnerName').value = p.name || '';
+  document.getElementById('partnerImgUrl').value = p.logo || '';
+  if (p.logo) {
+    document.getElementById('partnerImgThumb').src = p.logo;
+    document.getElementById('partnerImgThumb').style.display = 'block';
+    document.getElementById('partnerImgPlaceholder').style.display = 'none';
+  } else {
+    document.getElementById('partnerImgThumb').style.display = 'none';
+    document.getElementById('partnerImgPlaceholder').style.display = '';
+  }
+  document.getElementById('partnerImgFileInput').value = '';
+  document.getElementById('partnerDeleteBtn').style.display = '';
+  document.getElementById('admPartnerModal').style.display = 'flex';
+}
+
+function partnerHandleFile(file) {
+  if (!file) return;
+  _partnerImgFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    _partnerImgData = e.target.result;
+    document.getElementById('partnerImgThumb').src = _partnerImgData;
+    document.getElementById('partnerImgThumb').style.display = 'block';
+    document.getElementById('partnerImgPlaceholder').style.display = 'none';
+    document.getElementById('partnerImgUrl').value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function partnerPreviewUrl(val) {
+  if (!val) return;
+  _partnerImgData = val;
+  _partnerImgFile = null;
+  document.getElementById('partnerImgThumb').src = val;
+  document.getElementById('partnerImgThumb').style.display = 'block';
+  document.getElementById('partnerImgPlaceholder').style.display = 'none';
+}
+
+function partnerClearImg() {
+  _partnerImgData = null;
+  _partnerImgFile = null;
+  document.getElementById('partnerImgThumb').src = '';
+  document.getElementById('partnerImgThumb').style.display = 'none';
+  document.getElementById('partnerImgPlaceholder').style.display = '';
+  document.getElementById('partnerImgUrl').value = '';
+  document.getElementById('partnerImgFileInput').value = '';
+}
+
+async function savePartner() {
+  const name = document.getElementById('partnerName').value.trim();
+  if (!name) { showToast('Firma adı zorunlu.', true); return; }
+
+  let logoUrl = _partnerImgData || '';
+
+  // Dosya seçildiyse GitHub'a yükle
+  if (_partnerImgFile) {
+    const btn = document.querySelector('#admPartnerModal .adm-btn-primary');
+    btn.textContent = 'Yükleniyor...'; btn.disabled = true;
+    try {
+      const slug = name.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '_' + Date.now();
+      const url = await uploadImgToGitHub(_partnerImgFile, 'partner_' + slug);
+      if (url) logoUrl = url;
+      showToast('✓ Logo GitHub'a yüklendi');
+    } catch(e) {
+      showToast('Logo yüklenemedi: ' + e.message, true);
+      btn.textContent = 'Kaydet'; btn.disabled = false;
+      return;
+    }
+    btn.textContent = 'Kaydet'; btn.disabled = false;
+  }
+
+  if (!window.PARTNER_LOGOS) window.PARTNER_LOGOS = [];
+  const entry = { name, logo: logoUrl };
+
+  if (_editingPartnerIdx === -1) {
+    window.PARTNER_LOGOS.push(entry);
+    showToast('✓ Firma eklendi');
+  } else {
+    window.PARTNER_LOGOS[_editingPartnerIdx] = entry;
+    showToast('✓ Firma güncellendi');
+  }
+
+  closeAdmModal('admPartnerModal');
+  renderAdmPartners();
+  rebuildPartnerBand();
+}
+
+function deletePartner() {
+  if (_editingPartnerIdx < 0) return;
+  const p = window.PARTNER_LOGOS[_editingPartnerIdx];
+  if (!confirm(p.name + '\n\nFirmayı silmek istiyor musunuz?')) return;
+  admDeletePartnerDirect(_editingPartnerIdx);
+  closeAdmModal('admPartnerModal');
+}
+
+function admDeletePartnerDirect(idx) {
+  window.PARTNER_LOGOS.splice(idx, 1);
+  renderAdmPartners();
+  rebuildPartnerBand();
+  showToast('Firma silindi');
+}
+
+function rebuildPartnerBand() {
+  const logos = window.PARTNER_LOGOS || [];
+  const band = document.getElementById('partnersBand');
+  const track = document.getElementById('partnersTrack');
+  if (!band || !track) return;
+  if (!logos.length) { band.style.display = 'none'; return; }
+  band.style.display = '';
+  function buildItems() {
+    return logos.map(p =>
+      '<div class="partner-item">' +
+      (p.logo
+        ? '<img src="' + p.logo + '" alt="' + p.name + '" title="' + p.name + '" loading="lazy">'
+        : '<span style="font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:0.05em;white-space:nowrap;">' + p.name + '</span>') +
+      '</div>'
+    ).join('');
+  }
+  const items = buildItems();
+  track.innerHTML = items + items;
+}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
