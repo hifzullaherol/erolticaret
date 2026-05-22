@@ -7501,6 +7501,19 @@ function toggleTaksitAccordion() {
   const arrow = document.getElementById('taksitAccordionArrow');
   const isOpen = body.classList.toggle('open');
   arrow.style.transform = isOpen ? 'rotate(180deg)' : '';
+
+  if (isOpen && modalProduct && window._kurRate) {
+    const taksitContainer = document.getElementById('paytr_taksit_tablosu');
+    taksitContainer.innerHTML = '';
+    document.querySelectorAll('script[data-paytr-taksit]').forEach(s => s.remove());
+    const tlFiyat = Math.round(modalProduct.price_usd * window._kurRate * 1.20);
+    const token = '219df90e58f3fc9990d6845922c259e0c2f31f624227108de21705073aa6bfbe';
+    const mid = '693936';
+    const s = document.createElement('script');
+    s.setAttribute('data-paytr-taksit', '1');
+    s.src = 'https://www.paytr.com/odeme/taksit-tablosu/v2?token=' + token + '&merchant_id=' + mid + '&amount=' + tlFiyat + '&taksit=0&tumu=0';
+    document.body.appendChild(s);
+  }
 }
 
 function openModal(partNo) {
@@ -7527,28 +7540,9 @@ function openModal(partNo) {
   accBody.classList.remove('open');
   accArrow.style.transform = '';
 
-  // TAKSİT TABLOSU: script tag ile yükle (PayTR CORS izin vermiyor, fetch çalışmıyor)
-  const taksitContainer = document.getElementById('paytr_taksit_tablosu');
-  taksitContainer.innerHTML = '';
-
-  // Önceki PayTR script'ini kaldır
+  // TAKSİT TABLOSU: accordion açılınca yüklenir (toggleTaksitAccordion)
+  document.getElementById('paytr_taksit_tablosu').innerHTML = '';
   document.querySelectorAll('script[data-paytr-taksit]').forEach(s => s.remove());
-
-  if (window._kurRate) {
-    const tlFiyat = Math.round(p.price_usd * window._kurRate * 1.20);
-    const token = '219df90e58f3fc9990d6845922c259e0c2f31f624227108de21705073aa6bfbe';
-    const mid = '693936';
-    const scriptSrc = `https://www.paytr.com/odeme/taksit-tablosu/v2?token=${token}&merchant_id=${mid}&amount=${tlFiyat}&taksit=0&tumu=0`;
-
-    // PayTR script'i paytr_taksit_tablosu id'li elementi arar ve doldurur
-    // div zaten DOM'da mevcut, script yüklenince otomatik bulur
-    const s = document.createElement('script');
-    s.setAttribute('data-paytr-taksit', '1');
-    s.src = scriptSrc;
-    document.body.appendChild(s);
-  } else {
-    taksitContainer.innerHTML = '<div style="font-size:11px;color:#a2a2a2;padding:8px 0;">Taksit bilgisi için döviz kuru yükleniyor...</div>';
-  }
 }
 function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
 function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('open'); }
