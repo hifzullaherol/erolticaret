@@ -9560,32 +9560,33 @@ window._kurRate = 0;
 // ═══════════════════════════════════════════
 // ÇALIŞTIĞIMIZ FİRMALAR (ADMİN)
 // ═══════════════════════════════════════════
-let _editingPartnerIdx = -1;
-let _partnerImgData = null;   // base64 veya URL
-let _partnerImgFile = null;   // ham dosya
+var _editingPartnerIdx = -1;
+var _partnerImgData = null;
+var _partnerImgFile = null;
 
 function renderAdmPartners() {
-  const grid = document.getElementById('admPartnerGrid');
-  const logos = window.PARTNER_LOGOS || [];
+  var grid = document.getElementById('admPartnerGrid');
+  var logos = window.PARTNER_LOGOS || [];
   if (!logos.length) {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3);font-family:var(--mono);font-size:12px;">Henüz firma eklenmemiş.</div>';
     return;
   }
-  grid.innerHTML = logos.map((p, i) => `
-    <div style="border:1px solid var(--border);border-radius:6px;background:var(--white);overflow:hidden;display:flex;flex-direction:column;">
-      <div style="height:100px;background:var(--off);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:8px;cursor:pointer;" onclick="admEditPartner(${i})">
-        ${p.logo
-          ? `<img src="${p.logo}" alt="${p.name}" style="max-width:100%;max-height:84px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"><span style="display:none;font-size:28px;">🏢</span>`
-          : `<span style="font-size:28px;">🏢</span>`}
-      </div>
-      <div style="padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-        <div style="font-size:12px;font-weight:500;color:var(--ink);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.name}">${p.name}</div>
-        <div style="display:flex;gap:4px;flex-shrink:0;">
-          <button onclick="admEditPartner(${i})" style="padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);cursor:pointer;font-size:11px;color:var(--ink2);">✏</button>
-          <button onclick="admDeletePartnerDirect(${i})" style="padding:4px 8px;border:1px solid #fca5a5;border-radius:var(--radius);background:var(--white);cursor:pointer;font-size:11px;color:#dc2626;">🗑</button>
-        </div>
-      </div>
-    </div>`).join('');
+  var html = '';
+  for (var i = 0; i < logos.length; i++) {
+    var p = logos[i];
+    var imgHtml = p.logo
+      ? '<img src="' + p.logo + '" alt="' + p.name + '" style="max-width:100%;max-height:84px;object-fit:contain;" onerror="this.style.display=\'none\'" loading="lazy">'
+      : '<span style="font-size:28px;">🏢</span>';
+    html += '<div style="border:1px solid var(--border);border-radius:6px;background:var(--white);overflow:hidden;display:flex;flex-direction:column;">';
+    html += '<div style="height:100px;background:var(--off);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:8px;cursor:pointer;" onclick="admEditPartner(' + i + ')">' + imgHtml + '</div>';
+    html += '<div style="padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;">';
+    html += '<div style="font-size:12px;font-weight:500;color:var(--ink);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + p.name + '">' + p.name + '</div>';
+    html += '<div style="display:flex;gap:4px;flex-shrink:0;">';
+    html += '<button onclick="admEditPartner(' + i + ')" style="padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);cursor:pointer;font-size:11px;color:var(--ink2);">✏</button>';
+    html += '<button onclick="admDeletePartnerDirect(' + i + ')" style="padding:4px 8px;border:1px solid #fca5a5;border-radius:var(--radius);background:var(--white);cursor:pointer;font-size:11px;color:#dc2626;">🗑</button>';
+    html += '</div></div></div>';
+  }
+  grid.innerHTML = html;
 }
 
 function admAddPartner() {
@@ -9604,7 +9605,8 @@ function admAddPartner() {
 }
 
 function admEditPartner(idx) {
-  const p = (window.PARTNER_LOGOS || [])[idx];
+  var logos = window.PARTNER_LOGOS || [];
+  var p = logos[idx];
   if (!p) return;
   _editingPartnerIdx = idx;
   _partnerImgData = p.logo || null;
@@ -9628,8 +9630,8 @@ function admEditPartner(idx) {
 function partnerHandleFile(file) {
   if (!file) return;
   _partnerImgFile = file;
-  const reader = new FileReader();
-  reader.onload = e => {
+  var reader = new FileReader();
+  reader.onload = function(e) {
     _partnerImgData = e.target.result;
     document.getElementById('partnerImgThumb').src = _partnerImgData;
     document.getElementById('partnerImgThumb').style.display = 'block';
@@ -9659,22 +9661,21 @@ function partnerClearImg() {
 }
 
 async function savePartner() {
-  const name = document.getElementById('partnerName').value.trim();
-  if (!name) { showToast('Firma adı zorunlu.', true); return; }
+  var name = document.getElementById('partnerName').value.trim();
+  if (!name) { if (typeof showToast === 'function') showToast('Firma adı zorunlu.', true); return; }
 
-  let logoUrl = _partnerImgData || '';
+  var logoUrl = _partnerImgData || '';
 
-  // Dosya seçildiyse GitHub'a yükle
   if (_partnerImgFile) {
-    const btn = document.querySelector('#admPartnerModal .adm-btn-primary');
+    var btn = document.querySelector('#admPartnerModal .adm-btn-primary');
     btn.textContent = 'Yükleniyor...'; btn.disabled = true;
     try {
-      const slug = name.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '_' + Date.now();
-      const url = await uploadImgToGitHub(_partnerImgFile, 'partner_' + slug);
+      var slug = name.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '_' + Date.now();
+      var url = await uploadImgToGitHub(_partnerImgFile, 'partner_' + slug);
       if (url) logoUrl = url;
-      showToast('✓ Logo GitHub'a yüklendi');
+      if (typeof showToast === 'function') showToast('✓ Logo GitHub\'a yüklendi');
     } catch(e) {
-      showToast('Logo yüklenemedi: ' + e.message, true);
+      if (typeof showToast === 'function') showToast('Logo yüklenemedi: ' + e.message, true);
       btn.textContent = 'Kaydet'; btn.disabled = false;
       return;
     }
@@ -9682,14 +9683,14 @@ async function savePartner() {
   }
 
   if (!window.PARTNER_LOGOS) window.PARTNER_LOGOS = [];
-  const entry = { name, logo: logoUrl };
+  var entry = { name: name, logo: logoUrl };
 
   if (_editingPartnerIdx === -1) {
     window.PARTNER_LOGOS.push(entry);
-    showToast('✓ Firma eklendi');
+    if (typeof showToast === 'function') showToast('✓ Firma eklendi');
   } else {
     window.PARTNER_LOGOS[_editingPartnerIdx] = entry;
-    showToast('✓ Firma güncellendi');
+    if (typeof showToast === 'function') showToast('✓ Firma güncellendi');
   }
 
   closeAdmModal('admPartnerModal');
@@ -9699,7 +9700,7 @@ async function savePartner() {
 
 function deletePartner() {
   if (_editingPartnerIdx < 0) return;
-  const p = window.PARTNER_LOGOS[_editingPartnerIdx];
+  var p = window.PARTNER_LOGOS[_editingPartnerIdx];
   if (!confirm(p.name + '\n\nFirmayı silmek istiyor musunuz?')) return;
   admDeletePartnerDirect(_editingPartnerIdx);
   closeAdmModal('admPartnerModal');
@@ -9709,27 +9710,28 @@ function admDeletePartnerDirect(idx) {
   window.PARTNER_LOGOS.splice(idx, 1);
   renderAdmPartners();
   rebuildPartnerBand();
-  showToast('Firma silindi');
+  if (typeof showToast === 'function') showToast('Firma silindi');
 }
 
 function rebuildPartnerBand() {
-  const logos = window.PARTNER_LOGOS || [];
-  const band = document.getElementById('partnersBand');
-  const track = document.getElementById('partnersTrack');
+  var logos = window.PARTNER_LOGOS || [];
+  var band = document.getElementById('partnersBand');
+  var track = document.getElementById('partnersTrack');
   if (!band || !track) return;
   if (!logos.length) { band.style.display = 'none'; return; }
   band.style.display = '';
-  function buildItems() {
-    return logos.map(p =>
-      '<div class="partner-item">' +
-      (p.logo
-        ? '<img src="' + p.logo + '" alt="' + p.name + '" title="' + p.name + '" loading="lazy">'
-        : '<span style="font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:0.05em;white-space:nowrap;">' + p.name + '</span>') +
-      '</div>'
-    ).join('');
+  var html = '';
+  for (var i = 0; i < logos.length; i++) {
+    var p = logos[i];
+    html += '<div class="partner-item">';
+    if (p.logo) {
+      html += '<img src="' + p.logo + '" alt="' + p.name + '" title="' + p.name + '" loading="lazy">';
+    } else {
+      html += '<span style="font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:0.05em;white-space:nowrap;">' + p.name + '</span>';
+    }
+    html += '</div>';
   }
-  const items = buildItems();
-  track.innerHTML = items + items;
+  track.innerHTML = html + html;
 }
 
 </script>
