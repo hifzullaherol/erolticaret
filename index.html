@@ -7342,19 +7342,47 @@ function openModal(partNo) {
   modalImg.onerror = function() { col.style.display = 'none'; };
   document.getElementById('modalOverlay').classList.add('open');
 
-  // TAKSİT TABLOSU: fiyata göre PayTR script'ini dinamik yükle
-  const taksitDiv = document.getElementById('paytr_taksit_tablosu');
-  taksitDiv.innerHTML = '';
-  const oldScript = document.getElementById('paytrTaksitScript');
-  if (oldScript) oldScript.remove();
+  // TAKSİT TABLOSU: PayTR script'i her açılışta iframe içinde yeniden çalıştır
+  const taksitContainer = document.getElementById('paytr_taksit_tablosu');
+  taksitContainer.innerHTML = '';
   if (window._kurRate) {
-    const tlFiyat = Math.round(p.price_usd * window._kurRate * 1.20); // KDV dahil TL fiyat
-    const script = document.createElement('script');
-    script.id = 'paytrTaksitScript';
-    script.src = `https://www.paytr.com/odeme/taksit-tablosu/v2?token=219df90e58f3fc9990d6845922c259e0c2f31f624227108de21705073aa6bfbe&merchant_id=693936&amount=${tlFiyat}&taksit=0&tumu=0`;
-    document.body.appendChild(script);
+    const tlFiyat = Math.round(p.price_usd * window._kurRate * 1.20);
+    const token = '219df90e58f3fc9990d6845922c259e0c2f31f624227108de21705073aa6bfbe';
+    const mid = '693936';
+    const scriptSrc = `https://www.paytr.com/odeme/taksit-tablosu/v2?token=${token}&merchant_id=${mid}&amount=${tlFiyat}&taksit=0&tumu=0`;
+    const iframeDoc = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  body{margin:0;padding:0;font-family:Arial,sans-serif;}
+  #paytr_taksit_tablosu{clear:both;font-size:11px;max-width:100%;text-align:center;}
+  #paytr_taksit_tablosu::before{display:table;content:" ";}
+  #paytr_taksit_tablosu::after{content:"";clear:both;display:table;}
+  .taksit-tablosu-wrapper{margin:3px;width:calc(50% - 8px);padding:7px;cursor:default;text-align:center;display:inline-block;border:1px solid #e1e1e1;box-sizing:border-box;vertical-align:top;}
+  .taksit-logo img{max-height:20px;padding-bottom:5px;}
+  .taksit-tutari-text{float:left;width:50%;color:#a2a2a2;margin-bottom:3px;font-size:10px;}
+  .taksit-tutar-wrapper{display:inline-block;background-color:#f7f7f7;width:100%;}
+  .taksit-tutar-wrapper:hover{background-color:#e8e8e8;}
+  .taksit-tutari{float:left;width:50%;padding:3px 0;color:#474747;border:2px solid #fff;font-size:10px;}
+  .taksit-tutari-bold{font-weight:bold;}
+</style>
+</head><body>
+<div id="paytr_taksit_tablosu"></div>
+<script src="${scriptSrc}"><\/script>
+</body></html>`;
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'width:100%;border:none;min-height:200px;';
+    iframe.srcdoc = iframeDoc;
+    iframe.onload = function() {
+      // iframe yüklendikten sonra yüksekliği içeriğe göre ayarla
+      setTimeout(() => {
+        try {
+          const h = iframe.contentDocument.body.scrollHeight;
+          if (h > 50) iframe.style.height = h + 'px';
+        } catch(e) {}
+      }, 800);
+    };
+    taksitContainer.appendChild(iframe);
   } else {
-    taksitDiv.innerHTML = '<div style="font-size:11px;color:#a2a2a2;padding:8px 0;">Taksit bilgisi için döviz kuru yükleniyor...</div>';
+    taksitContainer.innerHTML = '<div style="font-size:11px;color:#a2a2a2;padding:8px 0;">Taksit bilgisi için döviz kuru yükleniyor...</div>';
   }
 }
 function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
