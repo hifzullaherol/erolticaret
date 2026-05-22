@@ -5864,7 +5864,7 @@ window.PARTNER_LOGOS = [
   </div>
 
   <!-- FIRMA EKLE/DÜZENLE MODAL -->
-  <div class="adm-modal" id="admPartnerModal" style="display:none;" onclick="if(event.target===this)closeAdmModal('admPartnerModal')">
+  <div class="adm-modal" id="admPartnerModal" onclick="if(event.target===this)closeAdmModal('admPartnerModal')">
     <div class="adm-modal-box" style="max-width:480px;">
       <div class="adm-modal-head">
         <div id="partnerModalTitle" style="font-family:var(--serif);font-size:18px;color:var(--ink);">Firma Ekle</div>
@@ -9601,7 +9601,7 @@ function admAddPartner() {
   document.getElementById('partnerImgPlaceholder').style.display = '';
   document.getElementById('partnerImgFileInput').value = '';
   document.getElementById('partnerDeleteBtn').style.display = 'none';
-  document.getElementById('admPartnerModal').style.display = 'flex';
+  document.getElementById('admPartnerModal').classList.add('open');
 }
 
 function admEditPartner(idx) {
@@ -9624,7 +9624,7 @@ function admEditPartner(idx) {
   }
   document.getElementById('partnerImgFileInput').value = '';
   document.getElementById('partnerDeleteBtn').style.display = '';
-  document.getElementById('admPartnerModal').style.display = 'flex';
+  document.getElementById('admPartnerModal').classList.add('open');
 }
 
 function partnerHandleFile(file) {
