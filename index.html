@@ -6723,20 +6723,6 @@ async function initiateCardPayment() {
       }
     } catch(e) {}
 
-    // Admin'e bildirim maili gönder
-    sendOrderNotificationEmail({
-      orderNo: currentOrderNo,
-      customerName: orderPayload.customer_name,
-      email: orderPayload.customer_email,
-      phone: orderPayload.customer_phone,
-      company: orderPayload.company,
-      address: orderPayload.address,
-      note: orderPayload.note,
-      payMethod: 'card',
-      total: orderPayload.total_usd,
-      items: currentOrderCart
-    });
-
     // PayTR iFrame'i göster
     btn.style.display = 'none';
     const wrap = document.getElementById('paytrIframeWrap');
@@ -6759,6 +6745,19 @@ async function initiateCardPayment() {
       if (e.origin !== 'https://www.paytr.com') return;
       if (e.data === 'paytr_payment_success') {
         window.removeEventListener('message', paytrMsg);
+        // Ödeme onaylandı — şimdi mail gönder
+        sendOrderNotificationEmail({
+          orderNo: currentOrderNo,
+          customerName: orderPayload.customer_name,
+          email: orderPayload.customer_email,
+          phone: orderPayload.customer_phone,
+          company: orderPayload.company,
+          address: orderPayload.address,
+          note: orderPayload.note,
+          payMethod: 'card',
+          total: orderPayload.total_usd,
+          items: currentOrderCart
+        });
         cart = []; renderCart(); updateCartCount();
         appliedCoupon = null;
         wrap.style.display = 'none';
