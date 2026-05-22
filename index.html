@@ -2718,13 +2718,13 @@ window.PARTNER_LOGOS = [
       <div class="modal-info-col">
         <div class="modal-code" id="modalCode"></div>
         <h2 class="modal-name" id="modalName"></h2>
-        <div class="modal-name-en" id="modalNameEn"></div>
+        <div class="modal-name-en" id="modalNameEn" style="display:none;"></div>
         <div class="modal-cat" id="modalCat"></div>
         <div class="modal-price-big" id="modalPrice"></div>
         <button class="modal-add" id="modalAddBtn" onclick="addToCartFromModal()">+ Sepete Ekle</button>
 
         <!-- TAKSİT TABLOSU -->
-        <div id="modalTaksitSection" style="margin-top:20px;border-top:1px solid var(--border);">
+        <div id="modalTaksitSection" style="margin-top:12px;">
           <style>
             #paytr_taksit_tablosu{clear:both;font-size:11px;max-width:100%;text-align:center;font-family:Arial,sans-serif;}
             #paytr_taksit_tablosu::before{display:table;content:" ";}
@@ -2739,11 +2739,12 @@ window.PARTNER_LOGOS = [
             @media all and (max-width:600px){.taksit-tablosu-wrapper{width:100%;margin:4px 0;}}
             #taksitAccordionBtn {
               width:100%; display:flex; align-items:center; justify-content:space-between;
-              padding:14px 0; background:none; border:none; cursor:pointer;
-              font-family:var(--mono); font-size:10px; color:var(--ink3);
-              letter-spacing:0.15em; text-align:left;
+              padding:12px 14px; background:var(--off2); border:1px solid var(--border2);
+              border-radius:var(--radius); cursor:pointer; margin-top:10px;
+              font-family:var(--mono); font-size:10px; color:var(--ink2);
+              letter-spacing:0.15em; text-align:left; transition: background 0.15s, border-color 0.15s;
             }
-            #taksitAccordionBtn:hover { color:var(--ink); }
+            #taksitAccordionBtn:hover { background:var(--off); border-color:var(--ink3); color:var(--ink); }
             #taksitAccordionArrow { font-size:14px; transition:transform 0.2s; line-height:1; }
             #taksitAccordionBody { overflow:hidden; max-height:0; transition:max-height 0.3s ease; }
             #taksitAccordionBody.open { max-height:2000px; }
