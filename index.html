@@ -2782,6 +2782,7 @@ window.PARTNER_LOGOS = [
         <button class="adm-tab active" id="tabProdBtn" onclick="admTab('prod')">Ürünler</button>
         <button class="adm-tab" id="tabCatBtn" onclick="admTab('cat')">Kategoriler</button>
         <button class="adm-tab" id="tabOrdersBtn" onclick="admTab('orders')" style="position:relative;">🛒 Siparişler <span id="admOrdersBadge" style="display:none;background:#dc2626;color:white;border-radius:99px;font-size:9px;padding:1px 5px;margin-left:4px;vertical-align:middle;"></span></button>
+        <button class="adm-tab" id="tabBannerBtn" onclick="admTab('banner')">🖼 Bannerlar</button>
       </div>
       <div class="adm-actions">
         <div class="adm-stat">Toplam <b id="admTotal">217</b></div>
@@ -5846,6 +5847,18 @@ window.PARTNER_LOGOS = [
     </div>
   </div>
 
+  <!-- BANNER TAB -->
+  <div class="adm-content" id="admBannerTab" style="display:none;">
+    <div class="adm-prod-toolbar" style="margin-bottom:20px;">
+      <div style="font-family:var(--serif);font-size:20px;color:var(--ink);">Banner Yönetimi</div>
+      <button onclick="admAddBanner()" class="adm-save-btn" style="margin-left:auto;">+ Yeni Banner</button>
+    </div>
+    <div id="admBannerList" style="display:flex;flex-direction:column;gap:12px;"></div>
+    <p style="font-family:var(--mono);font-size:10px;color:var(--ink3);margin-top:20px;letter-spacing:0.05em;">
+      💡 Değişiklikler sadece bellekte tutulur. Kaydetmek için üstteki <b>GitHub'a Yayınla</b> butonunu kullanın.
+    </p>
+  </div>
+
   <!-- SİPARİŞLER TAB -->
   <div class="adm-content" id="admOrdersTab" style="display:none">
     <div class="adm-prod-toolbar" style="margin-bottom:16px;">
@@ -7337,6 +7350,149 @@ function goPage(p) {
   document.querySelector('.main-wrap').scrollIntoView({behavior:'smooth'});
 }
 
+
+// ═══════════════════════════════════════════
+// BANNER YÖNETİMİ
+// ═══════════════════════════════════════════
+function getBanners() {
+  const slider = document.getElementById('heroSlider');
+  if (!slider) return [];
+  return Array.from(slider.querySelectorAll('.hero-slide')).map((el, i) => {
+    const style = el.getAttribute('style') || '';
+    const urlMatch = style.match(/url\(['"]?([^'"\)]+)['"]?\)/);
+    return {
+      idx: i,
+      url: urlMatch ? urlMatch[1] : '',
+      mobile: el.getAttribute('data-mobile') || '',
+      active: el.classList.contains('active')
+    };
+  });
+}
+
+function renderAdmBanners() {
+  const banners = getBanners();
+  const list = document.getElementById('admBannerList');
+  if (!list) return;
+  if (!banners.length) {
+    list.innerHTML = '<div style="color:var(--ink3);font-family:var(--mono);font-size:12px;">Henüz banner yok.</div>';
+    return;
+  }
+  list.innerHTML = banners.map((b, i) => `
+    <div style="display:flex;gap:16px;align-items:flex-start;background:var(--white);border:1px solid var(--border);border-radius:4px;padding:16px;">
+      <div style="flex-shrink:0;width:160px;height:90px;background:var(--off2);border:1px solid var(--border);border-radius:4px;overflow:hidden;">
+        <img src="${b.url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em;">BANNER ${i + 1}${b.active ? ' <span style="color:#16a34a;font-weight:700;">● AKTİF</span>' : ''}</div>
+        <div>
+          <label style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em;display:block;margin-bottom:4px;">MASAÜSTÜ GÖRSEL URL</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="bannerUrl_${i}" value="${b.url}" class="adm-input" style="flex:1;font-size:12px;" placeholder="https://...">
+            <label style="padding:8px 12px;background:var(--off2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:11px;white-space:nowrap;">
+              📁 Seç <input type="file" accept="image/*" style="display:none;" onchange="admBannerFileSelect(this, ${i}, false)">
+            </label>
+          </div>
+        </div>
+        <div>
+          <label style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em;display:block;margin-bottom:4px;">MOBİL GÖRSEL URL (isteğe bağlı)</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="bannerMobile_${i}" value="${b.mobile}" class="adm-input" style="flex:1;font-size:12px;" placeholder="https://...">
+            <label style="padding:8px 12px;background:var(--off2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:11px;white-space:nowrap;">
+              📁 Seç <input type="file" accept="image/*" style="display:none;" onchange="admBannerFileSelect(this, ${i}, true)">
+            </label>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button onclick="admSaveBanner(${i})" class="adm-btn-primary" style="font-size:11px;padding:7px 16px;">💾 Güncelle</button>
+          <button onclick="admDeleteBanner(${i})" class="adm-btn-danger" style="font-size:11px;padding:7px 16px;">🗑 Sil</button>
+          ${i > 0 ? `<button onclick="admMoveBanner(${i},-1)" class="adm-btn-ghost" style="font-size:11px;padding:7px 12px;">↑</button>` : ''}
+          ${i < banners.length - 1 ? `<button onclick="admMoveBanner(${i},1)" class="adm-btn-ghost" style="font-size:11px;padding:7px 12px;">↓</button>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function admBannerFileSelect(input, idx, isMobile) {
+  const file = input.files[0];
+  if (!file) return;
+  const name = 'hero' + (isMobile ? '-mobile' : '') + '-' + (idx + 1) + '.' + (file.name.split('.').pop() || 'jpg');
+  showToast('Yükleniyor...');
+  try {
+    const url = await uploadImgToGitHub(file, name.replace(/\.\w+$/, ''));
+    if (isMobile) {
+      document.getElementById('bannerMobile_' + idx).value = url;
+    } else {
+      document.getElementById('bannerUrl_' + idx).value = url;
+    }
+    showToast('\u2713 Gorsel yuklendi');
+  } catch(e) {
+    showToast('Yuklenemedi: ' + e.message, true);
+  }
+}
+
+function admSaveBanner(idx) {
+  const slider = document.getElementById('heroSlider');
+  const slides = slider.querySelectorAll('.hero-slide');
+  const slide = slides[idx];
+  if (!slide) return;
+  const url = document.getElementById('bannerUrl_' + idx).value.trim();
+  const mob = document.getElementById('bannerMobile_' + idx).value.trim();
+  if (!url) { showToast('URL boş olamaz', true); return; }
+  slide.style.backgroundImage = "url('" + url + "')";
+  if (mob) slide.setAttribute('data-mobile', mob);
+  else slide.removeAttribute('data-mobile');
+  renderAdmBanners();
+  showToast('\u2713 Banner guncellendi');
+}
+
+function admDeleteBanner(idx) {
+  if (!confirm('Bu banner silinecek. Emin misiniz?')) return;
+  const slider = document.getElementById('heroSlider');
+  const slides = slider.querySelectorAll('.hero-slide');
+  if (slides.length <= 1) { showToast('En az 1 banner olmali', true); return; }
+  slides[idx].remove();
+  // dot'ları güncelle
+  rebuildHeroDots();
+  renderAdmBanners();
+  showToast('Silindi');
+}
+
+function admMoveBanner(idx, dir) {
+  const slider = document.getElementById('heroSlider');
+  const slides = Array.from(slider.querySelectorAll('.hero-slide'));
+  const target = idx + dir;
+  if (target < 0 || target >= slides.length) return;
+  if (dir === 1) slider.insertBefore(slides[target], slides[idx]);
+  else slider.insertBefore(slides[idx], slides[target]);
+  rebuildHeroDots();
+  renderAdmBanners();
+}
+
+function admAddBanner() {
+  const slider = document.getElementById('heroSlider');
+  const div = document.createElement('div');
+  div.className = 'hero-slide';
+  div.style.cssText = "background-image:url('');background-size:100% 100%;background-position:center center;";
+  slider.appendChild(div);
+  rebuildHeroDots();
+  renderAdmBanners();
+  // Yeni eklenen banner'a scroll
+  setTimeout(() => {
+    const list = document.getElementById('admBannerList');
+    if (list) list.lastElementChild?.scrollIntoView({behavior:'smooth'});
+  }, 100);
+}
+
+function rebuildHeroDots() {
+  const dotsEl = document.querySelector('.hero-dots');
+  if (!dotsEl) return;
+  const slides = document.querySelectorAll('.hero-slide');
+  dotsEl.innerHTML = Array.from(slides).map((_, i) =>
+    `<button class="hero-dot${i===0?' active':''}" onclick="goSlide(${i})"></button>`
+  ).join('');
+}
+
 // ═══════════════════════════════════════════
 // MODAL
 // ═══════════════════════════════════════════
@@ -7566,10 +7722,13 @@ function admTab(t) {
   document.getElementById('admProdTab').style.display = t==='prod' ? 'block' : 'none';
   document.getElementById('admCatTab').style.display = t==='cat' ? 'block' : 'none';
   document.getElementById('admOrdersTab').style.display = t==='orders' ? 'block' : 'none';
+  document.getElementById('admBannerTab').style.display = t==='banner' ? 'block' : 'none';
   document.getElementById('tabImgBtn').classList.toggle('active', t==='img');
   document.getElementById('tabProdBtn').classList.toggle('active', t==='prod');
   document.getElementById('tabCatBtn').classList.toggle('active', t==='cat');
   document.getElementById('tabOrdersBtn').classList.toggle('active', t==='orders');
+  document.getElementById('tabBannerBtn').classList.toggle('active', t==='banner');
+  if (t==='banner') renderAdmBanners();
   if (t==='prod') renderProdTable();
   if (t==='cat') renderCatTable();
   if (t==='orders') loadOrders();
