@@ -8219,9 +8219,50 @@ function pfGoogleTranslate() {
 }
 
 // ── ÜRÜN MODAL RESİM ──
-let _pfImgData = undefined; // undefined=değişmedi, null=silindi, string=yeni resim
+let _pfImgData = undefined; // undefined=değişmedi, null=silindi, string=yeni URL
+let _pfImgFile = null;     // Yüklenecek ham dosya
+
+async function uploadImgToGitHub(file, partNo) {
+  let token = sessionStorage.getItem('gh_token');
+  if (!token) {
+    token = prompt(
+      '\u{1F511} GitHub Personal Access Token girin:\n\n' +
+      'github.com \u2192 Settings \u2192 Developer settings \u2192 Personal access tokens\n' +
+      '\u2192 repo yetkisi olmal\u0131'
+    );
+    if (!token) return null;
+    sessionStorage.setItem('gh_token', token.trim());
+    token = token.trim();
+  }
+  const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+  const fileName = partNo + '.' + ext;
+  const apiUrl = 'https://api.github.com/repos/hifzullaherol/erolticaret/contents/images/' + encodeURIComponent(fileName);
+  const base64 = await new Promise((res, rej) => {
+    const r = new FileReader(); r.onload = e => res(e.target.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(file);
+  });
+  let sha;
+  try {
+    const meta = await fetch(apiUrl, { headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' } });
+    if (meta.ok) { const m = await meta.json(); sha = m.sha; }
+  } catch(e) {}
+  const body = { message: 'Add image: ' + fileName, content: base64 };
+  if (sha) body.sha = sha;
+  const res = await fetch(apiUrl, {
+    method: 'PUT',
+    headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    if (res.status === 401) sessionStorage.removeItem('gh_token');
+    throw new Error(err.message || 'GitHub yükleme hatası');
+  }
+  return 'https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/' + encodeURIComponent(fileName);
+}
+
 function pfHandleImg(file) {
   if (!file) return;
+  _pfImgFile = file;
   const reader = new FileReader();
   reader.onload = e => pfSetImg(e.target.result);
   reader.readAsDataURL(file);
@@ -8254,23 +8295,41 @@ function pfClearImg() {
   if (url) url.value = '';
 }
 
-function saveProd() {
+async function saveProd() {
   const part_no=document.getElementById('pfPartNo').value.trim().toUpperCase();
   const turkish_name=document.getElementById('pfTr').value.trim();
   const english_name=document.getElementById('pfEn').value.trim();
   const price_usd=parseFloat(document.getElementById('pfPrice').value);
   const category=document.getElementById('pfCat').value.trim().toUpperCase();
   if (!part_no||!turkish_name||!price_usd||!category) { showToast('Zorunlu alanları doldurun',true); return; }
-  const pfImg=window._pfImgData||'';
+
+  // GitHub'a resim yükle
+  let finalImgUrl = window._pfImgData || '';
+  if (_pfImgFile) {
+    const saveBtn = document.querySelector('#admProdModal .adm-btn-primary');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Yükleniyor...'; }
+    try {
+      const ghUrl = await uploadImgToGitHub(_pfImgFile, part_no);
+      if (ghUrl) finalImgUrl = ghUrl;
+      showToast('✓ Resim GitHub'a yüklendi');
+    } catch(e) {
+      showToast('Resim yüklenemedi: ' + e.message, true);
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Kaydet'; }
+      return;
+    }
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Kaydet'; }
+    _pfImgFile = null;
+  }
+
   if (editProdIdx===-1) {
     if (PRODUCTS.find(p=>p.part_no===part_no)) { showToast('Bu parça no zaten var',true); return; }
     PRODUCTS.push({part_no,turkish_name,english_name:english_name||turkish_name,price_usd,category});
-    if(pfImg) PRODUCT_IMAGES[part_no]=pfImg;
+    if(finalImgUrl) PRODUCT_IMAGES[part_no]=finalImgUrl;
     showToast(`✓ ${part_no} eklendi`);
   } else {
     PRODUCTS[editProdIdx]={part_no,turkish_name,english_name:english_name||turkish_name,price_usd,category};
-    if(pfImg) PRODUCT_IMAGES[part_no]=pfImg;
-    else if(pfImg===null) delete PRODUCT_IMAGES[part_no];
+    if(finalImgUrl) PRODUCT_IMAGES[part_no]=finalImgUrl;
+    else if(finalImgUrl===null) delete PRODUCT_IMAGES[part_no];
     showToast(`✓ ${part_no} güncellendi`);
   }
   closeAdmModal('admProdModal'); renderProdTable(); applyFilters(); updateAdmCounts();
