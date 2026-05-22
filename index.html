@@ -2724,8 +2724,7 @@ window.PARTNER_LOGOS = [
         <button class="modal-add" id="modalAddBtn" onclick="addToCartFromModal()">+ Sepete Ekle</button>
 
         <!-- TAKSİT TABLOSU -->
-        <div id="modalTaksitSection" style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px;">
-          <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.15em;margin-bottom:10px;">TAKSİT SEÇENEKLERİ</div>
+        <div id="modalTaksitSection" style="margin-top:20px;border-top:1px solid var(--border);">
           <style>
             #paytr_taksit_tablosu{clear:both;font-size:11px;max-width:100%;text-align:center;font-family:Arial,sans-serif;}
             #paytr_taksit_tablosu::before{display:table;content:" ";}
@@ -2738,8 +2737,24 @@ window.PARTNER_LOGOS = [
             .taksit-tutari{float:left;width:50%;padding:4px 0;color:#474747;border:2px solid #ffffff;font-size:10px;}
             .taksit-tutari-bold{font-weight:bold;}
             @media all and (max-width:600px){.taksit-tablosu-wrapper{width:100%;margin:4px 0;}}
+            #taksitAccordionBtn {
+              width:100%; display:flex; align-items:center; justify-content:space-between;
+              padding:14px 0; background:none; border:none; cursor:pointer;
+              font-family:var(--mono); font-size:10px; color:var(--ink3);
+              letter-spacing:0.15em; text-align:left;
+            }
+            #taksitAccordionBtn:hover { color:var(--ink); }
+            #taksitAccordionArrow { font-size:14px; transition:transform 0.2s; line-height:1; }
+            #taksitAccordionBody { overflow:hidden; max-height:0; transition:max-height 0.3s ease; }
+            #taksitAccordionBody.open { max-height:2000px; }
           </style>
-          <div id="paytr_taksit_tablosu"></div>
+          <button id="taksitAccordionBtn" onclick="toggleTaksitAccordion()">
+            <span>TAKSİT SEÇENEKLERİ</span>
+            <span id="taksitAccordionArrow">﹀</span>
+          </button>
+          <div id="taksitAccordionBody">
+            <div id="paytr_taksit_tablosu" style="padding-bottom:12px;"></div>
+          </div>
         </div>
 
       </div>
@@ -7324,6 +7339,13 @@ function goPage(p) {
 // ═══════════════════════════════════════════
 // MODAL
 // ═══════════════════════════════════════════
+function toggleTaksitAccordion() {
+  const body = document.getElementById('taksitAccordionBody');
+  const arrow = document.getElementById('taksitAccordionArrow');
+  const isOpen = body.classList.toggle('open');
+  arrow.style.transform = isOpen ? 'rotate(180deg)' : '';
+}
+
 function openModal(partNo) {
   const p = PRODUCTS.find(x => x.part_no === partNo);
   if (!p) return;
@@ -7341,6 +7363,12 @@ function openModal(partNo) {
   modalImg.src = imgSrc;
   modalImg.onerror = function() { col.style.display = 'none'; };
   document.getElementById('modalOverlay').classList.add('open');
+
+  // Accordion'ı kapat ve sıfırla
+  const accBody = document.getElementById('taksitAccordionBody');
+  const accArrow = document.getElementById('taksitAccordionArrow');
+  accBody.classList.remove('open');
+  accArrow.style.transform = '';
 
   // TAKSİT TABLOSU: fetch ile PayTR script içeriğini al, doğrudan DOM'a yaz
   const taksitContainer = document.getElementById('paytr_taksit_tablosu');
