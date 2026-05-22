@@ -6187,7 +6187,7 @@ async function loadProfileOrders() {
     listEl.innerHTML = orders.map(o => {
       const orderNo = 'STP-' + String(o.id).padStart(6,'0');
       const st = PROFILE_STATUS[o.status] || PROFILE_STATUS.pending;
-      const dt = o.created_at ? new Date(o.created_at).toLocaleDateString('tr-TR', {day:'2-digit',month:'long',year:'numeric'}) : '-';
+      const _d1 = o.created_at?.toDate ? o.created_at.toDate() : (o.created_at ? new Date(o.created_at) : null); const dt = _d1 ? _d1.toLocaleDateString('tr-TR', {day:'2-digit',month:'long',year:'numeric'}) : '-';
       const items = Array.isArray(o.items) ? o.items : [];
       const pay = payLabels[o.pay_method] || o.pay_method || '-';
       const itemsHtml = items.map(i => `
@@ -6722,6 +6722,20 @@ async function initiateCardPayment() {
         if (result && result.id) currentOrderNo = 'STP-' + String(result.id).substring(0,8).toUpperCase();
       }
     } catch(e) {}
+
+    // Admin'e bildirim maili gönder
+    sendOrderNotificationEmail({
+      orderNo: currentOrderNo,
+      customerName: orderPayload.customer_name,
+      email: orderPayload.customer_email,
+      phone: orderPayload.customer_phone,
+      company: orderPayload.company,
+      address: orderPayload.address,
+      note: orderPayload.note,
+      payMethod: 'card',
+      total: orderPayload.total_usd,
+      items: currentOrderCart
+    });
 
     // PayTR iFrame'i göster
     btn.style.display = 'none';
@@ -7514,7 +7528,7 @@ function renderOrdersTable() {
 
   tbody.innerHTML = orders.map(o => {
     const st = ORDER_STATUSES[o.status] || ORDER_STATUSES.pending;
-    const dt = o.created_at ? new Date(o.created_at).toLocaleDateString('tr-TR', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : '-';
+    const _d2 = o.created_at?.toDate ? o.created_at.toDate() : (o.created_at ? new Date(o.created_at) : null); const dt = _d2 ? _d2.toLocaleDateString('tr-TR', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : '-';
     const orderNo = 'STP-' + String(o.id).padStart(6,'0');
     const pay = PAY_LABELS[o.pay_method] || o.pay_method || '-';
     return `<tr>
@@ -7602,7 +7616,7 @@ function openOrderDetail(orderId) {
   const orderNo = 'STP-' + String(o.id).padStart(6,'0');
   const st = ORDER_STATUSES[o.status] || ORDER_STATUSES.pending;
   const pay = PAY_LABELS[o.pay_method] || o.pay_method || '-';
-  const dt = o.created_at ? new Date(o.created_at).toLocaleString('tr-TR') : '-';
+  const _d3 = o.created_at?.toDate ? o.created_at.toDate() : (o.created_at ? new Date(o.created_at) : null); const dt = _d3 ? _d3.toLocaleString('tr-TR') : '-';
   let items = '';
   if (o.items && Array.isArray(o.items) && o.items.length) {
     items = o.items.map(i => `
