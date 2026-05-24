@@ -8597,11 +8597,12 @@ async function importExcel(file) {
     const hdr = rows[hi].map(c => String(c).toLowerCase());
     const cm  = {};
     hdr.forEach((h, i) => {
-      if (h.includes('part') || h.includes('parça'))                         cm.part_no       = i;
+      if (h.includes('part') || h.includes('parça'))                           cm.part_no      = i;
       else if ((h.includes('türk') || h.includes('açık')) && !cm.turkish_name) cm.turkish_name = i;
-      else if (h.includes('ingiliz') || h.includes('english'))               cm.english_name  = i;
+      else if (h.includes('ingiliz') || h.includes('english'))                 cm.english_name = i;
       else if (h.includes('fiyat') || h.includes('price') || h.includes('usd')) cm.price_usd  = i;
-      else if (h.includes('kateg'))                                           cm.category      = i;
+      else if (h.includes('kateg'))                                             cm.category     = i;
+      else if (h.includes('resim') || h.includes('image') || h.includes('img') || h.includes('url')) cm.image_url = i;
     });
     if (cm.part_no       === undefined) cm.part_no       = 0;
     if (cm.turkish_name  === undefined) cm.turkish_name  = 1;
@@ -8618,7 +8619,8 @@ async function importExcel(file) {
         turkish_name : String(row[cm.turkish_name]  || '').trim(),
         english_name : String(row[cm.english_name]  || '').trim(),
         price_usd    : parseFloat(String(row[cm.price_usd] || '0').replace(/[^0-9.]/g, '')) || 0,
-        category     : cm.category !== undefined ? String(row[cm.category] || '').trim().toUpperCase() : 'DİĞER'
+        category     : cm.category !== undefined ? String(row[cm.category] || '').trim().toUpperCase() : 'DİĞER',
+        image_url    : cm.image_url !== undefined ? String(row[cm.image_url] || '').trim() : ''
       });
     });
 
@@ -8672,6 +8674,7 @@ function showImportPreview(data, fileName) {
                   <th style="padding:7px 10px;text-align:left;color:var(--ink2);">Türkçe Ad</th>
                   <th style="padding:7px 10px;text-align:right;color:var(--ink2);">Fiyat (USD)</th>
                   <th style="padding:7px 10px;text-align:left;color:var(--ink2);">Kategori</th>
+                  <th style="padding:7px 10px;text-align:center;color:var(--ink2);">Resim</th>
                   <th style="padding:7px 10px;text-align:center;color:var(--ink2);">Durum</th>
                 </tr>
               </thead>
@@ -8702,16 +8705,20 @@ function showImportPreview(data, fileName) {
   const tbody = document.getElementById('xlsPreviewBody');
   tbody.innerHTML = data.slice(0, 50).map(p => {
     const isNew = !existing.has(p.part_no);
+    const imgCell = p.image_url
+      ? `<img src="${p.image_url}" style="height:28px;max-width:48px;object-fit:contain;vertical-align:middle;" onerror="this.style.display='none'">`
+      : `<span style="color:var(--ink3);font-size:10px;">—</span>`;
     return `<tr style="border-top:1px solid var(--border);">
       <td style="padding:6px 10px;font-weight:600;color:var(--ink);">${p.part_no}</td>
-      <td style="padding:6px 10px;color:var(--ink2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.turkish_name}</td>
+      <td style="padding:6px 10px;color:var(--ink2);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.turkish_name}</td>
       <td style="padding:6px 10px;text-align:right;color:var(--ink);">$${p.price_usd.toFixed(2)}</td>
       <td style="padding:6px 10px;color:var(--ink3);">${p.category}</td>
+      <td style="padding:6px 10px;text-align:center;">${imgCell}</td>
       <td style="padding:6px 10px;text-align:center;">
         <span style="padding:2px 8px;border-radius:10px;font-size:10px;background:${isNew?'#dcfce7':'#dbeafe'};color:${isNew?'#16a34a':'#1a73e8'};">${isNew?'YENİ':'GÜNCELLE'}</span>
       </td>
     </tr>`;
-  }).join('') + (data.length > 50 ? `<tr><td colspan="5" style="padding:8px 10px;text-align:center;color:var(--ink3);">... ve ${data.length-50} ürün daha</td></tr>` : '');
+  }).join('') + (data.length > 50 ? `<tr><td colspan="6" style="padding:8px 10px;text-align:center;color:var(--ink3);">... ve ${data.length-50} ürün daha</td></tr>` : '');
 
   document.getElementById('xlsImportModal').classList.add('open');
 }
@@ -8723,7 +8730,11 @@ function applyImport() {
 
   if (mode === 'replace') {
     PRODUCTS.length = 0;
-    data.forEach(p => { PRODUCTS.push(p); added++; });
+    data.forEach(p => {
+      PRODUCTS.push(p);
+      if (p.image_url) PRODUCT_IMAGES[p.part_no] = p.image_url;
+      added++;
+    });
   } else {
     data.forEach(p => {
       const ex = PRODUCTS.find(x => x.part_no === p.part_no);
@@ -8732,9 +8743,11 @@ function applyImport() {
         if (p.english_name) ex.english_name = p.english_name;
         if (p.price_usd)    ex.price_usd    = p.price_usd;
         if (p.category)     ex.category     = p.category;
+        if (p.image_url)    PRODUCT_IMAGES[p.part_no] = p.image_url;
         updated++;
       } else if (mode === 'merge') {
         PRODUCTS.push({ ...p, english_name: p.english_name || p.turkish_name });
+        if (p.image_url) PRODUCT_IMAGES[p.part_no] = p.image_url;
         added++;
       }
     });
@@ -8846,16 +8859,21 @@ function exportGoogleFeed() {
 
 async function exportXls() {
   try {
-    const XLSX=await loadXLSX();
-    const data=[['Parça No','Türkçe Ad','İngilizce Ad','Fiyat (USD)','Kategori'],
-      ...PRODUCTS.map(p=>[p.part_no,p.turkish_name,p.english_name,p.price_usd,p.category])];
-    const wb=XLSX.utils.book_new();
-    const ws=XLSX.utils.aoa_to_sheet(data);
-    ws['!cols']=[{wch:16},{wch:40},{wch:40},{wch:12},{wch:50}];
-    XLSX.utils.book_append_sheet(wb,ws,'Ürünler');
-    XLSX.writeFile(wb,'globaltech_urunler.xlsx');
-    showToast('✓ Excel indirildi');
-  } catch(e) { showToast('Hata: '+e.message,true); }
+    const XLSX = await loadXLSX();
+    const data = [
+      ['Parça No', 'Türkçe Ad', 'İngilizce Ad', 'Fiyat (USD)', 'Kategori', 'Resim URL'],
+      ...PRODUCTS.map(p => {
+        const imgUrl = PRODUCT_IMAGES[p.part_no] || (R2_URL + '/' + p.part_no + '.png');
+        return [p.part_no, p.turkish_name, p.english_name, p.price_usd, p.category, imgUrl];
+      })
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    ws['!cols'] = [{wch:16},{wch:40},{wch:40},{wch:12},{wch:50},{wch:70}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Ürünler');
+    XLSX.writeFile(wb, 'globaltech_urunler.xlsx');
+    showToast('✓ Excel indirildi (' + PRODUCTS.length + ' ürün)');
+  } catch(e) { showToast('Hata: '+e.message, true); }
 }
 
 // ── SAVE ──
