@@ -7552,11 +7552,17 @@ function admSaveBanner(idx) {
   const url = document.getElementById('bannerUrl_' + idx).value.trim();
   const mob = document.getElementById('bannerMobile_' + idx).value.trim();
   if (!url) { showToast('URL boş olamaz', true); return; }
-  slide.style.backgroundImage = "url('" + url + "')";
+  // setAttribute ile style'ı doğrudan set et (getAttribute ile geri okunabilsin)
+  const currentStyle = slide.getAttribute('style') || '';
+  // background-image kısmını güncelle, diğer style'ları koru
+  let newStyle = currentStyle.replace(/background-image\s*:[^;]+;?/gi, '').trim();
+  if (newStyle && !newStyle.endsWith(';')) newStyle += ';';
+  newStyle = `background-image: url('${url}'); ` + newStyle;
+  slide.setAttribute('style', newStyle.trim());
   if (mob) slide.setAttribute('data-mobile', mob);
   else slide.removeAttribute('data-mobile');
   renderAdmBanners();
-  showToast('\u2713 Banner guncellendi');
+  showToast('✓ Banner güncellendi');
 }
 
 function admDeleteBanner(idx) {
@@ -9039,6 +9045,30 @@ async function buildUpdatedHTML() {
   out = out.replace(/const PRODUCT_IMAGES\s*=\s*\{[\s\S]*?\};/, 'const PRODUCT_IMAGES = ' + imgJSON + ';');
   out = out.replace(/const CAT_ORDER\s*=\s*\[[\s\S]*?\];/, 'const CAT_ORDER = ' + catOrderJSON + ';');
   out = out.replace(/window\.PARTNER_LOGOS\s*=\s*\[[\s\S]*?\];/, 'window.PARTNER_LOGOS = ' + JSON.stringify(window.PARTNER_LOGOS) + ';');
+
+  // ── Hero Slider HTML'ini DOM'dan al ve güncelle ──
+  try {
+    const sliderEl = document.getElementById('heroSlider');
+    if (sliderEl) {
+      const slides = Array.from(sliderEl.querySelectorAll('.hero-slide'));
+      const slidesHTML = slides.map((el) => {
+        const style = el.getAttribute('style') || '';
+        const mobile = el.getAttribute('data-mobile') || '';
+        const cls = el.className;
+        let attrs = `class="${cls}" style="${style}"`;
+        if (mobile) attrs += ` data-mobile="${mobile}"`;
+        return `    <div ${attrs}></div>`;
+      }).join('\n');
+
+      // heroSlider açılışından hero-dots'a kadar olan kısmı değiştir
+      out = out.replace(
+        /(<div[^>]+id="heroSlider"[^>]*>)([\s\S]*?)(\s*<div[^>]+class="hero-dots")/,
+        (match, open, inner, after) => open + '\n' + slidesHTML + '\n  ' + after.trimStart()
+      );
+    }
+  } catch(e) {
+    console.warn('Slider HTML güncellenemedi:', e);
+  }
 
   return out;
 }
