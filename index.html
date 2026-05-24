@@ -1477,9 +1477,11 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
     <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero%201.png?v=4'); background-size: 100% 100%; background-position: center center;" data-mobile="https://images.silotechparts.com.tr/mobil%20hero%201.png"></div>
     <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png?v=4'); background-size: 100% 100%; background-position: center center;" data-mobile="https://images.silotechparts.com.tr/mobil%20hero%202.png"></div>
     <div class="hero-slide" style="background-image: url('https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/hero-3.png'); background-size: 100% 100%; background-position: center center;" data-mobile="https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/hero-mobile-3.png"></div>
+  </div>
   <div class="hero-dots">
-    <span class="hero-dot active" onclick="goSlide(0)"></span>
-    <span class="hero-dot" onclick="goSlide(1)"></span>
+    <button class="hero-dot active" onclick="goSlide(0)"></button>
+    <button class="hero-dot" onclick="goSlide(1)"></button>
+    <button class="hero-dot" onclick="goSlide(2)"></button>
   </div>
 
 </section>
@@ -9036,7 +9038,7 @@ async function buildUpdatedHTML() {
   out = out.replace(/const CAT_ORDER\s*=\s*\[[\s\S]*?\];/, 'const CAT_ORDER = ' + catOrderJSON + ';');
   out = out.replace(/window\.PARTNER_LOGOS\s*=\s*\[[\s\S]*?\];/, 'window.PARTNER_LOGOS = ' + JSON.stringify(window.PARTNER_LOGOS) + ';');
 
-  // ── Hero Slider HTML'ini DOM'dan al ve güncelle ──
+  // ── Hero Slider + Dots HTML'ini DOM'dan al ve güncelle ──
   try {
     const sliderEl = document.getElementById('heroSlider');
     if (sliderEl) {
@@ -9050,10 +9052,15 @@ async function buildUpdatedHTML() {
         return `    <div ${attrs}></div>`;
       }).join('\n');
 
-      // heroSlider açılışından hero-dots'a kadar olan kısmı değiştir
+      const dotsHTML = `  <div class="hero-dots">\n` +
+        slides.map((_, i) => `    <button class="hero-dot${i===0?' active':''}" onclick="goSlide(${i})"></button>`).join('\n') +
+        `\n  </div>`;
+
+      // heroSlider açılışından </section>'a kadar tümünü değiştir
       out = out.replace(
-        /(<div[^>]+id="heroSlider"[^>]*>)([\s\S]*?)(\s*<div[^>]+class="hero-dots")/,
-        (match, open, inner, after) => open + '\n' + slidesHTML + '\n  ' + after.trimStart()
+        /(<div[^>]+id="heroSlider"[^>]*>)([\s\S]*?)(<\/section>)/,
+        (match, open, inner, close) =>
+          open + '\n' + slidesHTML + '\n  </div>\n' + dotsHTML + '\n\n' + close
       );
     }
   } catch(e) {
