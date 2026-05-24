@@ -1556,7 +1556,17 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
    Her obje: { name: "Firma Adı", logo: "https://..." }
    logo URL yoksa sadece isim gösterilir.
 ============================================================ */
-window.PARTNER_LOGOS = [{"name":"Alışan Logistics","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/1.jpeg"},{"name":"Hacıoğulları","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/2.jpeg"},{"name":"Haydaroğlu Hazır Beton","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/3.jpeg"},{"name":"Nuh Çimento Grubu","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/4.jpeg"},{"name":"Ömürlü İnşaat","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/5.jpeg"},{"name":"Özer Ticaret","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/6.jpeg"},{"name":"Safi Çimento","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/7.jpeg"},{"name":"Timaş Nakliyat","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/8.jpeg"},{"name":"TLS","logo":"https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/9.jpeg"}];
+window.PARTNER_LOGOS = [
+  { name: "Alışan Logistics",       logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/1.jpeg" },
+  { name: "Hacıoğulları",           logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/2.jpeg" },
+  { name: "Haydaroğlu Hazır Beton", logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/3.jpeg" },
+  { name: "Nuh Çimento Grubu",      logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/4.jpeg" },
+  { name: "Ömürlü İnşaat",          logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/5.jpeg" },
+  { name: "Özer Ticaret",           logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/6.jpeg" },
+  { name: "Safi Çimento",           logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/7.jpeg" },
+  { name: "Timaş Nakliyat",         logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/8.jpeg" },
+  { name: "TLS",                    logo: "https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/9.jpeg" },
+];
 
 (function() {
   var logos = window.PARTNER_LOGOS;
@@ -7484,18 +7494,53 @@ function renderAdmBanners() {
 async function admBannerFileSelect(input, idx, isMobile) {
   const file = input.files[0];
   if (!file) return;
-  const name = 'hero' + (isMobile ? '-mobile' : '') + '-' + (idx + 1) + '.' + (file.name.split('.').pop() || 'jpg');
-  showToast('Yükleniyor...');
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const partName = 'hero' + (isMobile ? '-mobile' : '') + '-' + (idx + 1);
+  const fileName = partName + '.' + ext;
+
+  // Yükleme başlamadan önce token kontrolü
+  let token = localStorage.getItem('gh_token') || '';
+  if (!token) {
+    token = prompt('🔑 GitHub Personal Access Token girin (repo yetkili):\n\n1. github.com → Settings → Developer settings\n2. Personal access tokens → Tokens (classic)\n3. "repo" yetkisi ile token oluşturun\n4. Oluşturulan token\'ı buraya yapıştırın');
+    if (!token) { showToast('Token girilmedi, iptal edildi.', true); return; }
+    localStorage.setItem('gh_token', token.trim());
+    token = token.trim();
+  }
+
+  // Yükleniyor göstergesi
+  showToast('⏳ Görsel GitHub\'a yükleniyor...');
+  const btn = input.closest('label');
+  if (btn) { btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; }
+
   try {
-    const url = await uploadImgToGitHub(file, name.replace(/\.\w+$/, ''));
+    const url = await uploadImgToGitHub(file, partName);
+    if (!url) { showToast('Yükleme başarısız, URL alınamadı.', true); return; }
+
     if (isMobile) {
       document.getElementById('bannerMobile_' + idx).value = url;
     } else {
       document.getElementById('bannerUrl_' + idx).value = url;
     }
-    showToast('\u2713 Gorsel yuklendi');
+
+    // Otomatik kaydet (Güncelle butonuna basmaya gerek kalmasın)
+    admSaveBanner(idx);
+    showToast('✓ Görsel yüklendi ve banner kaydedildi! GitHub\'a Yayınla\'yı unutmayın.');
   } catch(e) {
-    showToast('Yuklenemedi: ' + e.message, true);
+    // Token geçersizse temizle ki bir sonraki denemede tekrar sorulsun
+    if (e.message && (e.message.includes('401') || e.message.includes('Bad credentials'))) {
+      localStorage.removeItem('gh_token');
+      showToast('❌ GitHub token geçersiz veya süresi dolmuş. Lütfen yeni token girin.', true);
+    } else if (e.message && e.message.includes('404')) {
+      showToast('❌ GitHub repo veya dosya yolu bulunamadı. Repo ayarlarını kontrol edin.', true);
+    } else if (e.message && e.message.includes('422')) {
+      showToast('❌ Bu isimde dosya zaten var ve SHA eşleşmiyor. Sayfa yenileyip tekrar deneyin.', true);
+    } else {
+      showToast('❌ Yüklenemedi: ' + e.message, true);
+    }
+  } finally {
+    if (btn) { btn.style.opacity = ''; btn.style.pointerEvents = ''; }
+    // input'u sıfırla ki aynı dosyayı tekrar seçilebilsin
+    input.value = '';
   }
 }
 
@@ -8472,8 +8517,13 @@ async function uploadImgToGitHub(file, partNo) {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    if (res.status === 401) localStorage.removeItem('gh_token');
-    throw new Error(err.message || 'GitHub yükleme hatası');
+    if (res.status === 401) {
+      localStorage.removeItem('gh_token');
+      throw new Error('401 - Bad credentials: Token geçersiz veya süresi dolmuş.');
+    }
+    if (res.status === 404) throw new Error('404 - Repo veya yol bulunamadı.');
+    if (res.status === 422) throw new Error('422 - Dosya çakışması. Sayfayı yenileyip tekrar deneyin.');
+    throw new Error((err.message || 'GitHub yükleme hatası') + ' (HTTP ' + res.status + ')');
   }
   return 'https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/' + encodeURIComponent(fileName);
 }
