@@ -5553,11 +5553,44 @@ window.PARTNER_LOGOS = [
 
   <!-- PRODUCT TAB -->
   <div class="adm-content" id="admProdTab" style="display: block;">
-    <div class="adm-dropzone" id="xlsDz" onclick="document.getElementById('xlsFile').click()">
-      <div class="adm-dropzone-title">Excel'den İçe Aktar</div>
-      <div class="adm-dropzone-sub">Parça No · Türkçe Ad · İngilizce Ad · Fiyat (USD) · Kategori sütunları</div>
-      <input type="file" id="xlsFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(this.files[0])">
+
+    <!-- İÇE / DIŞA AKTAR BÖLÜMÜ -->
+    <div style="display:flex;gap:12px;margin-bottom:16px;align-items:stretch;">
+
+      <!-- İÇE AKTAR -->
+      <div id="xlsDz" onclick="document.getElementById('xlsFile').click()"
+        ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+        ondragleave="this.style.borderColor='var(--border2)'"
+        ondrop="event.preventDefault();this.style.borderColor='var(--border2)';importExcel(event.dataTransfer.files[0])"
+        style="flex:1;border:2px dashed var(--border2);border-radius:8px;padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:14px;background:var(--off);transition:border-color .2s;">
+        <div style="font-size:28px;line-height:1;flex-shrink:0;">📥</div>
+        <div>
+          <div style="font-family:var(--serif);font-size:15px;color:var(--ink);margin-bottom:3px;">Excel'den İçe Aktar</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.05em;">XLSX — Parça No · Türkçe Ad · İngilizce Ad · Fiyat (USD) · Kategori</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.05em;margin-top:2px;">Mevcut parça numaraları güncellenir · Yeniler eklenir</div>
+        </div>
+        <div style="margin-left:auto;flex-shrink:0;">
+          <span style="display:inline-block;padding:7px 16px;background:var(--ink);color:var(--white);border-radius:var(--radius);font-family:var(--mono);font-size:11px;letter-spacing:0.05em;">DOSYA SEÇ</span>
+        </div>
+        <input type="file" id="xlsFile" accept=".xlsx,.xls" style="display:none" onchange="importExcel(this.files[0])">
+      </div>
+
+      <!-- DIŞA AKTAR -->
+      <div style="flex:1;border:1px solid var(--border);border-radius:8px;padding:18px 20px;display:flex;align-items:center;gap:14px;background:var(--white);">
+        <div style="font-size:28px;line-height:1;flex-shrink:0;">📤</div>
+        <div style="flex:1;">
+          <div style="font-family:var(--serif);font-size:15px;color:var(--ink);margin-bottom:3px;">Dışa Aktar</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.05em;">Ürün listesini indir veya Google Merchant'a gönder</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button onclick="exportXls()" style="padding:8px 16px;background:var(--white);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--mono);font-size:11px;letter-spacing:0.05em;cursor:pointer;white-space:nowrap;">↓ Excel</button>
+          <button onclick="exportGoogleFeed()" style="padding:8px 16px;background:#1a73e8;color:#fff;border:none;border-radius:var(--radius);font-family:var(--mono);font-size:11px;letter-spacing:0.05em;cursor:pointer;white-space:nowrap;">🛒 Google Feed</button>
+        </div>
+      </div>
+
     </div>
+
+    <!-- ARAÇ ÇUBUĞU -->
     <div class="adm-prod-toolbar">
       <div class="adm-search" style="max-width:260px">
         <svg class="adm-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
@@ -5566,9 +5599,7 @@ window.PARTNER_LOGOS = [
       <select id="admCatFilter" onchange="renderProdTable()" style="height:34px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--ink);font-family:var(--mono);font-size:11px;padding:0 10px;cursor:pointer;max-width:220px;">
         <option value="">Tüm Kategoriler</option>
       </select>
-      <button class="adm-add-btn" onclick="openAddProd()">+ Yeni Ürün</button>
-      <button class="adm-add-btn" onclick="exportXls()" style="background:var(--white);color:var(--ink);border:1px solid var(--border);margin-left:auto;">↓ Excel İndir</button>
-      <button class="adm-add-btn" onclick="exportGoogleFeed()" style="background:#1a73e8;color:#fff;border:1px solid #1a73e8;">🛒 Google Feed XML</button>
+      <button class="adm-add-btn" onclick="openAddProd()" style="margin-left:auto;">+ Yeni Ürün</button>
     </div>
     <table class="adm-table">
       <thead><tr>
@@ -8548,42 +8579,176 @@ async function loadXLSX() {
 async function importExcel(file) {
   if (!file) return;
   try {
-    const XLSX=await loadXLSX();
-    const buf=await file.arrayBuffer();
-    const wb=XLSX.read(buf,{type:'array'});
-    const ws=wb.Sheets[wb.SheetNames[0]];
-    const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-    let hi=-1;
-    for (let i=0;i<Math.min(5,rows.length);i++) {
-      const r=rows[i].map(c=>String(c).toLowerCase());
-      if (r.some(c=>c.includes('part')||c.includes('parça')||c.includes('no'))) { hi=i; break; }
+    showToast('⏳ Excel okunuyor...');
+    const XLSX = await loadXLSX();
+    const buf  = await file.arrayBuffer();
+    const wb   = XLSX.read(buf, {type:'array'});
+    const ws   = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+
+    // Başlık satırını bul
+    let hi = -1;
+    for (let i = 0; i < Math.min(5, rows.length); i++) {
+      const r = rows[i].map(c => String(c).toLowerCase());
+      if (r.some(c => c.includes('part') || c.includes('parça') || c.includes('no'))) { hi = i; break; }
     }
-    if (hi===-1) hi=1;
-    const hdr=rows[hi].map(c=>String(c).toLowerCase());
-    const cm={};
-    hdr.forEach((h,i)=>{
-      if (h.includes('part')||h.includes('parça')) cm.part_no=i;
-      else if ((h.includes('türk')||h.includes('açık'))&&!cm.turkish_name) cm.turkish_name=i;
-      else if (h.includes('ingiliz')||h.includes('english')) cm.english_name=i;
-      else if (h.includes('fiyat')||h.includes('price')||h.includes('usd')) cm.price_usd=i;
-      else if (h.includes('kateg')) cm.category=i;
+    if (hi === -1) hi = 0;
+
+    const hdr = rows[hi].map(c => String(c).toLowerCase());
+    const cm  = {};
+    hdr.forEach((h, i) => {
+      if (h.includes('part') || h.includes('parça'))                         cm.part_no       = i;
+      else if ((h.includes('türk') || h.includes('açık')) && !cm.turkish_name) cm.turkish_name = i;
+      else if (h.includes('ingiliz') || h.includes('english'))               cm.english_name  = i;
+      else if (h.includes('fiyat') || h.includes('price') || h.includes('usd')) cm.price_usd  = i;
+      else if (h.includes('kateg'))                                           cm.category      = i;
     });
-    if (!cm.part_no) cm.part_no=0; if (!cm.turkish_name) cm.turkish_name=1;
-    if (!cm.english_name) cm.english_name=2; if (!cm.price_usd) cm.price_usd=3;
-    let added=0,updated=0;
-    rows.slice(hi+1).forEach(row=>{
-      const part_no=String(row[cm.part_no]||'').trim().toUpperCase(); if (!part_no) return;
-      const turkish_name=String(row[cm.turkish_name]||'').trim();
-      const english_name=String(row[cm.english_name]||'').trim();
-      const price_usd=parseFloat(String(row[cm.price_usd]).replace(/[^0-9.]/g,''))||0;
-      const category=cm.category!==undefined?String(row[cm.category]||'').trim().toUpperCase():'DİĞER';
-      const ex=PRODUCTS.find(p=>p.part_no===part_no);
-      if (ex) { if (turkish_name) ex.turkish_name=turkish_name; if (price_usd) ex.price_usd=price_usd; updated++; }
-      else { PRODUCTS.push({part_no,turkish_name,english_name:english_name||turkish_name,price_usd,category}); added++; }
+    if (cm.part_no       === undefined) cm.part_no       = 0;
+    if (cm.turkish_name  === undefined) cm.turkish_name  = 1;
+    if (cm.english_name  === undefined) cm.english_name  = 2;
+    if (cm.price_usd     === undefined) cm.price_usd     = 3;
+
+    // Satırları parse et
+    const incoming = [];
+    rows.slice(hi + 1).forEach(row => {
+      const part_no = String(row[cm.part_no] || '').trim().toUpperCase();
+      if (!part_no) return;
+      incoming.push({
+        part_no,
+        turkish_name : String(row[cm.turkish_name]  || '').trim(),
+        english_name : String(row[cm.english_name]  || '').trim(),
+        price_usd    : parseFloat(String(row[cm.price_usd] || '0').replace(/[^0-9.]/g, '')) || 0,
+        category     : cm.category !== undefined ? String(row[cm.category] || '').trim().toUpperCase() : 'DİĞER'
+      });
     });
-    renderProdTable(); applyFilters(); updateAdmCounts();
-    showToast(`✓ ${added} yeni, ${updated} güncellendi`);
-  } catch(e) { showToast('Excel okunamadı: '+e.message,true); }
+
+    if (!incoming.length) { showToast('Geçerli ürün satırı bulunamadı.', true); return; }
+
+    // Önizleme modalını göster
+    _xlsImportData = incoming;
+    showImportPreview(incoming, file.name);
+
+  } catch(e) {
+    showToast('Excel okunamadı: ' + e.message, true);
+  }
+}
+
+var _xlsImportData = [];
+
+function showImportPreview(data, fileName) {
+  // Modal yoksa oluştur
+  if (!document.getElementById('xlsImportModal')) {
+    const m = document.createElement('div');
+    m.id = 'xlsImportModal';
+    m.className = 'adm-modal';
+    m.onclick = function(e) { if (e.target === m) closeAdmModal('xlsImportModal'); };
+    m.innerHTML = `
+      <div class="adm-modal-box" style="max-width:640px;width:100%;">
+        <div class="adm-modal-head">
+          <div style="font-family:var(--serif);font-size:18px;color:var(--ink);">Excel İçe Aktar</div>
+          <button onclick="closeAdmModal('xlsImportModal')" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--ink3);">✕</button>
+        </div>
+        <div class="adm-modal-body" style="padding:20px 24px;">
+          <div id="xlsImportInfo" style="margin-bottom:16px;"></div>
+          <div style="margin-bottom:14px;">
+            <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em;margin-bottom:8px;">AKTARMA MODU</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-family:var(--mono);font-size:12px;">
+                <input type="radio" name="importMode" value="merge" checked> Birleştir <span style="color:var(--ink3)">(var olanı güncelle, yeni ürün ekle)</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-family:var(--mono);font-size:12px;">
+                <input type="radio" name="importMode" value="update"> Sadece güncelle <span style="color:var(--ink3)">(yeni ürün ekleme)</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-family:var(--mono);font-size:12px;">
+                <input type="radio" name="importMode" value="replace"> Tümünü değiştir <span style="color:#dc2626">(mevcut ürünleri sil)</span>
+              </label>
+            </div>
+          </div>
+          <div style="background:var(--off);border-radius:6px;overflow:hidden;max-height:260px;overflow-y:auto;">
+            <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;">
+              <thead>
+                <tr style="background:var(--border);position:sticky;top:0;">
+                  <th style="padding:7px 10px;text-align:left;color:var(--ink2);">Parça No</th>
+                  <th style="padding:7px 10px;text-align:left;color:var(--ink2);">Türkçe Ad</th>
+                  <th style="padding:7px 10px;text-align:right;color:var(--ink2);">Fiyat (USD)</th>
+                  <th style="padding:7px 10px;text-align:left;color:var(--ink2);">Kategori</th>
+                  <th style="padding:7px 10px;text-align:center;color:var(--ink2);">Durum</th>
+                </tr>
+              </thead>
+              <tbody id="xlsPreviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="adm-modal-actions">
+          <button onclick="applyImport()" class="adm-btn-primary" id="xlsImportApplyBtn">Aktar</button>
+          <button onclick="closeAdmModal('xlsImportModal')" class="adm-btn-ghost">İptal</button>
+        </div>
+      </div>`;
+    document.body.appendChild(m);
+  }
+
+  // Önizleme tablosunu doldur
+  const existing = new Set(PRODUCTS.map(p => p.part_no));
+  const newCount = data.filter(p => !existing.has(p.part_no)).length;
+  const updCount = data.filter(p =>  existing.has(p.part_no)).length;
+
+  document.getElementById('xlsImportInfo').innerHTML =
+    `<div style="font-family:var(--mono);font-size:12px;color:var(--ink2);margin-bottom:4px;">📄 <b>${fileName}</b> — <b>${data.length}</b> satır okundu</div>` +
+    `<div style="display:flex;gap:12px;font-family:var(--mono);font-size:11px;">` +
+    `<span style="color:#16a34a;">✚ ${newCount} yeni ürün</span>` +
+    `<span style="color:#1a73e8;">↻ ${updCount} güncelleme</span>` +
+    `</div>`;
+
+  const tbody = document.getElementById('xlsPreviewBody');
+  tbody.innerHTML = data.slice(0, 50).map(p => {
+    const isNew = !existing.has(p.part_no);
+    return `<tr style="border-top:1px solid var(--border);">
+      <td style="padding:6px 10px;font-weight:600;color:var(--ink);">${p.part_no}</td>
+      <td style="padding:6px 10px;color:var(--ink2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.turkish_name}</td>
+      <td style="padding:6px 10px;text-align:right;color:var(--ink);">$${p.price_usd.toFixed(2)}</td>
+      <td style="padding:6px 10px;color:var(--ink3);">${p.category}</td>
+      <td style="padding:6px 10px;text-align:center;">
+        <span style="padding:2px 8px;border-radius:10px;font-size:10px;background:${isNew?'#dcfce7':'#dbeafe'};color:${isNew?'#16a34a':'#1a73e8'};">${isNew?'YENİ':'GÜNCELLE'}</span>
+      </td>
+    </tr>`;
+  }).join('') + (data.length > 50 ? `<tr><td colspan="5" style="padding:8px 10px;text-align:center;color:var(--ink3);">... ve ${data.length-50} ürün daha</td></tr>` : '');
+
+  document.getElementById('xlsImportModal').classList.add('open');
+}
+
+function applyImport() {
+  const mode = document.querySelector('input[name="importMode"]:checked')?.value || 'merge';
+  const data  = _xlsImportData;
+  let added = 0, updated = 0;
+
+  if (mode === 'replace') {
+    PRODUCTS.length = 0;
+    data.forEach(p => { PRODUCTS.push(p); added++; });
+  } else {
+    data.forEach(p => {
+      const ex = PRODUCTS.find(x => x.part_no === p.part_no);
+      if (ex) {
+        if (p.turkish_name) ex.turkish_name = p.turkish_name;
+        if (p.english_name) ex.english_name = p.english_name;
+        if (p.price_usd)    ex.price_usd    = p.price_usd;
+        if (p.category)     ex.category     = p.category;
+        updated++;
+      } else if (mode === 'merge') {
+        PRODUCTS.push({ ...p, english_name: p.english_name || p.turkish_name });
+        added++;
+      }
+    });
+  }
+
+  closeAdmModal('xlsImportModal');
+  renderProdTable(); applyFilters(); updateAdmCounts();
+  document.getElementById('xlsFile').value = '';
+  _xlsImportData = [];
+
+  const msg = mode === 'replace'
+    ? `✓ ${added} ürün yüklendi (liste değiştirildi)`
+    : `✓ ${added} yeni eklendi, ${updated} güncellendi`;
+  showToast(msg);
 }
 
 // ═══════════════════════════════════════════
