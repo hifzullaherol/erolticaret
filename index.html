@@ -66,10 +66,10 @@
   }
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-  <script src="https://www.paytr.com/js/iframeResizer.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <script src="https://www.paytr.com/js/iframeResizer.min.js" defer></script>
 
 
   <style>
@@ -1474,8 +1474,8 @@ body { background: var(--white); color: var(--ink); font-family: var(--font); fo
 <!-- HERO -->
 <section class="hero" id="heroSection">
   <div class="hero-slider" id="heroSlider">
-    <div class="hero-slide" style="background-image: url('https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/hero-3.png'); background-size: 100% 100%; background-position: center center;" data-mobile="https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/hero-mobile-3.png"></div>
-    <div class="hero-slide active" style="background-image: url('https://images.silotechparts.com.tr/hero%201.png?v=4'); background-size: 100% 100%; background-position: center center;" data-mobile="https://images.silotechparts.com.tr/mobil%20hero%201.png"></div>
+    <div class="hero-slide active" style="background-image: url('https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/hero-3.png'); background-size: 100% 100%; background-position: center center;" data-mobile="https://raw.githubusercontent.com/hifzullaherol/erolticaret/main/images/hero-mobile-3.png"></div>
+    <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%201.png?v=4'); background-size: 100% 100%; background-position: center center;" data-mobile="https://images.silotechparts.com.tr/mobil%20hero%201.png"></div>
     <div class="hero-slide" style="background-image: url('https://images.silotechparts.com.tr/hero%202.png?v=4'); background-size: 100% 100%; background-position: center center;" data-mobile="https://images.silotechparts.com.tr/mobil%20hero%202.png"></div>
   </div>
   <div class="hero-dots">
@@ -7576,6 +7576,10 @@ function admMoveBanner(idx, dir) {
   if (target < 0 || target >= slides.length) return;
   if (dir === 1) slider.insertBefore(slides[target], slides[idx]);
   else slider.insertBefore(slides[idx], slides[target]);
+  // Sıralama sonrası active class'ı her zaman ilk slide'a ver
+  Array.from(slider.querySelectorAll('.hero-slide')).forEach((s, i) => {
+    s.classList.toggle('active', i === 0);
+  });
   rebuildHeroDots();
   renderAdmBanners();
 }
@@ -9836,7 +9840,9 @@ document.addEventListener('keydown', function(e) {
 window._kurRate = 0;
 (async function() {
   try {
-    const res = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 3000); // 3 saniye timeout
+    const res = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', {signal: controller.signal});
     const data = await res.json(); const rate = data.usd['try']; window._kurRate = rate;
     // Checkout açıksa toplam alanlarını hemen güncelle
     if (typeof currentOrderTotal !== 'undefined' && currentOrderTotal > 0 && typeof fmtTL === 'function') {
