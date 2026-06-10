@@ -7377,7 +7377,7 @@ function renderGrid() {
         <div class="p-name">${nameKey}</div>
         <div class="p-footer">
           <div>
-            <div class="p-price">$${p.price_usd.toFixed(2)}</div>
+            <div class="p-price">$${p.price_usd.toFixed(2)}${window._kurRate ? ` <span style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;">(₺${(p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})})</span>` : ''}</div>
             <div class="p-price-usd" style="font-size:11px;color:#c8410a;font-weight:700;letter-spacing:0.05em;">+KDV</div>
             ${window._kurRate ? `<div style="font-family:var(--mono);font-size:11px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;">₺${(p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2})}</div>` : ''}
           </div>
@@ -7639,7 +7639,7 @@ function openModal(partNo) {
   document.getElementById('modalName').textContent = lang==='en' ? p.english_name : p.turkish_name;
   document.getElementById('modalNameEn').textContent = lang==='en' ? p.turkish_name : p.english_name;
   document.getElementById('modalCat').textContent = p.category;
-  document.getElementById('modalPrice').innerHTML = `$${p.price_usd.toFixed(2)} <small>USD</small><div style="font-size:13px;color:#c8410a;font-weight:700;letter-spacing:0.05em;margin-top:4px;">+KDV</div>${window._kurRate ? '<div style=\"font-family:var(--mono);font-size:14px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;\">\u20ba' + (p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2}) + '</div>' : ''}`;
+  document.getElementById('modalPrice').innerHTML = `$${p.price_usd.toFixed(2)}${window._kurRate ? ' <small style="font-family:var(--mono);font-size:14px;color:#1a5c3a;font-weight:600;letter-spacing:0.03em;">(\u20ba' + (p.price_usd * window._kurRate).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2}) + ')</small>' : ''}<div style="font-size:13px;color:#c8410a;font-weight:700;letter-spacing:0.05em;margin-top:4px;">+KDV</div>${window._kurRate ? '<div style=\"font-family:var(--mono);font-size:14px;color:#1a5c3a;font-weight:600;letter-spacing:0.05em;margin-top:2px;\">\u20ba' + (p.price_usd * window._kurRate * 1.20).toLocaleString('tr-TR', {minimumFractionDigits:2,maximumFractionDigits:2}) + '</div>' : ''}`;
   document.getElementById('modalAddBtn').textContent = `+ ${t('add')}`;
   const imgSrc = getImgUrl(p.part_no);
   const col = document.getElementById('modalImgCol');
